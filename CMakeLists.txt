@@ -9,3 +9,6 @@ project ("Box2d")
 # Each sub-project
 set(EXECUTABLE_CUSTOM_NAME "00-Starter")
 add_subdirectory ("00-Starter")
+
+set(EXECUTABLE_CUSTOM_NAME "01-SpaceShooter")
+add_subdirectory ("01-SpaceShooter")
