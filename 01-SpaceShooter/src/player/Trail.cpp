@@ -2,6 +2,7 @@
 
 #include "Assets.h"
 #include "Game.h"
+#include "Random.h"
 
 #include "box2d/b2_chain_shape.h"
 
@@ -31,7 +32,7 @@ Trail::Trail(b2Body* body, const sf::Vector2f position, const float angle) : Dra
 	// Ignore the collision between the player and the trail
 	_body->GetFixtureList()->SetSensor(true);
 
-	_lifeTime = sf::seconds(0.5f);
+	_lifeTime = sf::seconds(Random::GetFloat(0.3f, 0.7f));
 }
 
 void Trail::draw(sf::RenderTarget& target, const sf::RenderStates states) const
@@ -47,7 +48,7 @@ void Trail::Update(const sf::Time elapsed)
 	_sprite.setColor(sf::Color(255, 255, 255, 255 - (255 * _currentLifeTime.asSeconds() / _lifeTime.asSeconds())));
 
 	// Make the trail bigger over time
-	_sprite.setScale(1 + _currentLifeTime.asSeconds() / _lifeTime.asSeconds(), 1 + _currentLifeTime.asSeconds() / _lifeTime.asSeconds());
+	_sprite.setScale(0.5f + 1.5f * _currentLifeTime.asSeconds() / _lifeTime.asSeconds(), 0.5f + 1.5f * _currentLifeTime.asSeconds() / _lifeTime.asSeconds());
 
 	_sprite.setPosition(Game::MeterToPixel(_body->GetPosition()));
 	_sprite.setRotation(Game::RadToDegree(_body->GetAngle()));

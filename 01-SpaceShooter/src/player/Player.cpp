@@ -12,7 +12,7 @@ Player::Player(Game& game, const sf::Vector2f position) : DrawableObject(game.Ge
 
 	_speed = 0.1f;
 	_rotationSpeed = 15.f;
-	_maxSpeed = 100.0f;
+	_maxSpeed = 200.0f;
 	_sparksPerSecond = 5;
 
 	const sf::Texture& texture = Assets::GetInstance().GetTexture(Texture::SPACE_SHIP);
@@ -131,8 +131,6 @@ void Player::Move()
 		//TODO: Get the correct direction (only the right and the left are working)
 		float degrees = Game::RadToDegree(_body->GetAngle()) - 90.f;
 		const float angle = Game::DegreeToRad(degrees);
-
-		std::cout << "Angle: " << degrees << std::endl;
 
 		_body->SetLinearVelocity(_body->GetLinearVelocity() + b2Vec2(cos(angle) * _speed, sin(angle) * _speed));
 	}
