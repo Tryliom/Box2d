@@ -3,24 +3,52 @@
 #include "Assets.h"
 
 Game::Game() :
-	_window(sf::RenderWindow(sf::VideoMode(1920, 1080), "Space Shooter")),
-	_world(b2World(b2Vec2(0.0f, -30.f)))
+	_window(sf::RenderWindow(sf::VideoMode(1920, 1080), "Space Shooter", sf::Style::Close)),
+	_world(b2World(b2Vec2(0.0f, 0.f))),
+	_player(*this, sf::Vector2f(100.f, 100.f))
 {
+	_window.setFramerateLimit(144);
+	_window.setVerticalSyncEnabled(true);
+
+	// Set the size of the game
+	Game::HEIGHT = _window.getSize().y;
+	Game::WIDTH = _window.getSize().x;
 
 	// Set the background to the size of the window
 	_background.setSize(sf::Vector2f(_window.getSize()));
 	_background.setPosition(0.f, 0.f);
 
 	_background.setTexture(&Assets::GetInstance().GetTexture(Texture::BACKGROUND));
-
-	// Set the size of the game
-	Game::HEIGHT = _window.getSize().y;
-	Game::WIDTH = _window.getSize().x;
 }
 
 void Game::update(const sf::Time elapsed)
 {
 	_world.Step(elapsed.asSeconds(), 8, 3);
+
+	_player.Update(elapsed);
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		_player.Move();
+	}
+
+	// If the player go out of the screen, teleport him to the other side
+	if (_player.GetPosition().x < 0)
+	{
+		_player.SetPosition(sf::Vector2f(Game::WIDTH, _player.GetPosition().y));
+	}
+	else if (_player.GetPosition().x > Game::WIDTH)
+	{
+		_player.SetPosition(sf::Vector2f(0, _player.GetPosition().y));
+	}
+	else if (_player.GetPosition().y < 0)
+	{
+		_player.SetPosition(sf::Vector2f(_player.GetPosition().x, Game::HEIGHT));
+	}
+	else if (_player.GetPosition().y > Game::HEIGHT)
+	{
+		_player.SetPosition(sf::Vector2f(_player.GetPosition().x, 0));
+	}
 }
 
 void Game::checkInputs(const sf::Event event)
@@ -36,15 +64,10 @@ void Game::render()
 	// Render background
 	_window.draw(_background);
 
-	_window.display();
-}
+	// Render entities
+	_window.draw(_player);
 
-b2Body* Game::getNewBody()
-{
-	b2BodyDef bodyDef;
-	bodyDef.type = b2_dynamicBody;
-	bodyDef.position.Set(0.0f, 0.0f);
-	return _world.CreateBody(&bodyDef);
+	_window.display();
 }
 
 sf::Vector2f Game::MeterToPixel(const b2Vec2 meter)
@@ -87,6 +110,16 @@ float Game::PixelToMeter(const float pixel)
 	return pixel / SCALE;
 }
 
+float Game::b2AngleToSfAngle(const float angle)
+{
+	return 180.f - angle * 180.f / b2_pi;
+}
+
+float Game::sfAngleToB2Angle(const float angle)
+{
+	return (180.f - angle) * b2_pi / 180.f;
+}
+
 int Game::Loop()
 {
 	sf::Clock clock;
@@ -105,4 +138,19 @@ int Game::Loop()
 	}
 
 	return EXIT_SUCCESS;
+}
+
+b2Body* Game::GetNewBody()
+{
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	bodyDef.position.Set(0.0f, 0.0f);
+
+	return _world.CreateBody(&bodyDef);
+}
+
+void Game::PlaySound(const Sound sound)
+{
+	_sound.setBuffer(Assets::GetInstance().GetSound(sound));
+	_sound.play();
 }

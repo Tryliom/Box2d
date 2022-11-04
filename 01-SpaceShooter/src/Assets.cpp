@@ -3,7 +3,13 @@
 Assets::Assets()
 {
 	_textures[static_cast<int>(Texture::BACKGROUND)].loadFromFile("data/images/background.png");
+	_textures[static_cast<int>(Texture::SPACE_SHIP)].loadFromFile("data/images/space_ship.png");
+	_textures[static_cast<int>(Texture::TRAIL)].loadFromFile("data/images/trail.png");
+	_textures[static_cast<int>(Texture::SPARKS)].loadFromFile("data/images/sparks.png");
+
 	_fonts[static_cast<int>(Font::PIXELMIX)].loadFromFile("data/fonts/pixelmix.ttf");
+
+	_sounds[static_cast<int>(Sound::BURST)].loadFromFile("data/sounds/burst.wav");
 }
 
 sf::Texture& Assets::GetTexture(const Texture texture)

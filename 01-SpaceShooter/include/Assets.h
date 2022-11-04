@@ -6,22 +6,22 @@
 
 enum class Texture
 {
-	BACKGROUND
+	BACKGROUND, SPACE_SHIP, TRAIL, SPARKS, END
 };
 
 enum class Font
 {
-	PIXELMIX
+	PIXELMIX, END
 };
 
 enum class Sound
 {
-	LASER
+	BURST, END
 };
 
 enum class Music
 {
-	MAIN_THEME
+	MAIN_THEME, END
 };
 
 class Assets
@@ -29,10 +29,10 @@ class Assets
 private:
 	Assets();
 
-	std::array<sf::Texture, 1> _textures;
-	std::array<sf::Font, 1> _fonts;
-	std::array<sf::SoundBuffer, 0> _sounds;
-	std::array<sf::Music, 0> _musics;
+	std::array<sf::Texture, static_cast<int>(Texture::END)> _textures;
+	std::array<sf::Font, static_cast<int>(Font::END)> _fonts;
+	std::array<sf::SoundBuffer, static_cast<int>(Sound::END)> _sounds;
+	std::array<sf::Music, static_cast<int>(Music::END)> _musics;
 
 public:
 	Assets(const Assets&) = delete;

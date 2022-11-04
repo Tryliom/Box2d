@@ -1,7 +1,12 @@
 #pragma once
 
+#include <SFML/Audio/Music.hpp>
+#include <SFML/Audio/Sound.hpp>
+
+#include "Assets.h"
 #include "box2d/b2_body.h"
 #include "box2d/b2_world.h"
+#include "player/Player.h"
 
 #include "SFML/Graphics.hpp"
 
@@ -13,15 +18,18 @@ public:
 private:
 	sf::RenderWindow _window;
 	b2World _world;
+	sf::Music _music;
+	sf::Sound _sound;
 
 	// Background
 	sf::RectangleShape _background;
 
+	// Entities
+	Player _player;
+
 	void update(sf::Time elapsed);
 	void checkInputs(sf::Event event);
 	void render();
-
-	b2Body* getNewBody();
 
 public:
 	inline static float HEIGHT = 0.f;
@@ -39,5 +47,14 @@ public:
 	static float YPixelToMeter(float yPixel);
 	static float PixelToMeter(float pixel);
 
+	static float b2AngleToSfAngle(float angle);
+	static float sfAngleToB2Angle(float angle);
+
 	int Loop();
+
+	b2Body* GetNewBody();
+
+	sf::RenderWindow& GetWindow() { return _window; }
+
+	void PlaySound(Sound sound);
 };
