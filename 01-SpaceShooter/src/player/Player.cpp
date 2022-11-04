@@ -1,7 +1,6 @@
 #include "player/Player.h"
 
 #include <iostream>
-#include "box2d/b2_revolute_joint.h"
 
 #include "Assets.h"
 #include "Game.h"
@@ -36,9 +35,9 @@ Player::Player(Game& game, const sf::Vector2f position) : DrawableObject(game.Ge
 	_body->CreateFixture(&fixtureDef);
 
 	_body->SetLinearDamping(0.5f);
-
 	_body->SetTransform(Game::PixelToMeter(position), Game::DegreeToRad(_shape.getRotation()));
-	
+	_body->SetType(b2_dynamicBody);
+	_body->SetBullet(true);
 
 	// Add a linear velocity to the body to make it move to the angle it is facing by default to add some style
 	_body->SetLinearVelocity(b2Vec2(cos(_body->GetAngle()) * 10.0f, sin(_body->GetAngle()) * 10.0f));
@@ -78,8 +77,8 @@ sf::Vector2f Player::getTrailPosition() const
 	const float angle = Game::RadToDegree(_body->GetAngle()) - 90.f;
 
 	// Calculate the position of the trail
-	const float x = _shape.getPosition().x - (_shape.getSize().x / 4.f) * std::cos(Game::DegreeToRad(angle));
-	const float y = _shape.getPosition().y - (_shape.getSize().y / 4.f) * std::sin(Game::DegreeToRad(angle));
+	const float x = _shape.getPosition().x - (_shape.getSize().x / 5.f) * std::cos(Game::DegreeToRad(angle));
+	const float y = _shape.getPosition().y - (_shape.getSize().y / 5.f) * std::sin(Game::DegreeToRad(angle));
 
 	return { x, y };
 }
@@ -111,6 +110,7 @@ void Player::Update(const sf::Time elapsed)
 	{
 		// Update the position of the trail at the bottom of the ship
 		trail.Update(elapsed);
+		trail.GetBody()->SetTransform(Game::PixelToMeter(getTrailPosition()), Game::DegreeToRad(_shape.getRotation()));
 	}
 
 	// Update the position of the player
@@ -142,15 +142,6 @@ void Player::Move()
 		_trailCooldown = sf::Time::Zero;
 
 		_trails.emplace_back(Trail(_game.GetNewBody(), getTrailPosition(), _shape.getRotation()));
-
-		// Join the trail to the player
-		b2RevoluteJointDef jointDef;
-		jointDef.Initialize(_body, _trails.back().GetBody(), _body->GetWorldCenter());
-		jointDef.collideConnected = false;
-		jointDef.lowerAngle = 0;
-		jointDef.upperAngle = 0;
-
-		_game.GetWorld().CreateJoint(&jointDef);
 
 		_game.PlaySound(Sound::BURST);
 	}

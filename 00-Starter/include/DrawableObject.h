@@ -2,9 +2,6 @@
 #include "SFML/Graphics.hpp"
 
 #include "box2d/b2_body.h"
-#include "box2d/b2_polygon_shape.h"
-#include "box2d/b2_fixture.h"
-#include "box2d/b2_circle_shape.h"
 
 // An object that is drawable and linked to box2d physic world
 class DrawableObject : public sf::Drawable

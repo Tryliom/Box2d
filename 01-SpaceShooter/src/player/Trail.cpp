@@ -26,6 +26,7 @@ Trail::Trail(b2Body* body, const sf::Vector2f position, const float angle) : Dra
 	_body->CreateFixture(&fixtureDef);
 
 	_body->SetTransform(Game::PixelToMeter(position), Game::DegreeToRad(_sprite.getRotation()));
+	_body->SetType(b2_dynamicBody);
 
 	// Ignore the collision between the player and the trail
 	_body->GetFixtureList()->SetSensor(true);
