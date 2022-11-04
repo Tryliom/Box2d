@@ -1,6 +1,7 @@
 #pragma once
-#include "Game.h"
 #include "Trail.h"
+
+class Game;
 
 constexpr float TRAIL_COOLDOWN = 0.1f;
 
@@ -27,6 +28,11 @@ protected:
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+	// Returns the nearest angle to the given angle
+	float getNearestAngle(float angle) const;
+
+	// Get trail position at the bottom of the ship that change with the rotation
+	sf::Vector2f getTrailPosition() const;
 public:
 	void Update(sf::Time elapsed) override;
 

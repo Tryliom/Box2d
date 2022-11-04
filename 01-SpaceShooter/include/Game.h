@@ -1,14 +1,13 @@
 #pragma once
+#include "player/Player.h"
+#include "Assets.h"
 
+#include "SFML/Graphics.hpp"
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
 
-#include "Assets.h"
 #include "box2d/b2_body.h"
 #include "box2d/b2_world.h"
-#include "player/Player.h"
-
-#include "SFML/Graphics.hpp"
 
 class Game final
 {
@@ -47,8 +46,8 @@ public:
 	static float YPixelToMeter(float yPixel);
 	static float PixelToMeter(float pixel);
 
-	static float b2AngleToSfAngle(float angle);
-	static float sfAngleToB2Angle(float angle);
+	static float RadToDegree(float angle);
+	static float DegreeToRad(float angle);
 
 	int Loop();
 

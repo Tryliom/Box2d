@@ -25,12 +25,12 @@ void Game::update(const sf::Time elapsed)
 {
 	_world.Step(elapsed.asSeconds(), 8, 3);
 
-	_player.Update(elapsed);
-
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
 		_player.Move();
 	}
+
+	_player.Update(elapsed);
 
 	// If the player go out of the screen, teleport him to the other side
 	if (_player.GetPosition().x < 0)
@@ -110,14 +110,14 @@ float Game::PixelToMeter(const float pixel)
 	return pixel / SCALE;
 }
 
-float Game::b2AngleToSfAngle(const float angle)
+float Game::RadToDegree(const float angle)
 {
-	return 180.f - angle * 180.f / b2_pi;
+	return angle * 180.f / b2_pi;
 }
 
-float Game::sfAngleToB2Angle(const float angle)
+float Game::DegreeToRad(const float angle)
 {
-	return (180.f - angle) * b2_pi / 180.f;
+	return angle * b2_pi / 180.f;
 }
 
 int Game::Loop()

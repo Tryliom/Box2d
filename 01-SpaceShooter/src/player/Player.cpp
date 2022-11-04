@@ -1,18 +1,21 @@
 #include "player/Player.h"
 
+#include <iostream>
+
 #include "Assets.h"
+#include "Game.h"
 
 Player::Player(Game& game, const sf::Vector2f position) : DrawableObject(game.GetNewBody(), position), _game(game)
 {
 	_health = 100;
 	_maxHealth = 100;
 
-	_speed = 20.0f;
-	_rotationSpeed = 0.5f;
+	_speed = 0.1f;
+	_rotationSpeed = 15.f;
 	_maxSpeed = 100.0f;
 	_sparksPerSecond = 5;
 
-	const sf::Texture texture = Assets::GetInstance().GetTexture(Texture::SPACE_SHIP);
+	const sf::Texture& texture = Assets::GetInstance().GetTexture(Texture::SPACE_SHIP);
 
 	_shape.setTexture(&texture);
 	_shape.setSize(sf::Vector2f(texture.getSize()));
@@ -27,18 +30,20 @@ Player::Player(Game& game, const sf::Vector2f position) : DrawableObject(game.Ge
 	fixtureDef.shape = &dynamicBox;
 	fixtureDef.density = 1.f;
 	fixtureDef.restitution = 0.1f;
-	fixtureDef.friction = 0.1f;
+	fixtureDef.friction = 0.5f;
 
 	_body->CreateFixture(&fixtureDef);
-	_body->SetAngularDamping(10.f);
 
-	_body->SetTransform(Game::PixelToMeter(position), Game::sfAngleToB2Angle(_shape.getRotation()));
+	_body->SetLinearDamping(0.5f);
+
+	_body->SetTransform(Game::PixelToMeter(position), Game::DegreeToRad(_shape.getRotation()));
+	
 
 	// Add a linear velocity to the body to make it move to the angle it is facing by default to add some style
-	_body->SetLinearVelocity(b2Vec2(cos(_body->GetAngle()) * _speed, sin(_body->GetAngle()) * _speed));
+	_body->SetLinearVelocity(b2Vec2(cos(_body->GetAngle()) * 10.0f, sin(_body->GetAngle()) * 10.0f));
 }
 
-void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
 	target.draw(_shape, states);
 
@@ -48,20 +53,63 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	}
 }
 
+float Player::getNearestAngle(const float angle) const
+{
+	const float currentAngle = Game::RadToDegree(_body->GetAngle());
+	float difference = angle - currentAngle;
+
+	while (difference < -180.f)
+	{
+		difference += 360.f;
+	}
+
+	while (difference > 180.f)
+	{
+		difference -= 360.f;
+	}
+
+	return difference + 90.f;
+}
+
+sf::Vector2f Player::getTrailPosition() const
+{
+	// Calculate the difference of angle between the default one and the current one
+	const float angle = Game::RadToDegree(_body->GetAngle()) - 90.f;
+
+	// Calculate the position of the trail
+	const float x = _shape.getPosition().x - (_shape.getSize().x / 2.f) * std::cos(Game::DegreeToRad(angle));
+	const float y = _shape.getPosition().y - (_shape.getSize().y / 2.f) * std::sin(Game::DegreeToRad(angle));
+
+	return { x, y };
+}
+
 void Player::Update(const sf::Time elapsed)
 {
 	_trailCooldown += elapsed;
 
-	// Make the player rotate slowly to the mouse position
+	// Make the player rotate slowly to the mouse position angle
 	const auto mousePosition = sf::Vector2f(sf::Mouse::getPosition(_game.GetWindow()));
-	const sf::Vector2f direction = mousePosition - _shape.getPosition();
-	const float angle = atan2(direction.y, direction.x) * 180 / b2_pi;
+	const auto playerPosition = _shape.getPosition();
+	const auto position = mousePosition - playerPosition;
 
-	_body->SetAngularVelocity(Game::sfAngleToB2Angle(angle - _shape.getRotation()) * _rotationSpeed);
+	// Get angle between two positions
+	const float angle = Game::RadToDegree(atan2(position.y, position.x));
+
+	// Get the nearest angle to the mouse position
+	float targetAngle = getNearestAngle(angle);
+
+	if (abs(targetAngle) > _rotationSpeed)
+	{
+		targetAngle = targetAngle > 0 ? _rotationSpeed : -_rotationSpeed;
+	}
+
+	// Rotate the player
+	_body->SetAngularVelocity(Game::DegreeToRad(targetAngle * 10.f));
 
 	for (auto& trail : _trails)
 	{
-		trail.UpdatePosition(_shape.getPosition(), _shape.getRotation());
+		// Update the position of the trail at the bottom of the ship
+		trail.UpdatePosition(getTrailPosition(),_body->GetAngle());
 		trail.Update(elapsed);
 	}
 
@@ -69,24 +117,33 @@ void Player::Update(const sf::Time elapsed)
 	_shape.setPosition(Game::MeterToPixel(_body->GetPosition()));
 
 	// Update the rotation of the player
-	_shape.setRotation(Game::b2AngleToSfAngle(_body->GetAngle()));
+	_shape.setRotation(Game::RadToDegree(_body->GetAngle()));
+
+	// Remove trails that are dead
+	_trails.erase(std::remove_if(_trails.begin(), _trails.end(), [](const Trail& trail) { return trail.IsDead(); }), _trails.end());
 }
 
 void Player::Move()
 {
-	// If the player is moving, create a trail and sparks
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	// Add a linear velocity to the body to make it move to the angle it is facing
+	if (_body->GetLinearVelocity().Length() < _maxSpeed)
 	{
-		_body->ApplyForceToCenter(b2Vec2(_speed * cos(_body->GetAngle()), _speed * sin(_body->GetAngle())), true);
+		//TODO: Get the correct direction (only the right and the left are working)
+		float degrees = Game::RadToDegree(_body->GetAngle()) - 90.f;
+		const float angle = Game::DegreeToRad(degrees);
 
-		if (_trailCooldown >= sf::Time(sf::seconds(TRAIL_COOLDOWN)))
-		{
-			_trailCooldown = sf::Time::Zero;
+		std::cout << "Angle: " << degrees << std::endl;
 
-			_trails.emplace_back(Trail(_game.GetNewBody(), _shape.getPosition(), _shape.getRotation()));
+		_body->SetLinearVelocity(_body->GetLinearVelocity() + b2Vec2(cos(angle) * _speed, sin(angle) * _speed));
+	}
 
-			_game.PlaySound(Sound::BURST);
-		}
+	if (_trailCooldown >= sf::Time(sf::seconds(TRAIL_COOLDOWN)))
+	{
+		_trailCooldown = sf::Time::Zero;
+
+		_trails.emplace_back(Trail(_game.GetNewBody(), getTrailPosition(), _shape.getRotation()));
+
+		_game.PlaySound(Sound::BURST);
 	}
 }
 
