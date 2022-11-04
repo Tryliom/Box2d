@@ -1,6 +1,7 @@
 #include "player/Player.h"
 
 #include <iostream>
+#include "box2d/b2_revolute_joint.h"
 
 #include "Assets.h"
 #include "Game.h"
@@ -77,8 +78,8 @@ sf::Vector2f Player::getTrailPosition() const
 	const float angle = Game::RadToDegree(_body->GetAngle()) - 90.f;
 
 	// Calculate the position of the trail
-	const float x = _shape.getPosition().x - (_shape.getSize().x / 2.f) * std::cos(Game::DegreeToRad(angle));
-	const float y = _shape.getPosition().y - (_shape.getSize().y / 2.f) * std::sin(Game::DegreeToRad(angle));
+	const float x = _shape.getPosition().x - (_shape.getSize().x / 4.f) * std::cos(Game::DegreeToRad(angle));
+	const float y = _shape.getPosition().y - (_shape.getSize().y / 4.f) * std::sin(Game::DegreeToRad(angle));
 
 	return { x, y };
 }
@@ -109,7 +110,6 @@ void Player::Update(const sf::Time elapsed)
 	for (auto& trail : _trails)
 	{
 		// Update the position of the trail at the bottom of the ship
-		trail.UpdatePosition(getTrailPosition(),_body->GetAngle());
 		trail.Update(elapsed);
 	}
 
@@ -142,6 +142,15 @@ void Player::Move()
 		_trailCooldown = sf::Time::Zero;
 
 		_trails.emplace_back(Trail(_game.GetNewBody(), getTrailPosition(), _shape.getRotation()));
+
+		// Join the trail to the player
+		b2RevoluteJointDef jointDef;
+		jointDef.Initialize(_body, _trails.back().GetBody(), _body->GetWorldCenter());
+		jointDef.collideConnected = false;
+		jointDef.lowerAngle = 0;
+		jointDef.upperAngle = 0;
+
+		_game.GetWorld().CreateJoint(&jointDef);
 
 		_game.PlaySound(Sound::BURST);
 	}

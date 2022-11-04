@@ -17,7 +17,6 @@ protected:
 
 public:
 	void Update(sf::Time elapsed) override;
-	void UpdatePosition(sf::Vector2f position, float rad) const;
 
 	bool IsDead() const { return _currentLifeTime >= _lifeTime; }
 };

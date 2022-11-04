@@ -10,7 +10,7 @@ Trail::Trail(b2Body* body, const sf::Vector2f position, const float angle) : Dra
 	const sf::Texture& texture = Assets::GetInstance().GetTexture(Texture::TRAIL);
 
 	_sprite.setTexture(texture);
-	_sprite.setOrigin(texture.getSize().x / 2.f, texture.getSize().y / 2.f);
+	_sprite.setOrigin(texture.getSize().x / 2.f, 0.f);
 	_sprite.setPosition(position);
 	_sprite.setRotation(angle);
 
@@ -46,13 +46,8 @@ void Trail::Update(const sf::Time elapsed)
 	_sprite.setColor(sf::Color(255, 255, 255, 255 - (255 * _currentLifeTime.asSeconds() / _lifeTime.asSeconds())));
 
 	// Make the trail bigger over time
-	//_sprite.setScale(1 + _currentLifeTime.asSeconds() / _lifeTime.asSeconds(), 1 + _currentLifeTime.asSeconds() / _lifeTime.asSeconds());
+	_sprite.setScale(1 + _currentLifeTime.asSeconds() / _lifeTime.asSeconds(), 1 + _currentLifeTime.asSeconds() / _lifeTime.asSeconds());
 
 	_sprite.setPosition(Game::MeterToPixel(_body->GetPosition()));
 	_sprite.setRotation(Game::RadToDegree(_body->GetAngle()));
-}
-
-void Trail::UpdatePosition(const sf::Vector2f position, const float rad) const
-{
-	_body->SetTransform(Game::PixelToMeter(position), rad);
 }

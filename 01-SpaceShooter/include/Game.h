@@ -54,6 +54,7 @@ public:
 	b2Body* GetNewBody();
 
 	sf::RenderWindow& GetWindow() { return _window; }
+	b2World& GetWorld() { return _world; }
 
 	void PlaySound(Sound sound);
 };
