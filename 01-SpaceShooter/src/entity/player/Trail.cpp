@@ -1,4 +1,4 @@
-#include "player/Trail.h"
+#include "entity/player/Trail.h"
 
 #include "Assets.h"
 #include "Game.h"

@@ -1,46 +1,20 @@
-#include "player/Player.h"
+#include "entity/player/Player.h"
 
 #include "Assets.h"
 #include "Game.h"
 #include "Random.h"
 
-Player::Player(Game& game, const sf::Vector2f position) : DrawableObject(game.GetNewBody(), position), _game(game)
+Player::Player(Game& game, const sf::Vector2f position) :
+	Entity(
+		game.GetNewBody(), position, Assets::GetInstance().GetTexture(Texture::SPACE_SHIP),
+		100.f, 100.f, 0.5f, 0.5f, 15.f, 2000.f,
+		45.f
+	),
+	_game(game)
 {
-	_health = 100.f;
-	_maxHealth = 100.f;
-	_healthRegeneration = 0.5f;
-
-	_speed = 0.5f;
-	_rotationSpeed = 15.f;
-	_maxSpeed = 2000.0f;
-
 	_damagePerSecond = 10.f;
 	_sparksPerSecond = 20.f;
 	_sparksAngle = 90.f;
-
-	const sf::Texture& texture = Assets::GetInstance().GetTexture(Texture::SPACE_SHIP);
-
-	_shape.setTexture(&texture);
-	_shape.setSize(sf::Vector2f(texture.getSize()));
-	_shape.setOrigin(_shape.getSize() / 2.f);
-	_shape.setPosition(position);
-	_shape.setRotation(45.f);
-
-	b2PolygonShape dynamicBox;
-	dynamicBox.SetAsBox(Game::PixelToMeter(_shape.getSize().x / 2.f), Game::PixelToMeter(_shape.getSize().y / 2.f));
-
-	b2FixtureDef fixtureDef;
-	fixtureDef.shape = &dynamicBox;
-	fixtureDef.density = 1.f;
-	fixtureDef.restitution = 0.1f;
-	fixtureDef.friction = 0.5f;
-
-	_body->CreateFixture(&fixtureDef);
-
-	_body->SetLinearDamping(0.5f);
-	_body->SetTransform(Game::PixelToMeter(position), Game::DegreeToRad(_shape.getRotation()));
-	_body->SetType(b2_dynamicBody);
-	_body->SetBullet(true);
 
 	// Add a linear velocity to the body to make it move to the angle it is facing by default to add some style
 	_body->SetLinearVelocity(Game::GetLinearVelocity(_speed * 100.f, _shape.getRotation()));
@@ -48,7 +22,7 @@ Player::Player(Game& game, const sf::Vector2f position) : DrawableObject(game.Ge
 
 void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
-	target.draw(_shape, states);
+	Entity::draw(target, states);
 
 	for (const auto& trail : _trails)
 	{
@@ -87,24 +61,6 @@ void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 	target.draw(healthBar, states);
 }
 
-float Player::getNearestAngle(const float angle) const
-{
-	const float currentAngle = Game::RadToDegree(_body->GetAngle());
-	float difference = angle - currentAngle;
-
-	while (difference < -180.f)
-	{
-		difference += 360.f;
-	}
-
-	while (difference > 180.f)
-	{
-		difference -= 360.f;
-	}
-
-	return difference + 90.f;
-}
-
 sf::Vector2f Player::getTrailPosition() const
 {
 	// Calculate the difference of angle between the default one and the current one
@@ -131,16 +87,6 @@ void Player::AddSparks(float angleDegree)
 
 void Player::Update(const sf::Time elapsed)
 {
-	if (_health < _maxHealth)
-	{
-		_health += _healthRegeneration * elapsed.asSeconds();
-	}
-
-	if (_health > _maxHealth)
-	{
-		_health = _maxHealth;
-	}
-
 	_trailCooldown += elapsed;
 	_sparksCooldown += elapsed;
 
@@ -152,16 +98,7 @@ void Player::Update(const sf::Time elapsed)
 	// Get angle between two positions
 	const float angle = Game::RadToDegree(atan2(position.y, position.x));
 
-	// Get the nearest angle to the mouse position
-	float targetAngle = getNearestAngle(angle);
-
-	if (abs(targetAngle) > _rotationSpeed)
-	{
-		targetAngle = targetAngle > 0 ? _rotationSpeed : -_rotationSpeed;
-	}
-
-	// Rotate the player
-	_body->SetAngularVelocity(Game::DegreeToRad(targetAngle * 10.f));
+	rotate(angle);
 
 	for (auto& trail : _trails)
 	{
@@ -176,26 +113,18 @@ void Player::Update(const sf::Time elapsed)
 		sparks.Update(elapsed);
 	}
 
-	// Update the position of the player
-	_shape.setPosition(Game::MeterToPixel(_body->GetPosition()));
-
-	// Update the rotation of the player
-	_shape.setRotation(Game::RadToDegree(_body->GetAngle()));
-
 	// Remove trails that are dead
 	_trails.erase(std::remove_if(_trails.begin(), _trails.end(), [](const Trail& trail) { return trail.IsDead(); }), _trails.end());
 
 	// Remove sparks that are dead
 	_sparks.erase(std::remove_if(_sparks.begin(), _sparks.end(), [](const Sparks& sparks) { return sparks.IsDead(); }), _sparks.end());
+
+	Entity::Update(elapsed);
 }
 
 void Player::Move()
 {
-	// Add a linear velocity to the body to make it move to the angle it is facing
-	if (_body->GetLinearVelocity().Length() < _maxSpeed)
-	{
-		_body->SetLinearVelocity(_body->GetLinearVelocity() + Game::GetLinearVelocity(_speed, Game::RadToDegree(_body->GetAngle())));
-	}
+	Entity::Move();
 
 	if (_trailCooldown >= sf::Time(sf::seconds(TRAIL_COOLDOWN)))
 	{
@@ -213,19 +142,4 @@ void Player::Move()
 		AddSparks(Random::GetFloat(anglePosition - _sparksAngle / 2.f, anglePosition));
 		AddSparks(Random::GetFloat(anglePosition, anglePosition + _sparksAngle / 2.f));
 	}
-}
-
-sf::Vector2f Player::GetPosition() const
-{
-	return Game::MeterToPixel(_body->GetPosition());
-}
-
-void Player::SetPosition(const sf::Vector2f position)
-{
-	_body->SetTransform(Game::PixelToMeter(position), _body->GetAngle()); _shape.setPosition(position);
-}
-
-void Player::TakeDamage(const float damage)
-{
-	_health -= damage;
 }

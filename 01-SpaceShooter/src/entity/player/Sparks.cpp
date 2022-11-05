@@ -1,4 +1,4 @@
-#include "player/Sparks.h"
+#include "entity/player/Sparks.h"
 
 #include "Assets.h"
 #include "Game.h"
