@@ -1,5 +1,7 @@
 #include "Game.h"
 
+#include <iostream>
+
 #include "Assets.h"
 
 Game::Game() :
@@ -15,12 +17,11 @@ Game::Game() :
 	Game::WIDTH = _window.getSize().x;
 
 	const sf::Texture& backgroundTexture = Assets::GetInstance().GetTexture(Texture::BACKGROUND);
-
-	// Set the background to the size of the window
+	
+	_background.setTexture(&backgroundTexture);
 	_background.setSize(sf::Vector2f(backgroundTexture.getSize()));
 	_background.setPosition(0.f, 0.f);
-
-	_background.setTexture(&backgroundTexture);
+	_backgroundStep = 0.f;
 
 	_player.SetPosition(sf::Vector2f(-100.f, HEIGHT + 100.f));
 }
@@ -28,6 +29,11 @@ Game::Game() :
 void Game::update(const sf::Time elapsed)
 {
 	_world.Step(elapsed.asSeconds(), 8, 3);
+
+	_backgroundStep += elapsed.asSeconds() / 300.f;
+	const float y = (HEIGHT - _background.getSize().y) / 2.f + std::cos(_backgroundStep * b2_pi) * (HEIGHT - _background.getSize().y) / 2.f;
+
+	_background.setPosition(0.f, y);
 
 	if (_stopBurstSound && _burstSound.getStatus() != sf::SoundSource::Stopped)
 	{
@@ -88,6 +94,7 @@ void Game::checkInputs(const sf::Event event)
 		_burstSound.setLoop(true);
 		_burstSound.play();
 		_stopBurstSound = false;
+		_burstSound.setVolume(100.f);
 	}
 
 	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)

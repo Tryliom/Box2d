@@ -24,6 +24,7 @@ private:
 	bool _stopBurstSound;
 
 	sf::RectangleShape _background;
+	float _backgroundStep;
 
 	// Entities
 	Player _player;
