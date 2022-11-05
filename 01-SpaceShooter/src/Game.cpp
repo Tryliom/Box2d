@@ -21,6 +21,8 @@ Game::Game() :
 	_background.setPosition(0.f, 0.f);
 
 	_background.setTexture(&backgroundTexture);
+
+	_player.SetPosition(sf::Vector2f(-100.f, HEIGHT + 100.f));
 }
 
 void Game::update(const sf::Time elapsed)

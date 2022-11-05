@@ -24,7 +24,7 @@ Player::Player(Game& game, const sf::Vector2f position) : DrawableObject(game.Ge
 	_shape.setSize(sf::Vector2f(texture.getSize()));
 	_shape.setOrigin(_shape.getSize() / 2.f);
 	_shape.setPosition(position);
-	_shape.setRotation(90.f);
+	_shape.setRotation(45.f);
 
 	b2PolygonShape dynamicBox;
 	dynamicBox.SetAsBox(Game::PixelToMeter(_shape.getSize().x / 2.f), Game::PixelToMeter(_shape.getSize().y / 2.f));
@@ -43,7 +43,7 @@ Player::Player(Game& game, const sf::Vector2f position) : DrawableObject(game.Ge
 	_body->SetBullet(true);
 
 	// Add a linear velocity to the body to make it move to the angle it is facing by default to add some style
-	_body->SetLinearVelocity(b2Vec2(cos(_body->GetAngle()) * 10.0f, sin(_body->GetAngle()) * 10.0f));
+	_body->SetLinearVelocity(Game::GetLinearVelocity(_speed * 100.f, _shape.getRotation()));
 }
 
 void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
