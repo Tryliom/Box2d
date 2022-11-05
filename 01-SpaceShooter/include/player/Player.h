@@ -35,7 +35,6 @@ protected:
 	sf::Vector2f getTrailPosition() const;
 public:
 	void Update(sf::Time elapsed) override;
-
 	void Move();
 
 	sf::Vector2f GetPosition() const;

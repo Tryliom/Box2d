@@ -18,7 +18,7 @@ private:
 	sf::RenderWindow _window;
 	b2World _world;
 	sf::Music _music;
-	sf::Sound _sound;
+	std::vector<sf::Sound> _sounds;
 
 	// Background
 	sf::RectangleShape _background;

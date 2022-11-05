@@ -49,12 +49,23 @@ void Game::update(const sf::Time elapsed)
 	{
 		_player.SetPosition(sf::Vector2f(_player.GetPosition().x, 0));
 	}
+
+	// Remove the sounds that are finished
+	_sounds.erase(std::remove_if(_sounds.begin(), _sounds.end(), [](sf::Sound& sound)
+	{
+		return sound.getStatus() == sf::Sound::Status::Stopped;
+	}), _sounds.end());
 }
 
 void Game::checkInputs(const sf::Event event)
 {
 	if (event.type == sf::Event::Closed)
 		_window.close();
+
+	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
+	{
+		PlaySound(Sound::BURST);
+	}
 }
 
 void Game::render()
@@ -151,6 +162,7 @@ b2Body* Game::GetNewBody()
 
 void Game::PlaySound(const Sound sound)
 {
-	_sound.setBuffer(Assets::GetInstance().GetSound(sound));
-	_sound.play();
+	_sounds.emplace_back();
+	_sounds.back().setBuffer(Assets::GetInstance().GetSound(sound));
+	_sounds.back().play();
 }

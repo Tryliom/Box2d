@@ -10,9 +10,9 @@ Player::Player(Game& game, const sf::Vector2f position) : DrawableObject(game.Ge
 	_health = 100;
 	_maxHealth = 100;
 
-	_speed = 0.1f;
+	_speed = 0.5f;
 	_rotationSpeed = 15.f;
-	_maxSpeed = 200.0f;
+	_maxSpeed = 2000.0f;
 	_sparksPerSecond = 5;
 
 	const sf::Texture& texture = Assets::GetInstance().GetTexture(Texture::SPACE_SHIP);
@@ -128,11 +128,11 @@ void Player::Move()
 	// Add a linear velocity to the body to make it move to the angle it is facing
 	if (_body->GetLinearVelocity().Length() < _maxSpeed)
 	{
-		//TODO: Get the correct direction (only the right and the left are working)
-		float degrees = Game::RadToDegree(_body->GetAngle()) - 90.f;
-		const float angle = Game::DegreeToRad(degrees);
+		const float angle = Game::DegreeToRad(Game::RadToDegree(_body->GetAngle()) - 90.f);
+		const float x = _speed * std::cos(angle);
+		const float y = _speed * std::sin(angle);
 
-		_body->SetLinearVelocity(_body->GetLinearVelocity() + b2Vec2(cos(angle) * _speed, sin(angle) * _speed));
+		_body->SetLinearVelocity(_body->GetLinearVelocity() + b2Vec2(x, - y));
 	}
 
 	if (_trailCooldown >= sf::Time(sf::seconds(TRAIL_COOLDOWN)))
@@ -140,8 +140,6 @@ void Player::Move()
 		_trailCooldown = sf::Time::Zero;
 
 		_trails.emplace_back(Trail(_game.GetNewBody(), getTrailPosition(), _shape.getRotation()));
-
-		_game.PlaySound(Sound::BURST);
 	}
 }
 
