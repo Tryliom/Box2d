@@ -14,11 +14,13 @@ Game::Game() :
 	Game::HEIGHT = _window.getSize().y;
 	Game::WIDTH = _window.getSize().x;
 
+	const sf::Texture& backgroundTexture = Assets::GetInstance().GetTexture(Texture::BACKGROUND);
+
 	// Set the background to the size of the window
-	_background.setSize(sf::Vector2f(_window.getSize()));
+	_background.setSize(sf::Vector2f(backgroundTexture.getSize()));
 	_background.setPosition(0.f, 0.f);
 
-	_background.setTexture(&Assets::GetInstance().GetTexture(Texture::BACKGROUND));
+	_background.setTexture(&backgroundTexture);
 }
 
 void Game::update(const sf::Time elapsed)
@@ -62,9 +64,16 @@ void Game::checkInputs(const sf::Event event)
 	if (event.type == sf::Event::Closed)
 		_window.close();
 
+	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+	{
+		_burstSound.setBuffer(Assets::GetInstance().GetSound(Sound::BURST));
+		_burstSound.setLoop(true);
+		_burstSound.play();
+	}
+
 	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 	{
-		PlaySound(Sound::BURST);
+		_burstSound.setLoop(false);
 	}
 }
 

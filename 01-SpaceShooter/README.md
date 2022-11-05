@@ -1,6 +1,6 @@
 # TODO
 
-- Add a player with a skin of space ship. He make damage with his back reactors, shooting small spark from his back that make damage
+- Add a player with a skin of space ship. He make damage with his back reactors and by shooting small spark from his back that make damage
 - Add level to player, each level require xp. When level up, he can choose to upgrade his:
 	- Health
 	- Speed (increase the damage)
@@ -8,7 +8,9 @@
 	- Number of sparks
 	- Health regen
 	- Lifetime of sparks
-- Orient the player to the direction of the mouse (increase with a certain speed that can be upgraded)
-- Move the player with the left click of the mouse (increase with a certain speed that can be upgraded)
-- When the player go out of the screen, he appear on the other side
-- When the player move, the trail grow and is slowing becoming transparent, every time the player move, a new trail is created
+- Create experience shards that rotate on themselves and are attracted by the player when a enemy is destroyed
+- Add a sound when the player is continuously moving and one when he stop
+
+- Create basic enemy that move slowly in the direction of the player and charge attacks every 5sec that shoot a projectile with an animation, charge sound, shoot sound
+- Manage contact with projectiles and player/enemies
+- Make enemies drop xp shards when destroyed

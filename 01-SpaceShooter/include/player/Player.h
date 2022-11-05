@@ -11,8 +11,9 @@ public:
 	Player(Game& game, sf::Vector2f position);
 
 protected:
-	int _health;
-	int _maxHealth;
+	float _health;
+	float _maxHealth;
+	float _healthRegeneration;
 
 	float _speed;
 	float _rotationSpeed;
@@ -39,4 +40,7 @@ public:
 
 	sf::Vector2f GetPosition() const;
 	void SetPosition(sf::Vector2f position);
+
+	bool IsDead() const { return _health <= 0.f; }
+	void TakeDamage(float damage);
 };

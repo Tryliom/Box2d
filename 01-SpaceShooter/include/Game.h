@@ -18,6 +18,7 @@ private:
 	sf::RenderWindow _window;
 	b2World _world;
 	sf::Music _music;
+	sf::Sound _burstSound;
 	std::vector<sf::Sound> _sounds;
 
 	// Background

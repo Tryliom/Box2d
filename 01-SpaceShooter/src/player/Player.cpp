@@ -7,8 +7,9 @@
 
 Player::Player(Game& game, const sf::Vector2f position) : DrawableObject(game.GetNewBody(), position), _game(game)
 {
-	_health = 100;
-	_maxHealth = 100;
+	_health = 100.f;
+	_maxHealth = 100.f;
+	_healthRegeneration = 0.5f;
 
 	_speed = 0.5f;
 	_rotationSpeed = 15.f;
@@ -51,6 +52,32 @@ void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 	{
 		target.draw(trail, states);
 	}
+
+	// Draw health bar
+	sf::RectangleShape healthBackgroundBar;
+	healthBackgroundBar.setSize(sf::Vector2f(400.f, 8.f));
+	healthBackgroundBar.setFillColor(sf::Color(40, 40, 40));
+	healthBackgroundBar.setOrigin(healthBackgroundBar.getSize() / 2.f);
+	healthBackgroundBar.setPosition({ Game::WIDTH / 2.f, Game::HEIGHT - 20.f });
+
+	target.draw(healthBackgroundBar, states);
+
+	float healthPercentage = _health / _maxHealth;
+
+	if (healthPercentage < 0.f)
+	{
+		healthPercentage = 0.f;
+	}
+
+	sf::RectangleShape healthBar;
+	healthBar.setSize(sf::Vector2f(healthBackgroundBar.getSize().x * _health / _maxHealth, healthBackgroundBar.getSize().y));
+	healthBar.setFillColor(sf::Color::Red);
+	healthBackgroundBar.setOutlineColor(sf::Color::Black);
+	healthBackgroundBar.setOutlineThickness(-0.5f);
+	healthBar.setOrigin(healthBar.getSize() / 2.f);
+	healthBar.setPosition(healthBackgroundBar.getPosition());
+
+	target.draw(healthBar, states);
 }
 
 float Player::getNearestAngle(const float angle) const
@@ -85,6 +112,16 @@ sf::Vector2f Player::getTrailPosition() const
 
 void Player::Update(const sf::Time elapsed)
 {
+	if (_health < _maxHealth)
+	{
+		_health += _healthRegeneration * elapsed.asSeconds();
+	}
+
+	if (_health > _maxHealth)
+	{
+		_health = _maxHealth;
+	}
+
 	_trailCooldown += elapsed;
 
 	// Make the player rotate slowly to the mouse position angle
@@ -152,4 +189,9 @@ sf::Vector2f Player::GetPosition() const
 void Player::SetPosition(const sf::Vector2f position)
 {
 	_body->SetTransform(Game::PixelToMeter(position), _body->GetAngle()); _shape.setPosition(position);
+}
+
+void Player::TakeDamage(const float damage)
+{
+	_health -= damage;
 }
