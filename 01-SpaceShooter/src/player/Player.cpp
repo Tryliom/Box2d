@@ -1,9 +1,8 @@
 #include "player/Player.h"
 
-#include <iostream>
-
 #include "Assets.h"
 #include "Game.h"
+#include "Random.h"
 
 Player::Player(Game& game, const sf::Vector2f position) : DrawableObject(game.GetNewBody(), position), _game(game)
 {
@@ -14,7 +13,10 @@ Player::Player(Game& game, const sf::Vector2f position) : DrawableObject(game.Ge
 	_speed = 0.5f;
 	_rotationSpeed = 15.f;
 	_maxSpeed = 2000.0f;
-	_sparksPerSecond = 5;
+
+	_damagePerSecond = 10.f;
+	_sparksPerSecond = 20.f;
+	_sparksAngle = 90.f;
 
 	const sf::Texture& texture = Assets::GetInstance().GetTexture(Texture::SPACE_SHIP);
 
@@ -51,6 +53,11 @@ void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 	for (const auto& trail : _trails)
 	{
 		target.draw(trail, states);
+	}
+
+	for (const auto& sparks : _sparks)
+	{
+		target.draw(sparks, states);
 	}
 
 	// Draw health bar
@@ -110,6 +117,18 @@ sf::Vector2f Player::getTrailPosition() const
 	return { x, y };
 }
 
+void Player::AddSparks(float angleDegree)
+{
+	// Calculate the position of the sparks
+	const float x = _shape.getPosition().x - (_shape.getSize().x / 5.f) * std::cos(Game::DegreeToRad(angleDegree));
+	const float y = _shape.getPosition().y - (_shape.getSize().y / 5.f) * std::sin(Game::DegreeToRad(angleDegree));
+	
+	const float sparksSpeed = _body->GetLinearVelocity().Length() / 2.f;
+	angleDegree -= 90.f;
+
+	_sparks.emplace_back(Sparks(_game.GetNewBody(), sf::Vector2f(x, y), angleDegree, Game::GetLinearVelocity(sparksSpeed, angleDegree), _damagePerSecond));
+}
+
 void Player::Update(const sf::Time elapsed)
 {
 	if (_health < _maxHealth)
@@ -123,6 +142,7 @@ void Player::Update(const sf::Time elapsed)
 	}
 
 	_trailCooldown += elapsed;
+	_sparksCooldown += elapsed;
 
 	// Make the player rotate slowly to the mouse position angle
 	const auto mousePosition = sf::Vector2f(sf::Mouse::getPosition(_game.GetWindow()));
@@ -151,6 +171,11 @@ void Player::Update(const sf::Time elapsed)
 		trail.GetBody()->SetLinearVelocity(_body->GetLinearVelocity());
 	}
 
+	for (auto& sparks : _sparks)
+	{
+		sparks.Update(elapsed);
+	}
+
 	// Update the position of the player
 	_shape.setPosition(Game::MeterToPixel(_body->GetPosition()));
 
@@ -159,6 +184,9 @@ void Player::Update(const sf::Time elapsed)
 
 	// Remove trails that are dead
 	_trails.erase(std::remove_if(_trails.begin(), _trails.end(), [](const Trail& trail) { return trail.IsDead(); }), _trails.end());
+
+	// Remove sparks that are dead
+	_sparks.erase(std::remove_if(_sparks.begin(), _sparks.end(), [](const Sparks& sparks) { return sparks.IsDead(); }), _sparks.end());
 }
 
 void Player::Move()
@@ -166,11 +194,7 @@ void Player::Move()
 	// Add a linear velocity to the body to make it move to the angle it is facing
 	if (_body->GetLinearVelocity().Length() < _maxSpeed)
 	{
-		const float angle = Game::DegreeToRad(Game::RadToDegree(_body->GetAngle()) - 90.f);
-		const float x = _speed * std::cos(angle);
-		const float y = _speed * std::sin(angle);
-
-		_body->SetLinearVelocity(_body->GetLinearVelocity() + b2Vec2(x, - y));
+		_body->SetLinearVelocity(_body->GetLinearVelocity() + Game::GetLinearVelocity(_speed, Game::RadToDegree(_body->GetAngle())));
 	}
 
 	if (_trailCooldown >= sf::Time(sf::seconds(TRAIL_COOLDOWN)))
@@ -178,6 +202,16 @@ void Player::Move()
 		_trailCooldown = sf::Time::Zero;
 
 		_trails.emplace_back(Trail(_game.GetNewBody(), getTrailPosition(), _shape.getRotation()));
+	}
+
+	if (_sparksCooldown >= sf::Time(sf::seconds(1.f / _sparksPerSecond)))
+	{
+		_sparksCooldown = sf::Time::Zero;
+
+		const float anglePosition = Game::RadToDegree(_body->GetAngle()) - 90.f;
+
+		AddSparks(Random::GetFloat(anglePosition - _sparksAngle / 2.f, anglePosition));
+		AddSparks(Random::GetFloat(anglePosition, anglePosition + _sparksAngle / 2.f));
 	}
 }
 

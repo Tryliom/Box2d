@@ -27,6 +27,22 @@ void Game::update(const sf::Time elapsed)
 {
 	_world.Step(elapsed.asSeconds(), 8, 3);
 
+	if (_stopBurstSound && _burstSound.getStatus() != sf::SoundSource::Stopped)
+	{
+		const float volume = _burstSound.getVolume() - 200.f * elapsed.asSeconds();
+
+		if (volume <= 0.f)
+		{
+			_burstSound.stop();
+			_stopBurstSound = false;
+			_burstSound.setVolume(100.f);
+		}
+		else
+		{
+			_burstSound.setVolume(volume);
+		}
+	}
+
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
 		_player.Move();
@@ -69,11 +85,13 @@ void Game::checkInputs(const sf::Event event)
 		_burstSound.setBuffer(Assets::GetInstance().GetSound(Sound::BURST));
 		_burstSound.setLoop(true);
 		_burstSound.play();
+		_stopBurstSound = false;
 	}
 
 	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 	{
 		_burstSound.setLoop(false);
+		_stopBurstSound = true;
 	}
 }
 
@@ -138,6 +156,15 @@ float Game::RadToDegree(const float angle)
 float Game::DegreeToRad(const float angle)
 {
 	return angle * b2_pi / 180.f;
+}
+
+b2Vec2 Game::GetLinearVelocity(const float speed, const float angleDegree)
+{
+	const float angle = Game::DegreeToRad(angleDegree - 90.f);
+	const float x = speed * std::cos(angle);
+	const float y = speed * std::sin(angle);
+
+	return {x, -y};
 }
 
 int Game::Loop()

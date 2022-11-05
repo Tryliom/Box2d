@@ -18,10 +18,11 @@ private:
 	sf::RenderWindow _window;
 	b2World _world;
 	sf::Music _music;
-	sf::Sound _burstSound;
 	std::vector<sf::Sound> _sounds;
 
-	// Background
+	sf::Sound _burstSound;
+	bool _stopBurstSound;
+
 	sf::RectangleShape _background;
 
 	// Entities
@@ -49,6 +50,8 @@ public:
 
 	static float RadToDegree(float angle);
 	static float DegreeToRad(float angle);
+
+	static b2Vec2 GetLinearVelocity(float speed, float angleDegree);
 
 	int Loop();
 
