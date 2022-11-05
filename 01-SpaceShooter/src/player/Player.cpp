@@ -110,7 +110,8 @@ void Player::Update(const sf::Time elapsed)
 	{
 		// Update the position of the trail at the bottom of the ship
 		trail.Update(elapsed);
-		trail.GetBody()->SetTransform(Game::PixelToMeter(getTrailPosition()), Game::DegreeToRad(_shape.getRotation()));
+		trail.GetBody()->SetAngularVelocity(_body->GetAngularVelocity());
+		trail.GetBody()->SetLinearVelocity(_body->GetLinearVelocity());
 	}
 
 	// Update the position of the player
