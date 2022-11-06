@@ -1,4 +1,4 @@
-#include "entity/player/Player.h"
+#include "entity/Player.h"
 
 #include "Assets.h"
 #include "Game.h"
@@ -130,7 +130,7 @@ void Player::Move()
 	{
 		_trailCooldown = sf::Time::Zero;
 
-		_trails.emplace_back(Trail(_game.GetNewBody(), getTrailPosition(), _shape.getRotation()));
+		_trails.emplace_back(Trail(_game.GetNewBody(), getTrailPosition(), _shape.getRotation(), _damagePerSecond));
 	}
 
 	if (_sparksCooldown >= sf::Time(sf::seconds(1.f / _sparksPerSecond)))

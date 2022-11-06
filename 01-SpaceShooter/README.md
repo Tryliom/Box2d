@@ -2,9 +2,11 @@
 
 - Create a class that regroup projectiles
 
-- Create basic enemy that move slowly in the direction of the player and charge attacks every 5sec that shoot a projectile with an animation, charge sound, shoot sound
+- Create all assets for the first enemy and find it a name
+- Create basic enemy (name it) that move slowly in the direction of the player and charge attacks every 5sec that shoot a projectile with an animation, charge sound, shoot sound
+
 - Create experience shards that rotate on themselves and are attracted by the player when a enemy is destroyed
-- Manage contact with projectiles and player/enemies
+- Manage contact with projectiles and player/enemies to apply damages
 - Make enemies drop xp shards when destroyed
 
 - Add level to player, each level require xp. When level up, he can choose to upgrade his:
@@ -15,3 +17,6 @@
 	- Health regen
 	- Lifetime of sparks
 	- damagePerSecond
+
+- Spawn sparks with the velocity of the current rotation instead of the velocity of the player
+- Add an enemy that load his attack in 5sec (with an animation) and gain high velocity in the direction his facing

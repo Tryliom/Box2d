@@ -1,6 +1,6 @@
 #pragma once
-#include "Sparks.h"
-#include "Trail.h"
+#include "projectile/Sparks.h"
+#include "projectile/Trail.h"
 #include "entity/Entity.h"
 
 class Game;

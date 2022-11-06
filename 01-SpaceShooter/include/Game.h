@@ -1,5 +1,5 @@
 #pragma once
-#include "entity/player/Player.h"
+#include "entity/Player.h"
 #include "Assets.h"
 
 #include "SFML/Graphics.hpp"

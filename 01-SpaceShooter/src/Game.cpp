@@ -1,7 +1,5 @@
 #include "Game.h"
 
-#include <iostream>
-
 #include "Assets.h"
 
 Game::Game() :
