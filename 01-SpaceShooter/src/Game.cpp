@@ -100,6 +100,17 @@ void Game::checkInputs(const sf::Event event)
 		_burstSound.setLoop(false);
 		_stopBurstSound = true;
 	}
+
+	// Player can charge a special attack (if he has any), for test purpose actually
+	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
+	{
+		_player.StartAttackAnimation();
+	}
+
+	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Right)
+	{
+		_player.StopAttackAnimation();
+	}
 }
 
 void Game::render()
@@ -112,7 +123,38 @@ void Game::render()
 	// Render entities
 	_window.draw(_player);
 
+	renderHealthBar();
+
 	_window.display();
+}
+
+void Game::renderHealthBar()
+{
+	// Draw health bar
+	sf::RectangleShape healthBackgroundBar;
+	healthBackgroundBar.setSize(sf::Vector2f(400.f, 8.f));
+	healthBackgroundBar.setFillColor(sf::Color(40, 40, 40));
+	healthBackgroundBar.setOrigin(healthBackgroundBar.getSize() / 2.f);
+	healthBackgroundBar.setPosition({ Game::WIDTH / 2.f, Game::HEIGHT - 20.f });
+
+	_window.draw(healthBackgroundBar);
+
+	float healthPercentage = _player.GetHealthPercentage();
+
+	if (healthPercentage < 0.f)
+	{
+		healthPercentage = 0.f;
+	}
+
+	sf::RectangleShape healthBar;
+	healthBar.setSize(sf::Vector2f(healthBackgroundBar.getSize().x * healthPercentage, healthBackgroundBar.getSize().y));
+	healthBar.setFillColor(sf::Color::Red);
+	healthBackgroundBar.setOutlineColor(sf::Color::Black);
+	healthBackgroundBar.setOutlineThickness(-0.5f);
+	healthBar.setOrigin(healthBar.getSize() / 2.f);
+	healthBar.setPosition(healthBackgroundBar.getPosition());
+
+	_window.draw(healthBar);
 }
 
 sf::Vector2f Game::MeterToPixel(const b2Vec2 meter)

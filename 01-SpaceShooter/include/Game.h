@@ -32,6 +32,7 @@ private:
 	void update(sf::Time elapsed);
 	void checkInputs(sf::Event event);
 	void render();
+	void renderHealthBar();
 
 public:
 	inline static float HEIGHT = 0.f;

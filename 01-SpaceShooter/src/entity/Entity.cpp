@@ -118,3 +118,13 @@ void Entity::TakeDamage(const float damage)
 {
 	_health -= damage;
 }
+
+void Entity::StartAttackAnimation()
+{
+	_attackCharge = AttackCharge(_shape.getPosition(), (_shape.getSize().x + _shape.getSize().y) / 2.f, 5.f);
+}
+
+void Entity::StopAttackAnimation()
+{
+	_attackCharge.Stop();
+}

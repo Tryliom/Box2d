@@ -22,8 +22,6 @@ Player::Player(Game& game, const sf::Vector2f position) :
 
 void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
-	Entity::draw(target, states);
-
 	for (const auto& trail : _trails)
 	{
 		target.draw(trail, states);
@@ -34,31 +32,9 @@ void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 		target.draw(sparks, states);
 	}
 
-	// Draw health bar
-	sf::RectangleShape healthBackgroundBar;
-	healthBackgroundBar.setSize(sf::Vector2f(400.f, 8.f));
-	healthBackgroundBar.setFillColor(sf::Color(40, 40, 40));
-	healthBackgroundBar.setOrigin(healthBackgroundBar.getSize() / 2.f);
-	healthBackgroundBar.setPosition({ Game::WIDTH / 2.f, Game::HEIGHT - 20.f });
+	target.draw(_attackCharge, states);
 
-	target.draw(healthBackgroundBar, states);
-
-	float healthPercentage = _health / _maxHealth;
-
-	if (healthPercentage < 0.f)
-	{
-		healthPercentage = 0.f;
-	}
-
-	sf::RectangleShape healthBar;
-	healthBar.setSize(sf::Vector2f(healthBackgroundBar.getSize().x * _health / _maxHealth, healthBackgroundBar.getSize().y));
-	healthBar.setFillColor(sf::Color::Red);
-	healthBackgroundBar.setOutlineColor(sf::Color::Black);
-	healthBackgroundBar.setOutlineThickness(-0.5f);
-	healthBar.setOrigin(healthBar.getSize() / 2.f);
-	healthBar.setPosition(healthBackgroundBar.getPosition());
-
-	target.draw(healthBar, states);
+	Entity::draw(target, states);
 }
 
 sf::Vector2f Player::getTrailPosition() const
@@ -112,6 +88,9 @@ void Player::Update(const sf::Time elapsed)
 	{
 		sparks.Update(elapsed);
 	}
+
+	_attackCharge.UpdatePosition(_shape.getPosition());
+	_attackCharge.Update(elapsed);
 
 	// Remove trails that are dead
 	_trails.erase(std::remove_if(_trails.begin(), _trails.end(), [](const Trail& trail) { return trail.IsDead(); }), _trails.end());
