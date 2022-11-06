@@ -2,12 +2,11 @@
 
 #include "Assets.h"
 #include "Game.h"
-#include "Random.h"
 
 Trail::Trail(b2Body* body, const sf::Vector2f position, const float angle, const float damage) :
 	Projectile(
 		body, position, Assets::GetInstance().GetTexture(Texture::TRAIL),
-		angle, b2Vec2(0.f, 0.f), sf::seconds(Random::GetFloat(0.3f, 0.7f)),
+		angle, b2Vec2(0.f, 0.f), sf::seconds(0.3f),
 		damage, true, Group::PLAYER_PROJECTILE
 	)
 {
