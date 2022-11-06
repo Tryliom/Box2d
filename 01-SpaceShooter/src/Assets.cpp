@@ -3,6 +3,8 @@
 Assets::Assets()
 {
 	_textures[static_cast<int>(Texture::BACKGROUND)].loadFromFile("data/images/background.png");
+	_textures[static_cast<int>(Texture::BACKGROUND2)].loadFromFile("data/images/background2.png");
+	_textures[static_cast<int>(Texture::BACKGROUND3)].loadFromFile("data/images/background3.png");
 	_textures[static_cast<int>(Texture::SPACE_SHIP)].loadFromFile("data/images/space_ship.png");
 	_textures[static_cast<int>(Texture::TRAIL)].loadFromFile("data/images/trail.png");
 	_textures[static_cast<int>(Texture::SPARKS)].loadFromFile("data/images/sparks.png");
