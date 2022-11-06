@@ -4,7 +4,7 @@
 
 Entity::Entity(b2Body* body, const sf::Vector2f position, const sf::Texture& texture,
                const float health, const float maxHealth, const float healthRegeneration,
-               const float speed, const float rotationSpeed, const float maxSpeed, const float angle) :
+               const float speed, const float rotationSpeed, const float maxSpeed, Weapon* weapon, const float angle) :
 	DrawableObject(body, position)
 {
 	_health = health;
@@ -14,6 +14,8 @@ Entity::Entity(b2Body* body, const sf::Vector2f position, const sf::Texture& tex
 	_speed = speed;
 	_rotationSpeed = rotationSpeed;
 	_maxSpeed = maxSpeed;
+
+	_weapon = weapon;
 
 	_shape.setTexture(&texture);
 	_shape.setSize(sf::Vector2f(texture.getSize()));
@@ -93,6 +95,14 @@ void Entity::Update(const sf::Time elapsed)
 
 	// Update the rotation of the shape
 	_shape.setRotation(Game::RadToDegree(_body->GetAngle()));
+
+	if (_weapon != nullptr && _weapon->CanShoot())
+	{
+		//TODO: Need to add a group to entity
+		_weapon->Shoot(_body, Group::PLAYER);
+
+		//TODO: If the entity group is PLAYER, charge the weapon again
+	}
 }
 
 void Entity::Move()
@@ -119,12 +129,18 @@ void Entity::TakeDamage(const float damage)
 	_health -= damage;
 }
 
-void Entity::StartAttackAnimation()
+void Entity::ChargeWeapon() const
 {
-	_attackCharge = AttackCharge(_shape.getPosition(), (_shape.getSize().x + _shape.getSize().y) / 2.f, 5.f);
+	if (_weapon != nullptr)
+	{
+		_weapon->StartCharging(_body, _shape.getSize());
+	}
 }
 
-void Entity::StopAttackAnimation()
+void Entity::StopChargingWeapon() const
 {
-	_attackCharge.Stop();
+	if (_weapon != nullptr)
+	{
+		_weapon->StopCharging();
+	}
 }

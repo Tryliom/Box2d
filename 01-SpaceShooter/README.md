@@ -1,15 +1,12 @@
 # TODO
 
-- Create a weapon class for any entity, using a specific bullet
-	- Create an animation of charging
-	- Create an animation of shooting
-	- Create an animation when fully charged
-- Create a basic bullet and a bullet class (only animated by code, not texture):
+- Create a canon bullet and a bullet class (only animated by code, not texture):
 	- Create a bullet destruction animation
 	- Create a bullet hit animation (spawn little particules when hit)
 	- Create a bullet launch animation (after charge, send little particule backward)
 - Assign it to entity in order to test it with the player (charge with right click, release it to shoot when fully charged)
 
+- Add a Group to entity class
 - Create an enemy space ship (looks like a camper)
 	
 - Add in entity class a weapon (that can be null)

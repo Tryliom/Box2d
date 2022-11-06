@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+#include "animation/ChargeAnimation.h"
+
 // Each circle used in attack charge
 class CircleAnimation final : public sf::Drawable
 {
@@ -21,31 +23,22 @@ public:
 	bool IsFinished() const { return _currentDuration >= _duration; }
 };
 
-class AttackCharge final : public sf::Drawable
+class CircleAttackCharge final : public ChargeAnimation
 {
 public:
-	AttackCharge();
-	AttackCharge(sf::Vector2f position, float radius, float duration);
+	CircleAttackCharge() = default;
+	CircleAttackCharge(sf::Vector2f position, float radius, float duration);
 
 protected:
-	sf::Vector2f _position;
-	float _radius;
+	float _radius{0.f};
 
 	std::vector<CircleAnimation> _animations;
-	sf::Time _duration;
-	sf::Time _currentDuration;
-
-	sf::Time _timeBetweenAnimations;
-	sf::Time _currentTimeBetweenAnimations;
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-	void addCircleAnimation();
+	void addAnimation() override;
 
 public:
-	void Update(sf::Time elapsed);
-	void Stop();
-	void UpdatePosition(sf::Vector2f position);
-
-	bool IsFinished() const { return _currentDuration >= _duration; }
+	void Update(sf::Time elapsed) override;
+	void UpdatePosition(sf::Vector2f position) override;
 };

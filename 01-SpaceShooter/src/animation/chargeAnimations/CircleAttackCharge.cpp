@@ -1,4 +1,4 @@
-#include "animation/AttackCharge.h"
+#include "animation/chargeAnimations/CircleAttackCharge.h"
 
 CircleAnimation::CircleAnimation(const sf::Vector2f position, const float radius, const float duration)
 {
@@ -7,7 +7,7 @@ CircleAnimation::CircleAnimation(const sf::Vector2f position, const float radius
 	_shape.setPosition(position);
 	_shape.setFillColor(sf::Color::Transparent);
 	_shape.setOutlineColor(sf::Color(255, 255, 255, 20));
-	_shape.setOutlineThickness(1.0f);
+	_shape.setOutlineThickness(5.0f);
 
 	_duration = sf::seconds(duration);
 	_currentDuration = sf::Time::Zero;
@@ -23,8 +23,7 @@ void CircleAnimation::Update(const sf::Time elapsed)
 	_currentDuration += elapsed;
 
 	const float percentage = _currentDuration.asSeconds() / _duration.asSeconds();
-
-	_shape.setOutlineThickness(2.0f + 10.0f * percentage);
+	
 	_shape.setOutlineColor(sf::Color(255, 255, 255, 20 + 235 * percentage));
 	_shape.setScale(1.0f - 1.f * percentage, 1.0f - 1.f * percentage);
 }
@@ -34,30 +33,15 @@ void CircleAnimation::UpdatePosition(const sf::Vector2f position)
 	_shape.setPosition(position);
 }
 
-AttackCharge::AttackCharge()
+CircleAttackCharge::CircleAttackCharge(const sf::Vector2f position, const float radius, const float duration) :
+	ChargeAnimation(position, duration)
 {
-	_position = sf::Vector2f(0.0f, 0.0f);
-	_radius = 0.0f;
-
-	_duration = sf::seconds(0.f);
-	_currentDuration = sf::Time::Zero;
-
-	_timeBetweenAnimations = sf::seconds(0.f);
-	_currentTimeBetweenAnimations = sf::Time::Zero;
-}
-
-AttackCharge::AttackCharge(const sf::Vector2f position, const float radius, const float duration)
-{
-	_position = position;
 	_radius = radius;
 
-	_duration = sf::seconds(duration);
-	_currentDuration = sf::Time::Zero;
-
-	addCircleAnimation();
+	addAnimation();
 }
 
-void AttackCharge::draw(sf::RenderTarget& target, const sf::RenderStates states) const
+void CircleAttackCharge::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
 	for (const auto& animation : _animations)
 	{
@@ -65,28 +49,22 @@ void AttackCharge::draw(sf::RenderTarget& target, const sf::RenderStates states)
 	}
 }
 
-void AttackCharge::addCircleAnimation()
+void CircleAttackCharge::addAnimation()
 {
 	const float leftDuration = (_duration - _currentDuration).asSeconds();
 
 	if (leftDuration > 0.0f)
 	{
-		_timeBetweenAnimations = sf::seconds(leftDuration / 10.0f);
+		_timeBetweenAnimations = sf::seconds(leftDuration / 3.f);
 		_currentTimeBetweenAnimations = sf::Time::Zero;
 
 		_animations.emplace_back(_position, _radius, _timeBetweenAnimations.asSeconds());
 	}
 }
 
-void AttackCharge::Update(const sf::Time elapsed)
+void CircleAttackCharge::Update(const sf::Time elapsed)
 {
-	_currentDuration += elapsed;
-
-	_currentTimeBetweenAnimations += elapsed;
-	if (_currentTimeBetweenAnimations >= _timeBetweenAnimations)
-	{
-		addCircleAnimation();
-	}
+	ChargeAnimation::Update(elapsed);
 
 	for (auto& animation : _animations)
 	{
@@ -100,14 +78,9 @@ void AttackCharge::Update(const sf::Time elapsed)
 	), _animations.end());
 }
 
-void AttackCharge::Stop()
+void CircleAttackCharge::UpdatePosition(sf::Vector2f position)
 {
-	_currentDuration = _duration;
-}
-
-void AttackCharge::UpdatePosition(sf::Vector2f position)
-{
-	_position = position;
+	ChargeAnimation::UpdatePosition(position);
 
 	for (auto& animation : _animations)
 	{

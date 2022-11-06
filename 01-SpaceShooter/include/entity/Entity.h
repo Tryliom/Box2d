@@ -1,13 +1,13 @@
 #pragma once
 #include "DrawableObject.h"
-#include "animation/AttackCharge.h"
+#include "weapon/Weapon.h"
 
 class Entity : public DrawableObject
 {
 public:
 	Entity(b2Body* body, sf::Vector2f position, const sf::Texture& texture,
 		float health, float maxHealth, float healthRegeneration, 
-		float speed, float rotationSpeed, float maxSpeed, float angle = 0.f);
+		float speed, float rotationSpeed, float maxSpeed, Weapon* weapon = nullptr, float angle = 0.f);
 
 protected:
 	sf::RectangleShape _shape;
@@ -20,7 +20,7 @@ protected:
 	float _maxSpeed;
 	float _rotationSpeed;
 
-	AttackCharge _attackCharge;
+	Weapon* _weapon;
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
@@ -39,6 +39,6 @@ public:
 	bool IsDead() const { return _health <= 0.f; }
 	void TakeDamage(float damage);
 
-	void StartAttackAnimation();
-	void StopAttackAnimation();
+	void ChargeWeapon() const;
+	void StopChargingWeapon() const;
 };

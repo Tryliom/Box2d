@@ -1,6 +1,7 @@
 #include "Game.h"
 
 #include "Assets.h"
+#include "Random.h"
 
 Game::Game() :
 	_window(sf::RenderWindow(sf::VideoMode(1920, 1080), "Space Shooter", sf::Style::Close)),
@@ -14,7 +15,9 @@ Game::Game() :
 	Game::HEIGHT = _window.getSize().y;
 	Game::WIDTH = _window.getSize().x;
 
-	const sf::Texture& backgroundTexture = Assets::GetInstance().GetTexture(Texture::BACKGROUND);
+	const std::vector<Texture> backgrounds = { Texture::BACKGROUND, Texture::BACKGROUND2, Texture::BACKGROUND3 };
+
+	const sf::Texture& backgroundTexture = Assets::GetInstance().GetTexture(backgrounds[Random::GetInt(0, backgrounds.size() - 1)]);
 	
 	_background.setTexture(&backgroundTexture);
 	_background.setSize(sf::Vector2f(backgroundTexture.getSize()));
@@ -28,7 +31,7 @@ void Game::update(const sf::Time elapsed)
 {
 	_world.Step(elapsed.asSeconds(), 8, 3);
 
-	_backgroundStep += elapsed.asSeconds() / 300.f;
+	_backgroundStep += elapsed.asSeconds() / 100.f;
 	const float y = (HEIGHT - _background.getSize().y) / 2.f + std::cos(_backgroundStep * b2_pi) * (HEIGHT - _background.getSize().y) / 2.f;
 
 	_background.setPosition(0.f, y);
@@ -104,12 +107,12 @@ void Game::checkInputs(const sf::Event event)
 	// Player can charge a special attack (if he has any), for test purpose actually
 	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
 	{
-		_player.StartAttackAnimation();
+		_player.ChargeWeapon();
 	}
 
 	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Right)
 	{
-		_player.StopAttackAnimation();
+		_player.StopChargingWeapon();
 	}
 }
 

@@ -3,12 +3,13 @@
 #include "Assets.h"
 #include "Game.h"
 #include "Random.h"
+#include "weapon/weapons/Canon.h"
 
 Player::Player(Game& game, const sf::Vector2f position) :
 	Entity(
 		game.GetNewBody(), position, Assets::GetInstance().GetTexture(Texture::SPACE_SHIP),
 		100.f, 100.f, 0.5f, 0.5f, 15.f, 2000.f,
-		45.f
+		new Canon(), 45.f
 	),
 	_game(game)
 {
@@ -32,7 +33,10 @@ void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 		target.draw(sparks, states);
 	}
 
-	target.draw(_attackCharge, states);
+	if (_weapon != nullptr)
+	{
+		target.draw(*_weapon, states);
+	}
 
 	Entity::draw(target, states);
 }
@@ -89,8 +93,11 @@ void Player::Update(const sf::Time elapsed)
 		sparks.Update(elapsed);
 	}
 
-	_attackCharge.UpdatePosition(_shape.getPosition());
-	_attackCharge.Update(elapsed);
+	if (_weapon != nullptr)
+	{
+		_weapon->UpdatePosition(_shape.getPosition());
+		_weapon->Update(elapsed);
+	}
 
 	// Remove trails that are dead
 	_trails.erase(std::remove_if(_trails.begin(), _trails.end(), [](const Trail& trail) { return trail.IsDead(); }), _trails.end());
