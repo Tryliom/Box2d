@@ -79,7 +79,7 @@ void Player::AddSparks(float angleDegree)
 	const float x = _shape.getPosition().x - (_shape.getSize().x / 5.f) * std::cos(Game::DegreeToRad(angleDegree));
 	const float y = _shape.getPosition().y - (_shape.getSize().y / 5.f) * std::sin(Game::DegreeToRad(angleDegree));
 	
-	const float sparksSpeed = _body->GetLinearVelocity().Length() / 2.f;
+	const float sparksSpeed = _speed * 50.f;
 	angleDegree -= 90.f;
 
 	_sparks.emplace_back(Sparks(_game.GetNewBody(), sf::Vector2f(x, y), angleDegree, Game::GetLinearVelocity(sparksSpeed, angleDegree), _damagePerSecond));
