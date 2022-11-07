@@ -41,4 +41,5 @@ protected:
 public:
 	void Update(sf::Time elapsed) override;
 	void UpdatePosition(sf::Vector2f position) override;
+	void Stop() override;
 };

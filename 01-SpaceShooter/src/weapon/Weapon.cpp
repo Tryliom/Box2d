@@ -1,5 +1,7 @@
 #include "weapon/Weapon.h"
 
+#include "entity/Entity.h"
+
 Weapon::Weapon(const float damage, const float speed, const float spread, const float range, const int bulletsPerShot, const float cooldown)
 {
 	_damage = damage;
@@ -17,9 +19,14 @@ Weapon::Weapon(const float damage, const float speed, const float spread, const 
 void Weapon::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
 	target.draw(*_chargeAnimation, states);
+
+	for (const Projectile* bullet : _bullets)
+	{
+		target.draw(*bullet, states);
+	}
 }
 
-void Weapon::StartCharging(b2Body* user, sf::Vector2f size)
+void Weapon::StartCharging(Entity entity)
 {
 	_isCharging = true;
 	_currentCooldown = _cooldown;
@@ -33,7 +40,7 @@ void Weapon::StopCharging()
 	_chargeAnimation->Stop();
 }
 
-void Weapon::Shoot(b2Body* user, Group bulletGroup)
+void Weapon::Shoot(Entity entity, Group bulletGroup)
 {
 	StopCharging();
 }
@@ -46,6 +53,14 @@ void Weapon::Update(const sf::Time elapsed)
 	}
 
 	_chargeAnimation->Update(elapsed);
+
+	for (Projectile* bullet : _bullets)
+	{
+		bullet->Update(elapsed);
+	}
+
+	// Remove bullets that have finished their life time
+	_bullets.erase(std::remove_if(_bullets.begin(), _bullets.end(), [](const Projectile* bullet) { return bullet->IsDead(); }), _bullets.end());
 }
 
 void Weapon::UpdatePosition(const sf::Vector2f position)

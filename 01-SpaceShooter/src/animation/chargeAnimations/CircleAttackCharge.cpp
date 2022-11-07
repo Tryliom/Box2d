@@ -55,7 +55,7 @@ void CircleAttackCharge::addAnimation()
 
 	if (leftDuration > 0.0f)
 	{
-		_timeBetweenAnimations = sf::seconds(leftDuration / 3.f);
+		_timeBetweenAnimations = sf::seconds(_duration.asSeconds());
 		_currentTimeBetweenAnimations = sf::Time::Zero;
 
 		_animations.emplace_back(_position, _radius, _timeBetweenAnimations.asSeconds());
@@ -86,4 +86,11 @@ void CircleAttackCharge::UpdatePosition(sf::Vector2f position)
 	{
 		animation.UpdatePosition(position);
 	}
+}
+
+void CircleAttackCharge::Stop()
+{
+	ChargeAnimation::Stop();
+
+	_animations.clear();
 }

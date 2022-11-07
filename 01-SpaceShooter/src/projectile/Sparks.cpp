@@ -20,4 +20,6 @@ void Sparks::Update(const sf::Time elapsed)
 
 	// Make the sparks smaller over time
 	_sprite.setScale(2.f - 1.5f * _currentLifeTime.asSeconds() / _lifeTime.asSeconds(), 2.f - 1.5f * _currentLifeTime.asSeconds() / _lifeTime.asSeconds());
+	// Scale the body
+	_body->GetFixtureList()->GetShape()->m_radius = 2.f - 1.5f * _currentLifeTime.asSeconds() / _lifeTime.asSeconds();
 }

@@ -1,15 +1,9 @@
 # TODO
 
-- Create a canon bullet and a bullet class (only animated by code, not texture):
-	- Create a bullet destruction animation
-	- Create a bullet hit animation (spawn little particules when hit)
-	- Create a bullet launch animation (after charge, send little particule backward)
-- Assign it to entity in order to test it with the player (charge with right click, release it to shoot when fully charged)
+- Make that we can improve weapons with our own stats (more bullets, more spread, more damage, etc)
 
-- Add a Group to entity class
 - Create an enemy space ship (looks like a camper)
 	
-- Add in entity class a weapon (that can be null)
 - Create an enemy class that can charge an attack, shoot it, have a reload time between shots, etc.
 - Create basic enemy (camper) that move slowly in the direction of the player and charge attacks every 5sec that shoot a projectile with an animation, charge sound, shoot sound
 

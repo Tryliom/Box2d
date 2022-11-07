@@ -1,9 +1,7 @@
 #pragma once
 #include "projectile/Sparks.h"
-#include "projectile/Trail.h"
+#include "projectile/Tail.h"
 #include "entity/Entity.h"
-
-class Game;
 
 constexpr float TRAIL_COOLDOWN = 0.1f;
 
@@ -13,17 +11,15 @@ public:
 	Player(Game& game, sf::Vector2f position);
 
 protected:
-	float _damagePerSecond;
+	float _damage;
 
-	std::vector<Trail> _trails;
+	std::vector<Tail> _trails;
 	sf::Time _trailCooldown;
 
 	float _sparksPerSecond;
 	std::vector<Sparks> _sparks;
 	sf::Time _sparksCooldown;
 	float _sparksAngle;
-
-	Game& _game;
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 

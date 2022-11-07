@@ -7,13 +7,12 @@
 
 Player::Player(Game& game, const sf::Vector2f position) :
 	Entity(
-		game.GetNewBody(), position, Assets::GetInstance().GetTexture(Texture::SPACE_SHIP),
+		game, position, Assets::GetInstance().GetTexture(Texture::SPACE_SHIP),
 		100.f, 100.f, 0.5f, 0.5f, 15.f, 2000.f,
-		new Canon(), 45.f
-	),
-	_game(game)
+		Group::PLAYER, new Canon(), 45.f
+	)
 {
-	_damagePerSecond = 10.f;
+	_damage = 10.f;
 	_sparksPerSecond = 20.f;
 	_sparksAngle = 90.f;
 
@@ -43,7 +42,6 @@ void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 
 sf::Vector2f Player::getTrailPosition() const
 {
-	// Calculate the difference of angle between the default one and the current one
 	const float angle = Game::RadToDegree(_body->GetAngle()) - 90.f;
 
 	// Calculate the position of the trail
@@ -62,7 +60,7 @@ void Player::AddSparks(float angleDegree)
 	const float sparksSpeed = _speed * 50.f;
 	angleDegree -= 90.f;
 
-	_sparks.emplace_back(Sparks(_game.GetNewBody(), sf::Vector2f(x, y), angleDegree, Game::GetLinearVelocity(sparksSpeed, angleDegree), _damagePerSecond));
+	_sparks.emplace_back(Sparks(_game.GetNewBody(), sf::Vector2f(x, y), angleDegree, Game::GetLinearVelocity(sparksSpeed, angleDegree), _damage));
 }
 
 void Player::Update(const sf::Time elapsed)
@@ -100,7 +98,7 @@ void Player::Update(const sf::Time elapsed)
 	}
 
 	// Remove trails that are dead
-	_trails.erase(std::remove_if(_trails.begin(), _trails.end(), [](const Trail& trail) { return trail.IsDead(); }), _trails.end());
+	_trails.erase(std::remove_if(_trails.begin(), _trails.end(), [](const Tail& trail) { return trail.IsDead(); }), _trails.end());
 
 	// Remove sparks that are dead
 	_sparks.erase(std::remove_if(_sparks.begin(), _sparks.end(), [](const Sparks& sparks) { return sparks.IsDead(); }), _sparks.end());
@@ -116,7 +114,7 @@ void Player::Move()
 	{
 		_trailCooldown = sf::Time::Zero;
 
-		_trails.emplace_back(Trail(_game.GetNewBody(), getTrailPosition(), _shape.getRotation(), _damagePerSecond));
+		_trails.emplace_back(Tail(_game.GetNewBody(), getTrailPosition(), _shape.getRotation(), _damage));
 	}
 
 	if (_sparksCooldown >= sf::Time(sf::seconds(1.f / _sparksPerSecond)))

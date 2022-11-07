@@ -8,10 +8,9 @@ public:
 	Canon();
 
 protected:
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	sf::Vector2f getFrontPosition(const Entity& entity) const;
 
 public:
-	void StartCharging(b2Body* user, sf::Vector2f size) override;
-
-	void Shoot(b2Body* user, Group bulletGroup) override;
+	void StartCharging(Entity entity) override;
+	void Shoot(Entity entity, Group bulletGroup) override;
 };

@@ -2,10 +2,12 @@
 
 #include "Game.h"
 
-Entity::Entity(b2Body* body, const sf::Vector2f position, const sf::Texture& texture,
+Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& texture,
                const float health, const float maxHealth, const float healthRegeneration,
-               const float speed, const float rotationSpeed, const float maxSpeed, Weapon* weapon, const float angle) :
-	DrawableObject(body, position)
+               const float speed, const float rotationSpeed, const float maxSpeed, 
+               Group groupIndex, Weapon* weapon, const float angle) :
+	_game(game),
+	DrawableObject(game.GetNewBody(), position)
 {
 	_health = health;
 	_maxHealth = maxHealth;
@@ -15,7 +17,10 @@ Entity::Entity(b2Body* body, const sf::Vector2f position, const sf::Texture& tex
 	_rotationSpeed = rotationSpeed;
 	_maxSpeed = maxSpeed;
 
+	_groupIndex = groupIndex;
 	_weapon = weapon;
+	
+	//_hitCooldown = {};
 
 	_shape.setTexture(&texture);
 	_shape.setSize(sf::Vector2f(texture.getSize()));
@@ -98,11 +103,31 @@ void Entity::Update(const sf::Time elapsed)
 
 	if (_weapon != nullptr && _weapon->CanShoot())
 	{
-		//TODO: Need to add a group to entity
-		_weapon->Shoot(_body, Group::PLAYER);
+		if (_groupIndex == Group::PLAYER)
+		{
+			_weapon->Shoot(*this, Group::PLAYER_PROJECTILE);
 
-		//TODO: If the entity group is PLAYER, charge the weapon again
+			_weapon->StartCharging(*this);
+		}
+		else
+		{
+			_weapon->Shoot(*this, Group::ENEMY_PROJECTILE);
+		}
 	}
+
+	//for (auto it = _hitCooldown.begin(); it != _hitCooldown.end();)
+	//{
+	//	it->second -= elapsed;
+
+	//	if (it->second <= sf::Time::Zero)
+	//	{
+	//		it = _hitCooldown.erase(it);
+	//	}
+	//	else
+	//	{
+	//		++it;
+	//	}
+	//}
 }
 
 void Entity::Move()
@@ -124,16 +149,21 @@ void Entity::SetPosition(const sf::Vector2f position)
 	_body->SetTransform(Game::PixelToMeter(position), _body->GetAngle()); _shape.setPosition(position);
 }
 
-void Entity::TakeDamage(const float damage)
+void Entity::TakeDamage(Projectile* projectile)
 {
-	_health -= damage;
+	/*if (std::find(_hitCooldown.begin(), _hitCooldown.end(), projectile) == _hitCooldown.end())
+	{
+		_health -= projectile->GetDamage();
+
+		_hitCooldown.emplace_back(projectile, sf::seconds(1.f));
+	}*/
 }
 
 void Entity::ChargeWeapon() const
 {
 	if (_weapon != nullptr)
 	{
-		_weapon->StartCharging(_body, _shape.getSize());
+		_weapon->StartCharging(*this);
 	}
 }
 

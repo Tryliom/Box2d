@@ -8,6 +8,7 @@ Assets::Assets()
 	_textures[static_cast<int>(Texture::SPACE_SHIP)].loadFromFile("data/images/space_ship.png");
 	_textures[static_cast<int>(Texture::TRAIL)].loadFromFile("data/images/trail.png");
 	_textures[static_cast<int>(Texture::SPARKS)].loadFromFile("data/images/sparks.png");
+	_textures[static_cast<int>(Texture::CANON_BULLET)].loadFromFile("data/images/canon_bullet.png");
 
 	_fonts[static_cast<int>(Font::PIXELMIX)].loadFromFile("data/fonts/pixelmix.ttf");
 

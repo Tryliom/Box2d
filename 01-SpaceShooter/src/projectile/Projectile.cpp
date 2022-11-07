@@ -26,11 +26,7 @@ Projectile::Projectile(b2Body* body, const sf::Vector2f position, const sf::Text
 	fixtureDef.restitution = 0.f;
 	fixtureDef.friction = 0.f;
 	fixtureDef.filter.groupIndex = static_cast<int16>(_groupIndex);
-
-	if (canPierce)
-	{
-		fixtureDef.isSensor = true;
-	}
+	fixtureDef.isSensor = true;
 
 	_body->CreateFixture(&fixtureDef);
 
