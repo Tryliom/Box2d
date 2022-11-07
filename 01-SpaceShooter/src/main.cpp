@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Assets.h"
+#include "Stats.h"
 
 int main()
 {

@@ -1,5 +1,4 @@
 #pragma once
-#include <box2d/b2_body.h>
 #include <SFML/System/Time.hpp>
 
 #include "Group.h"

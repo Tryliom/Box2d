@@ -22,3 +22,15 @@
 
 - Add an enemy that load his attack in 5sec (with an animation) and gain high velocity in the direction his facing
 - Add a AnimationText that display damage taken by any entity going to a random direction from the center of the entity
+
+- Space shooter: faire EntityStats et WeaponStats
+- Changer damage en CollisionDamage
+- Mettre CollisionReductionDamage + Percentage
+- Mettre la Size dans entity et weapon
+- Du coup, les entity auront un WeaponStats à appliquer à leur arme
+- Les dégâts du tail et les sparks s'adaptent par rapport à la vitesse
+- Créer une classe module qui a des event avec Entity en paramètre et déplacer tail et sparks dedans et pouvoir avoir plus de modèles
+- Faire que la tail ne fasse pas de damage et soit juste décorative
+- Stocker la ref de WeaponStats de entity dans les weapons à leur création pour lier simplement
+- Si le group est enemy dans les bullets, set la color en rouge
+- Faire une struct TextComponent qui a lui même un vector de struct Text avec couleur et tout
