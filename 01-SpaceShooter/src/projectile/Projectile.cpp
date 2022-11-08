@@ -35,7 +35,7 @@ Projectile::Projectile(b2Body* body, const sf::Vector2f position, const sf::Text
 	_body->SetLinearVelocity(velocity);
 }
 
-void Projectile::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void Projectile::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
 	target.draw(_sprite, states);
 }

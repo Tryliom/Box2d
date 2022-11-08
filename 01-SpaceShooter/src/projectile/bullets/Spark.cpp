@@ -1,17 +1,16 @@
-#include "projectile/Sparks.h"
+#include "projectile/bullets/Spark.h"
 
 #include "Assets.h"
 #include "Group.h"
 
-Sparks::Sparks(b2Body* body, const sf::Vector2f position, const float angle, const b2Vec2 velocity,
-               const float damagePerSeconds) :
+Spark::Spark(b2Body* body, const sf::Vector2f position, const float angle, const b2Vec2 velocity, const float damage, Group group) :
 	Projectile(body, position, Assets::GetInstance().GetTexture(Texture::SPARKS),
 		angle, velocity, sf::seconds(0.5f),
-		damagePerSeconds, true, Group::PLAYER_PROJECTILE
+		damage, true, group
 	)
 {}
 
-void Sparks::Update(const sf::Time elapsed)
+void Spark::Update(const sf::Time elapsed)
 {
 	Projectile::Update(elapsed);
 

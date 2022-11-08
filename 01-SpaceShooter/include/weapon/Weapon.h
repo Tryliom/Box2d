@@ -16,6 +16,7 @@ public:
 private:
 	Stats::WeaponStats _stats;
 	Stats::WeaponStats& _userStats;
+
 protected:
 	float _currentCooldown;
 	bool _isCharging;

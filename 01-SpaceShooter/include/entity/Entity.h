@@ -1,5 +1,6 @@
 #pragma once
 #include "DrawableObject.h"
+#include "module/Module.h"
 #include "projectile/Projectile.h"
 #include "weapon/Weapon.h"
 
@@ -25,6 +26,7 @@ protected:
 	Group _groupIndex;
 	Weapon* _weapon;
 	Stats::WeaponStats _weaponStats;
+	std::vector<Module*> _modules;
 
 	Game& _game;
 
@@ -46,6 +48,7 @@ public:
 	float GetHealthPercentage() const { return _health / _maxHealth; }
 	bool IsDead() const { return _health <= 0.f; }
 	Game& GetGame() const { return _game; }
+	Group GetProjectileGroup() const;
 
 	void TakeDamage(Projectile* projectile);
 
@@ -56,4 +59,7 @@ public:
 	void AddBonusStats(const Stats::WeaponStats bonusStats) const { _weaponStats += bonusStats; }
 
 	Stats::EntityStats GetTotalStats() const { return _stats + _bonusStats; }
+	Stats::WeaponStats GetWeaponStats() const { return _weaponStats; }
+
+	void AddModule(Module* module);
 };

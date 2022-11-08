@@ -17,6 +17,7 @@ Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& textu
 
 	_groupIndex = groupIndex;
 	_weapon = weapon;
+	_modules = {};
 	
 	//_hitCooldown = {};
 
@@ -46,6 +47,16 @@ Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& textu
 
 void Entity::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
+	for (const auto* module : _modules)
+	{
+		target.draw(*module, states);
+	}
+
+	if (_weapon != nullptr)
+	{
+		target.draw(*_weapon, states);
+	}
+	
 	target.draw(_shape, states);
 }
 
@@ -116,6 +127,11 @@ void Entity::Update(const sf::Time elapsed)
 		}
 	}
 
+	for (auto* module : _modules)
+	{
+		module->Update(elapsed, this);
+	}
+
 	//for (auto it = _hitCooldown.begin(); it != _hitCooldown.end();)
 	//{
 	//	it->second -= elapsed;
@@ -141,6 +157,11 @@ void Entity::Move()
 			Game::GetLinearVelocity(GetTotalStats().GetSpeed(), Game::RadToDegree(_body->GetAngle()))
 		);
 	}
+
+	for (auto* module : _modules)
+	{
+		module->OnEntityMove(this);
+	}
 }
 
 sf::Vector2f Entity::GetPosition() const
@@ -153,6 +174,11 @@ void Entity::SetPosition(const sf::Vector2f position)
 	_body->SetTransform(Game::PixelToMeter(position), _body->GetAngle()); _shape.setPosition(position);
 }
 
+Group Entity::GetProjectileGroup() const
+{
+	return _groupIndex == Group::PLAYER ? Group::PLAYER_PROJECTILE : Group::ENEMY_PROJECTILE;
+}
+
 void Entity::TakeDamage(Projectile* projectile)
 {
 	/*if (std::find(_hitCooldown.begin(), _hitCooldown.end(), projectile) == _hitCooldown.end())
@@ -161,6 +187,11 @@ void Entity::TakeDamage(Projectile* projectile)
 
 		_hitCooldown.emplace_back(projectile, sf::seconds(1.f));
 	}*/
+
+	for (auto* module : _modules)
+	{
+		module->OnEntityHit(this, projectile);
+	}
 }
 
 void Entity::ChargeWeapon() const
@@ -177,4 +208,10 @@ void Entity::StopChargingWeapon() const
 	{
 		_weapon->StopCharging();
 	}
+}
+
+void Entity::AddModule(Module* module)
+{
+	module->Initialize(this);
+	_modules.push_back(module);
 }
