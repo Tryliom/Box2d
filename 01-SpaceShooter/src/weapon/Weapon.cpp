@@ -2,15 +2,10 @@
 
 #include "entity/Entity.h"
 
-Weapon::Weapon(const float damage, const float speed, const float spread, const float range, const int bulletsPerShot, const float cooldown)
+Weapon::Weapon(const Stats::WeaponStats stats, Stats::WeaponStats& userStats) : _userStats(userStats)
 {
-	_damage = damage;
-	_speed = speed;
-	_spread = spread;
-	_range = range;
-	_bulletsPerShot = bulletsPerShot;
-	_cooldown = cooldown;
-	_currentCooldown = cooldown;
+	_stats = stats;
+	_currentCooldown = getTotalStats().GetCooldown();
 	_isCharging = false;
 
 	_chargeAnimation = new ChargeAnimation();
@@ -26,16 +21,23 @@ void Weapon::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 	}
 }
 
+sf::Time Weapon::getLifeTime() const
+{
+	const Stats::WeaponStats stats = getTotalStats();
+
+	return sf::seconds(stats.GetRange() / stats.GetSpeed());
+}
+
 void Weapon::StartCharging(Entity entity)
 {
 	_isCharging = true;
-	_currentCooldown = _cooldown;
+	_currentCooldown = getTotalStats().GetCooldown();
 }
 
 void Weapon::StopCharging()
 {
 	_isCharging = false;
-	_currentCooldown = _cooldown;
+	_currentCooldown = getTotalStats().GetCooldown();
 
 	_chargeAnimation->Stop();
 }

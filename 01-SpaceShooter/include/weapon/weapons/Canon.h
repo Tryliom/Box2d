@@ -1,11 +1,11 @@
 #pragma once
 #include "weapon/Weapon.h"
 
-// Most basic weapon, shoot a single bullet after a short charge
+// Most basic weapon, shoot a big bullet after a medium charge
 class Canon : public Weapon
 {
 public:
-	Canon();
+	Canon(Stats::WeaponStats& userStats);
 
 protected:
 	sf::Vector2f getFrontPosition(const Entity& entity) const;

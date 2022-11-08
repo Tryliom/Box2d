@@ -8,16 +8,22 @@
 Player::Player(Game& game, const sf::Vector2f position) :
 	Entity(
 		game, position, Assets::GetInstance().GetTexture(Texture::SPACE_SHIP),
-		100.f, 100.f, 0.5f, 0.5f, 15.f, 2000.f,
-		Group::PLAYER, new Canon(), 45.f
+		100.f, 100.f, Stats::EntityStats{
+			.HealthRegeneration = 0.5f,
+			.Speed = 0.5f,
+			.RotationSpeed = 15.f,
+		},
+		Group::PLAYER, nullptr, 45.f
 	)
 {
 	_damage = 10.f;
 	_sparksPerSecond = 20.f;
 	_sparksAngle = 90.f;
 
+	_weapon = new Canon(_weaponStats);
+
 	// Add a linear velocity to the body to make it move to the angle it is facing by default to add some style
-	_body->SetLinearVelocity(Game::GetLinearVelocity(_speed * 100.f, _shape.getRotation()));
+	_body->SetLinearVelocity(Game::GetLinearVelocity(GetTotalStats().GetSpeed() * 100.f, _shape.getRotation()));
 }
 
 void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
@@ -57,7 +63,7 @@ void Player::AddSparks(float angleDegree)
 	const float x = _shape.getPosition().x - (_shape.getSize().x / 5.f) * std::cos(Game::DegreeToRad(angleDegree));
 	const float y = _shape.getPosition().y - (_shape.getSize().y / 5.f) * std::sin(Game::DegreeToRad(angleDegree));
 	
-	const float sparksSpeed = _speed * 50.f;
+	const float sparksSpeed = GetTotalStats().GetSpeed() * 50.f;
 	angleDegree -= 90.f;
 
 	_sparks.emplace_back(Sparks(_game.GetNewBody(), sf::Vector2f(x, y), angleDegree, Game::GetLinearVelocity(sparksSpeed, angleDegree), _damage));

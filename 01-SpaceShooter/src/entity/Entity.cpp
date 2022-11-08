@@ -3,19 +3,17 @@
 #include "Game.h"
 
 Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& texture,
-               const float health, const float maxHealth, const float healthRegeneration,
-               const float speed, const float rotationSpeed, const float maxSpeed, 
-               Group groupIndex, Weapon* weapon, const float angle) :
-	_game(game),
-	DrawableObject(game.GetNewBody(), position)
+               const float health, const float maxHealth, 
+               const Stats::EntityStats stats, const Group groupIndex, Weapon* weapon, const float angle) :
+	DrawableObject(game.GetNewBody(), position),
+	_game(game)
 {
 	_health = health;
 	_maxHealth = maxHealth;
-	_healthRegeneration = healthRegeneration;
 
-	_speed = speed;
-	_rotationSpeed = rotationSpeed;
-	_maxSpeed = maxSpeed;
+	_stats = stats;
+	_bonusStats = {};
+	_weaponStats = {};
 
 	_groupIndex = groupIndex;
 	_weapon = weapon;
@@ -69,15 +67,16 @@ float Entity::getDeltaAngle(const float angle) const
 
 void Entity::rotate(float angle) const
 {
+	const float rotationSpeed = GetTotalStats().GetRotationSpeed();
 	angle = getDeltaAngle(angle);
 
-	if (angle > _rotationSpeed)
+	if (angle > rotationSpeed)
 	{
-		angle = _rotationSpeed;
+		angle = rotationSpeed;
 	}
-	else if (angle < -_rotationSpeed)
+	else if (angle < -rotationSpeed)
 	{
-		angle = -_rotationSpeed;
+		angle = -rotationSpeed;
 	}
 
 	_body->SetAngularVelocity(Game::DegreeToRad(angle * 10.f));
@@ -87,7 +86,7 @@ void Entity::Update(const sf::Time elapsed)
 {
 	if (_health < _maxHealth)
 	{
-		_health += _healthRegeneration * elapsed.asSeconds();
+		_health += GetTotalStats().GetHealthRegeneration() * elapsed.asSeconds();
 	}
 
 	if (_health > _maxHealth)
@@ -133,9 +132,12 @@ void Entity::Update(const sf::Time elapsed)
 void Entity::Move()
 {
 	// Add a linear velocity to the body to make it move to the angle it is facing
-	if (_body->GetLinearVelocity().Length() < _maxSpeed)
+	if (_body->GetLinearVelocity().Length() < GetTotalStats().GetMaxSpeed())
 	{
-		_body->SetLinearVelocity(_body->GetLinearVelocity() + Game::GetLinearVelocity(_speed, Game::RadToDegree(_body->GetAngle())));
+		_body->SetLinearVelocity(
+			_body->GetLinearVelocity() + 
+			Game::GetLinearVelocity(GetTotalStats().GetSpeed(), Game::RadToDegree(_body->GetAngle()))
+		);
 	}
 }
 

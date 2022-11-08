@@ -9,22 +9,22 @@ class Entity : public DrawableObject
 {
 public:
 	Entity(Game& game, sf::Vector2f position, const sf::Texture& texture,
-		float health, float maxHealth, float healthRegeneration, 
-		float speed, float rotationSpeed, float maxSpeed, Group groupIndex, Weapon* weapon = nullptr, float angle = 0.f);
+		float health, float maxHealth, Stats::EntityStats stats, 
+		Group groupIndex, Weapon* weapon = nullptr, float angle = 0.f
+	);
+private:
+	Stats::EntityStats _stats;
+	Stats::EntityStats _bonusStats;
 
 protected:
 	sf::RectangleShape _shape;
 
 	float _health;
 	float _maxHealth;
-	float _healthRegeneration;
-
-	float _speed;
-	float _maxSpeed;
-	float _rotationSpeed;
 
 	Group _groupIndex;
 	Weapon* _weapon;
+	Stats::WeaponStats _weaponStats;
 
 	Game& _game;
 
@@ -32,7 +32,6 @@ protected:
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-	// Returns the angle distance between this angle and the current angle
 	float getDeltaAngle(float angle) const;
 	void rotate(float angle) const;
 
@@ -52,4 +51,9 @@ public:
 
 	void ChargeWeapon() const;
 	void StopChargingWeapon() const;
+
+	void AddBonusStats(const Stats::EntityStats bonusStats) const { _bonusStats += bonusStats; }
+	void AddBonusStats(const Stats::WeaponStats bonusStats) const { _weaponStats += bonusStats; }
+
+	Stats::EntityStats GetTotalStats() const { return _stats + _bonusStats; }
 };

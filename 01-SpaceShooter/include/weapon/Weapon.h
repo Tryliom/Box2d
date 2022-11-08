@@ -2,6 +2,7 @@
 #include <SFML/System/Time.hpp>
 
 #include "Group.h"
+#include "Stats.h"
 #include "animation/ChargeAnimation.h"
 #include "projectile/Projectile.h"
 
@@ -10,15 +11,12 @@ class Entity;
 class Weapon : public sf::Drawable
 {
 public:
-	Weapon(float damage, float speed, float spread, float range, int bulletsPerShot, float cooldown);
+	Weapon(Stats::WeaponStats stats, Stats::WeaponStats& userStats);
 
+private:
+	Stats::WeaponStats _stats;
+	Stats::WeaponStats& _userStats;
 protected:
-	float _damage;
-	float _speed;
-	float _spread;
-	float _range;
-	int _bulletsPerShot;
-	float _cooldown;
 	float _currentCooldown;
 	bool _isCharging;
 
@@ -28,6 +26,8 @@ protected:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+	Stats::WeaponStats getTotalStats() const { return _stats + _userStats; }
+	sf::Time getLifeTime() const;
 public:
 	virtual void StartCharging(Entity entity);
 	virtual void StopCharging();
