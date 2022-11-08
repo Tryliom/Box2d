@@ -1,6 +1,6 @@
 #pragma once
 #include "projectile/Sparks.h"
-#include "projectile/Tail.h"
+#include "animation/Tail.h"
 #include "entity/Entity.h"
 
 constexpr float TRAIL_COOLDOWN = 0.1f;
@@ -11,10 +11,8 @@ public:
 	Player(Game& game, sf::Vector2f position);
 
 protected:
-	float _damage;
-
 	std::vector<Tail> _trails;
-	sf::Time _trailCooldown;
+	sf::Time _tailCooldown;
 
 	float _sparksPerSecond;
 	std::vector<Sparks> _sparks;

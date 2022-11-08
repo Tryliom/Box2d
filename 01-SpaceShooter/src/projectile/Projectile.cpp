@@ -46,6 +46,13 @@ void Projectile::Update(const sf::Time elapsed)
 
 	_sprite.setPosition(Game::MeterToPixel(_body->GetPosition()));
 	_sprite.setRotation(Game::RadToDegree(_body->GetAngle()));
+
+	const sf::Uint8 alpha = 255 - (255 * _currentLifeTime.asSeconds() / _lifeTime.asSeconds());
+
+	sf::Color color = GetColor(_groupIndex);
+	color.a = alpha;
+
+	_sprite.setColor(color);
 }
 
 void Projectile::OnImpact()

@@ -23,6 +23,7 @@
 
 - Add an enemy that load his attack in 5sec (with an animation) and gain high velocity in the direction his facing
 - Add a AnimationText that display damage taken by any entity going to a random direction from the center of the entity
+- Make Tail a class that can be assigned to any entities
 
 - Les dégâts des sparks s'adaptent par rapport à la vitesse
 - Créer une classe module qui a des event avec Entity en paramètre et déplacer tail et sparks dedans et pouvoir avoir plus de modèles

@@ -25,6 +25,8 @@ Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& textu
 	_shape.setOrigin(_shape.getSize() / 2.f);
 	_shape.setPosition(position);
 	_shape.setRotation(angle);
+	
+	_shape.setFillColor(GetColor(_groupIndex));
 
 	b2PolygonShape dynamicBox;
 	dynamicBox.SetAsBox(Game::PixelToMeter(_shape.getSize().x / 2.f), Game::PixelToMeter(_shape.getSize().y / 2.f));

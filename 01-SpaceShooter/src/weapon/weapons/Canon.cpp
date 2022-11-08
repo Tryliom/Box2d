@@ -10,7 +10,7 @@ Canon::Canon(Stats::WeaponStats& userStats) :
 	Weapon(Stats::WeaponStats{
 		.Damage = 20.f,
 		.Speed = 50.f,
-		.Range = 1000.f,
+		.Range = 500.f,
 		.BulletsPerShot = 1,
 		.Cooldown = 1.5f
 	}, userStats)
