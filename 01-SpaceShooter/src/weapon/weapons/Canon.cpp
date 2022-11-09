@@ -48,7 +48,7 @@ void Canon::Shoot(const Entity entity, const Group bulletGroup)
 	const Stats::WeaponStats stats = getTotalStats();
 	const float angle = Game::RadToDegree(entity.GetBody()->GetAngle());
 	const sf::Time lifeTime = getLifeTime();
-	const b2Vec2 velocity = Game::GetLinearVelocity(stats.GetSpeed(), angle);
+	const b2Vec2 velocity = entity.GetBody()->GetLinearVelocity() + Game::GetLinearVelocity(stats.GetSpeed(), angle);
 
 	_bullets.emplace_back(new RegularBullet(
 		entity.GetGame().GetNewBody(), getFrontPosition(entity),
