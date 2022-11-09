@@ -18,7 +18,7 @@ void ContactListener::BeginContact(b2Contact* contact)
 	if (groupA == Group::PLAYER && groupB == Group::ENEMY || groupA == Group::ENEMY && groupB == Group::PLAYER)
 	{
 		// Player hit an enemy
-		auto entityA = reinterpret_cast<Entity*>(aPointer);
+		auto* entityA = reinterpret_cast<Entity*>(aPointer);
 		auto* entityB = reinterpret_cast<Entity*>(bPointer);
 
 		entityA->TakeDamage(entityB);
