@@ -29,6 +29,9 @@ protected:
 
 	[[nodiscard]] Stats::WeaponStats getTotalStats() const { return _stats + _userStats; }
 	[[nodiscard]] sf::Time getLifeTime() const;
+	sf::Vector2f getFrontPosition(const Entity* entity) const;
+
+	virtual void shootBullet(b2Body* body, const sf::Vector2f position, const float angle, const b2Vec2 velocity, const Group bulletGroup) = 0;
 public:
 	virtual void StartCharging(Entity* entity);
 	virtual void StopCharging();

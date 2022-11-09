@@ -1,6 +1,9 @@
 #include "weapon/Weapon.h"
 
 #include "entity/Entity.h"
+#include "Game.h"
+#include "animation/chargeAnimations/CircleAttackCharge.h"
+
 #include "box2d/b2_world.h"
 
 Weapon::Weapon(const Stats::WeaponStats stats, Stats::WeaponStats& userStats) : _userStats(userStats)
@@ -29,10 +32,26 @@ sf::Time Weapon::getLifeTime() const
 	return sf::seconds(stats.GetRange() / stats.GetSpeed());
 }
 
+sf::Vector2f Weapon::getFrontPosition(const Entity* entity) const
+{
+	const sf::Vector2f size = entity->GetShape().getSize();
+	const sf::Vector2f position = entity->GetShape().getPosition();
+
+	const float angle = entity->GetShape().getRotation() + 90.f;
+	const float x = position.x - (size.x * 0.5f) * std::cos(Game::DegreeToRad(angle));
+	const float y = position.y - (size.y * 0.5f) * std::sin(Game::DegreeToRad(angle));
+
+	return { x, y };
+}
+
 void Weapon::StartCharging(Entity* entity)
 {
 	_isCharging = true;
 	_currentCooldown = getTotalStats().GetCooldown();
+
+	const sf::Vector2f size = entity->GetShape().getSize();
+
+	_chargeAnimation = new CircleAttackCharge(entity->GetPosition(), (size.x + size.y) / 2.f, getTotalStats().GetCooldown());
 }
 
 void Weapon::StopCharging()
@@ -46,6 +65,27 @@ void Weapon::StopCharging()
 void Weapon::Shoot(Entity* entity, Group bulletGroup)
 {
 	StopCharging();
+
+	const Stats::WeaponStats stats = getTotalStats();
+	const float angle = Game::RadToDegree(entity->GetBody()->GetAngle());
+	const sf::Time lifeTime = getLifeTime();
+	const sf::Vector2f frontPosition = getFrontPosition(entity);
+	const int bulletPerShot = stats.GetBulletsPerShot();
+	const float spread = stats.GetSpread() / 2.f;
+
+	for (int i = 0; i < bulletPerShot; i++)
+	{
+		float angleAfterSpread = angle - spread + (spread * 2.f * static_cast<float>(i) + spread) / static_cast<float>(bulletPerShot);
+
+		if (bulletPerShot == 1)
+		{
+			angleAfterSpread = angle;
+		}
+
+		const b2Vec2 velocity = Game::GetLinearVelocity(stats.GetSpeed(), angleAfterSpread);
+
+		shootBullet(entity->GetGame().GetNewBody(), frontPosition, angleAfterSpread, velocity, bulletGroup);
+	}
 }
 
 void Weapon::Update(const sf::Time elapsed)

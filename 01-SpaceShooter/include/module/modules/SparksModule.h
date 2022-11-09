@@ -1,6 +1,6 @@
 #pragma once
 #include "module/Module.h"
-#include "projectile/bullets/Spark.h"
+#include "projectile/bullets/PenetrationBullet.h"
 
 class SparksModule final : public Module
 {
@@ -8,7 +8,7 @@ public:
 	SparksModule();
 
 protected:
-	std::vector<Spark> _sparks;
+	std::vector<PenetrationBullet> _sparks;
 	sf::Time _sparksCooldown;
 	sf::Time _sparksCurrentCooldown;
 

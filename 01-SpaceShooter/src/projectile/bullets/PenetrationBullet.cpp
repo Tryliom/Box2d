@@ -1,17 +1,18 @@
-#include "projectile/bullets/Spark.h"
+#include "projectile/bullets/PenetrationBullet.h"
 
 #include "Assets.h"
 #include "Group.h"
 #include "Game.h"
 
-Spark::Spark(b2Body* body, const sf::Vector2f position, const float angle, float size, const b2Vec2 velocity, const float damage, Group group) :
+PenetrationBullet::PenetrationBullet(b2Body* body, sf::Vector2f position, float angle, float size, b2Vec2 velocity,
+	sf::Time lifeTime, float damage, Group groupIndex) :
 	Projectile(body, position, Assets::GetInstance().GetTexture(Texture::SPARKS), ShapeType::RECTANGLE,
-		angle, size, velocity, sf::seconds(0.5f),
-		damage, true, group
+		angle, size, velocity, lifeTime,
+		damage, true, groupIndex
 	)
 {}
 
-void Spark::Update(const sf::Time elapsed)
+void PenetrationBullet::Update(const sf::Time elapsed)
 {
 	Projectile::Update(elapsed);
 

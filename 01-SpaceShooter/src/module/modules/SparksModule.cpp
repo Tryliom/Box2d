@@ -46,7 +46,8 @@ void SparksModule::addSparks(float angleDegree, Entity* entity)
 
 	_sparks.emplace_back(
 		entity->GetGame().GetNewBody(), sf::Vector2f(x, y),
-		angleDegree, 1.5f + weaponStats.GetSize(), Game::GetLinearVelocity(sparksSpeed, angleDegree), stats.GetSpeed() * 20.f, entity->GetProjectileGroup()
+		angleDegree, 1.5f + weaponStats.GetSize(), Game::GetLinearVelocity(sparksSpeed, angleDegree), sf::seconds(0.5f), 
+		stats.GetSpeed() * 20.f, entity->GetProjectileGroup()
 	);
 }
 
@@ -67,7 +68,7 @@ void SparksModule::Update(const sf::Time elapsed, Entity* entity)
 	}
 
 	// Remove the sparks that are dead
-	_sparks.erase(std::remove_if(_sparks.begin(), _sparks.end(), [](const Spark& spark)
+	_sparks.erase(std::remove_if(_sparks.begin(), _sparks.end(), [](const PenetrationBullet& spark)
 	{
 		if (spark.IsDead())
 		{

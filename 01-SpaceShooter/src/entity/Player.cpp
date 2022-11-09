@@ -2,9 +2,8 @@
 
 #include "Assets.h"
 #include "Game.h"
-#include "Random.h"
 #include "module/modules/SparksModule.h"
-#include "weapon/weapons/Canon.h"
+#include "weapon/weapons/Sniper.h"
 
 Player::Player(Game& game, const sf::Vector2f position) :
 	Entity(
@@ -17,7 +16,7 @@ Player::Player(Game& game, const sf::Vector2f position) :
 		Group::PLAYER, nullptr, 45.f
 	)
 {
-	_weapon = new Canon(_weaponStats);
+	_weapon = new Sniper(_weaponStats);
 	AddModule(new SparksModule());
 
 	// Add a linear velocity to the body to make it move to the angle it is facing by default to add some style
