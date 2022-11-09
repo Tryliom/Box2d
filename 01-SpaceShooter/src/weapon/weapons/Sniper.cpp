@@ -19,7 +19,7 @@ Trail::Trail(const sf::Vector2f position, const float angle, const Group group)
 	_currentLifeTime = sf::Time::Zero;
 }
 
-void Trail::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void Trail::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
 	target.draw(_sprite, states);
 }
