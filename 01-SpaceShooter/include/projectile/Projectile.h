@@ -27,7 +27,7 @@ public:
 	Projectile(
 		b2Body* body, sf::Vector2f position, 
 		const sf::Texture& texture, ShapeType shapeType,
-		float angle, b2Vec2 velocity, sf::Time lifeTime,
+		float angle, float size, b2Vec2 velocity, sf::Time lifeTime,
 		float damage, bool canPierce, Group groupIndex
 	);
 

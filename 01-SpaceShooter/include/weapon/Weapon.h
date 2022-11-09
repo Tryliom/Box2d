@@ -27,13 +27,13 @@ protected:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-	Stats::WeaponStats getTotalStats() const { return _stats + _userStats; }
-	sf::Time getLifeTime() const;
+	[[nodiscard]] Stats::WeaponStats getTotalStats() const { return _stats + _userStats; }
+	[[nodiscard]] sf::Time getLifeTime() const;
 public:
 	virtual void StartCharging(Entity entity);
 	virtual void StopCharging();
 
-	bool CanShoot() const { return _currentCooldown <= 0.f; }
+	[[nodiscard]] bool CanShoot() const { return _currentCooldown <= 0.f; }
 
 	// You need to override this method and shoot the bullets
 	virtual void Shoot(Entity entity, Group bulletGroup);

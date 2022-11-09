@@ -4,7 +4,7 @@
 
 Projectile::Projectile(b2Body* body, const sf::Vector2f position, 
 						const sf::Texture& texture, ShapeType shapeType,
-						const float angle, const b2Vec2 velocity, const sf::Time lifeTime,
+						const float angle, float size, const b2Vec2 velocity, const sf::Time lifeTime,
 						const float damage, const bool canPierce, const Group groupIndex) :
 	DrawableObject(body, position)
 {
@@ -17,6 +17,7 @@ Projectile::Projectile(b2Body* body, const sf::Vector2f position,
 	_sprite.setTexture(texture);
 	_sprite.setOrigin(texture.getSize().x / 2.f, texture.getSize().y / 2.f);
 	_sprite.setRotation(angle);
+	_sprite.setScale(size, size);
 
 	b2FixtureDef fixtureDef;
 	b2PolygonShape dynamicBox;

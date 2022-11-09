@@ -76,7 +76,7 @@ namespace Stats
 
 	float WeaponStats::GetCooldown() const
 	{
-		return (Cooldown - CooldownReduction) * (1.f + CoolDownReductionPercentage);
+		return (Cooldown - CooldownReduction) * (1.f - CoolDownReductionPercentage);
 	}
 
 	float WeaponStats::GetSize() const

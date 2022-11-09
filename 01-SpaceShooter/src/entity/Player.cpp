@@ -48,7 +48,7 @@ sf::Vector2f Player::getTrailPosition() const
 void Player::Update(const sf::Time elapsed)
 {
 	Entity::Update(elapsed);
-
+	
 	_tailCooldown += elapsed;
 
 	// Make the player rotate slowly to the mouse position angle

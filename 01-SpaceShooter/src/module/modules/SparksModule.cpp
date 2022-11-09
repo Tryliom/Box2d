@@ -35,6 +35,7 @@ void SparksModule::addSparks(float angleDegree, const Entity* entity)
 	const sf::RectangleShape shape = entity->GetShape();
 	const sf::Vector2f position = shape.getPosition();
 	const Stats::EntityStats stats = entity->GetTotalStats();
+	const Stats::WeaponStats weaponStats = entity->GetWeaponStats();
 
 	// Calculate the position of the sparks
 	const float x = position.x - (shape.getSize().x / 5.f) * std::cos(Game::DegreeToRad(angleDegree));
@@ -45,7 +46,7 @@ void SparksModule::addSparks(float angleDegree, const Entity* entity)
 
 	_sparks.emplace_back(Spark(
 		entity->GetGame().GetNewBody(), sf::Vector2f(x, y),
-		angleDegree, Game::GetLinearVelocity(sparksSpeed, angleDegree), stats.GetSpeed() * 20.f, entity->GetProjectileGroup()
+		angleDegree, 1.5f + weaponStats.GetSize(), Game::GetLinearVelocity(sparksSpeed, angleDegree), stats.GetSpeed() * 20.f, entity->GetProjectileGroup()
 	));
 }
 

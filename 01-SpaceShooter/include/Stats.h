@@ -20,14 +20,14 @@ namespace Stats
 
 		float Size{ 0.f };
 
-		float GetHealthRegeneration() const;
-		float GetSpeed() const;
-		float GetMaxSpeed() const;
-		float GetRotationSpeed() const;
-		float GetCollisionDamage() const;
-		float GetCollisionReductionDamage() const;
-		float GetCollisionDamage(float collisionDamage) const;
-		float GetSize() const;
+		[[nodiscard]] float GetHealthRegeneration() const;
+		[[nodiscard]] float GetSpeed() const;
+		[[nodiscard]] float GetMaxSpeed() const;
+		[[nodiscard]] float GetRotationSpeed() const;
+		[[nodiscard]] float GetCollisionDamage() const;
+		[[nodiscard]] float GetCollisionReductionDamage() const;
+		[[nodiscard]] float GetCollisionDamage(float collisionDamage) const;
+		[[nodiscard]] float GetSize() const;
 	};
 
 	struct WeaponStats
@@ -51,13 +51,13 @@ namespace Stats
 
 		float Size{ 0.f };
 
-		float GetDamage() const;
-		float GetSpeed() const;
-		float GetSpread() const;
-		float GetRange() const;
-		int GetBulletsPerShot() const;
-		float GetCooldown() const;
-		float GetSize() const;
+		[[nodiscard]] float GetDamage() const;
+		[[nodiscard]] float GetSpeed() const;
+		[[nodiscard]] float GetSpread() const;
+		[[nodiscard]] float GetRange() const;
+		[[nodiscard]] int GetBulletsPerShot() const;
+		[[nodiscard]] float GetCooldown() const;
+		[[nodiscard]] float GetSize() const;
 	};
 
 	WeaponStats operator+(WeaponStats stats, WeaponStats otherStats);

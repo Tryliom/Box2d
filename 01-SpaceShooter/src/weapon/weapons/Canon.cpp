@@ -10,6 +10,7 @@ Canon::Canon(Stats::WeaponStats& userStats) :
 	Weapon(Stats::WeaponStats{
 		.Damage = 20.f,
 		.Speed = 50.f,
+		.Spread = 15.f,
 		.Range = 500.f,
 		.BulletsPerShot = 1,
 		.Cooldown = 1.f,
@@ -44,16 +45,36 @@ void Canon::Shoot(const Entity entity, const Group bulletGroup)
 {
 	Weapon::Shoot(entity, bulletGroup);
 
-	//TODO: Apply spread, size and multiple bullets per shot
-
 	const Stats::WeaponStats stats = getTotalStats();
 	const float angle = Game::RadToDegree(entity.GetBody()->GetAngle());
 	const sf::Time lifeTime = getLifeTime();
-	const b2Vec2 velocity = entity.GetBody()->GetLinearVelocity() + Game::GetLinearVelocity(stats.GetSpeed(), angle);
+	const sf::Vector2f frontPosition = getFrontPosition(entity);
+	const int bulletPerShot = stats.GetBulletsPerShot();
 
-	_bullets.emplace_back(new RegularBullet(
-		entity.GetGame().GetNewBody(), getFrontPosition(entity),
-		angle, velocity, lifeTime,
-		stats.GetDamage(), false, bulletGroup
-	));
+	for (int i = 0; i < bulletPerShot; i++)
+	{
+		float angleAfterSpread = angle - stats.GetSpread() + stats.GetSpread() * 2.f * i / bulletPerShot;
+
+		if (stats.GetBulletsPerShot() % 2 == 0)
+		{
+			angleAfterSpread += stats.GetSpread() / bulletPerShot;
+		}
+		else
+		{
+			angleAfterSpread += stats.GetSpread() / (bulletPerShot - 1);
+		}
+
+		if (bulletPerShot == 1)
+		{
+			angleAfterSpread = angle;
+		}
+
+		const b2Vec2 velocity = entity.GetBody()->GetLinearVelocity() + Game::GetLinearVelocity(stats.GetSpeed(), angleAfterSpread);
+
+		_bullets.push_back(new RegularBullet(
+			entity.GetGame().GetNewBody(), frontPosition,
+			angleAfterSpread, stats.GetSize(), velocity, lifeTime,
+			stats.GetDamage(), false, bulletGroup
+		));
+	}
 }
