@@ -30,13 +30,13 @@ protected:
 	[[nodiscard]] Stats::WeaponStats getTotalStats() const { return _stats + _userStats; }
 	[[nodiscard]] sf::Time getLifeTime() const;
 public:
-	virtual void StartCharging(Entity entity);
+	virtual void StartCharging(Entity* entity);
 	virtual void StopCharging();
 
 	[[nodiscard]] bool CanShoot() const { return _currentCooldown <= 0.f; }
 
 	// You need to override this method and shoot the bullets
-	virtual void Shoot(Entity entity, Group bulletGroup);
+	virtual void Shoot(Entity* entity, Group bulletGroup);
 	virtual void Update(sf::Time elapsed);
 	virtual void UpdatePosition(sf::Vector2f position);
 };

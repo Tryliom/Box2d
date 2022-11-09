@@ -8,9 +8,9 @@ public:
 	Canon(Stats::WeaponStats& userStats);
 
 protected:
-	sf::Vector2f getFrontPosition(const Entity& entity) const;
+	sf::Vector2f getFrontPosition(Entity* entity) const;
 
 public:
-	void StartCharging(Entity entity) override;
-	void Shoot(Entity entity, Group bulletGroup) override;
+	void StartCharging(Entity* entity) override;
+	void Shoot(Entity* entity, Group bulletGroup) override;
 };

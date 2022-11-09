@@ -1,6 +1,5 @@
 # TODO
 
-- Delete bodies from World when they are destroyed
 - Create a weapon that shoot regular bullets with short cooldown but low damage and 0.5 size
 
 - Create an enemy space ship (looks like a camper)

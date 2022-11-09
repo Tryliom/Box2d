@@ -1,6 +1,7 @@
 #include "weapon/Weapon.h"
 
 #include "entity/Entity.h"
+#include "box2d/b2_world.h"
 
 Weapon::Weapon(const Stats::WeaponStats stats, Stats::WeaponStats& userStats) : _userStats(userStats)
 {
@@ -28,7 +29,7 @@ sf::Time Weapon::getLifeTime() const
 	return sf::seconds(stats.GetRange() / stats.GetSpeed());
 }
 
-void Weapon::StartCharging(Entity entity)
+void Weapon::StartCharging(Entity* entity)
 {
 	_isCharging = true;
 	_currentCooldown = getTotalStats().GetCooldown();
@@ -42,7 +43,7 @@ void Weapon::StopCharging()
 	_chargeAnimation->Stop();
 }
 
-void Weapon::Shoot(Entity entity, Group bulletGroup)
+void Weapon::Shoot(Entity* entity, Group bulletGroup)
 {
 	StopCharging();
 }
@@ -62,7 +63,17 @@ void Weapon::Update(const sf::Time elapsed)
 	}
 
 	// Remove bullets that have finished their life time
-	_bullets.erase(std::remove_if(_bullets.begin(), _bullets.end(), [](const Projectile* bullet) { return bullet->IsDead(); }), _bullets.end());
+	_bullets.erase(std::remove_if(_bullets.begin(), _bullets.end(), [](const Projectile* bullet)
+	{
+		if (bullet->IsDead())
+		{
+			bullet->GetBody()->GetWorld()->DestroyBody(bullet->GetBody());
+
+			return true;
+		}
+
+		return false;
+	}), _bullets.end());
 }
 
 void Weapon::UpdatePosition(const sf::Vector2f position)

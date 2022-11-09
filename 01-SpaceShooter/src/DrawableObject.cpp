@@ -2,7 +2,7 @@
 
 #include "Game.h"
 
-DrawableObject::DrawableObject(b2Body* body, sf::Vector2f position)
+DrawableObject::DrawableObject(b2Body* body, const sf::Vector2f position)
 {
 	_body = body;
 

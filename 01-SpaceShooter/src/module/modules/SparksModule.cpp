@@ -30,7 +30,7 @@ void SparksModule::updateData(Entity* entity)
 	_sparksCooldown = sf::seconds(1.0f / _sparksPerSecond);
 }
 
-void SparksModule::addSparks(float angleDegree, const Entity* entity)
+void SparksModule::addSparks(float angleDegree, Entity* entity)
 {
 	const sf::RectangleShape shape = entity->GetShape();
 	const sf::Vector2f position = shape.getPosition();
@@ -44,10 +44,10 @@ void SparksModule::addSparks(float angleDegree, const Entity* entity)
 	const float sparksSpeed = stats.GetSpeed() * 50.f;
 	angleDegree -= 90.f;
 
-	_sparks.emplace_back(Spark(
+	_sparks.emplace_back(
 		entity->GetGame().GetNewBody(), sf::Vector2f(x, y),
 		angleDegree, 1.5f + weaponStats.GetSize(), Game::GetLinearVelocity(sparksSpeed, angleDegree), stats.GetSpeed() * 20.f, entity->GetProjectileGroup()
-	));
+	);
 }
 
 void SparksModule::Initialize(Entity* entity)
@@ -67,7 +67,17 @@ void SparksModule::Update(const sf::Time elapsed, Entity* entity)
 	}
 
 	// Remove the sparks that are dead
-	_sparks.erase(std::remove_if(_sparks.begin(), _sparks.end(), [](const Spark& spark) { return spark.IsDead(); }), _sparks.end());
+	_sparks.erase(std::remove_if(_sparks.begin(), _sparks.end(), [](const Spark& spark)
+	{
+		if (spark.IsDead())
+		{
+			spark.GetBody()->GetWorld()->DestroyBody(spark.GetBody());
+
+			return true;
+		}
+
+		return false;
+	}), _sparks.end());
 }
 
 void SparksModule::OnEntityMove(Entity* entity)

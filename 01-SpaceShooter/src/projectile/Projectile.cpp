@@ -1,5 +1,7 @@
 #include "projectile/Projectile.h"
 
+#include <iostream>
+
 #include "Game.h"
 
 Projectile::Projectile(b2Body* body, const sf::Vector2f position, 

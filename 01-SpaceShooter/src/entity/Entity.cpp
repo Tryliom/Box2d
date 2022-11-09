@@ -117,13 +117,13 @@ void Entity::Update(const sf::Time elapsed)
 	{
 		if (_groupIndex == Group::PLAYER)
 		{
-			_weapon->Shoot(*this, Group::PLAYER_PROJECTILE);
+			_weapon->Shoot(this, Group::PLAYER_PROJECTILE);
 
-			_weapon->StartCharging(*this);
+			_weapon->StartCharging(this);
 		}
 		else
 		{
-			_weapon->Shoot(*this, Group::ENEMY_PROJECTILE);
+			_weapon->Shoot(this, Group::ENEMY_PROJECTILE);
 		}
 	}
 
@@ -185,11 +185,11 @@ void Entity::TakeDamage(Entity* entity)
 	}
 }
 
-void Entity::ChargeWeapon() const
+void Entity::ChargeWeapon()
 {
 	if (_weapon != nullptr)
 	{
-		_weapon->StartCharging(*this);
+		_weapon->StartCharging(this);
 	}
 }
 

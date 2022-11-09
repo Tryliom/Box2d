@@ -51,7 +51,7 @@ public:
 	void TakeDamage(Projectile* projectile);
 	void TakeDamage(Entity* entity);
 
-	void ChargeWeapon() const;
+	void ChargeWeapon();
 	void StopChargingWeapon() const;
 
 	void AddBonusStats(const Stats::EntityStats bonusStats) const { _bonusStats += bonusStats; }

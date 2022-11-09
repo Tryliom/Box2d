@@ -18,7 +18,7 @@ protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void updateData(Entity* entity) override;
 
-	void addSparks(float angleDegree, const Entity* entity);
+	void addSparks(float angleDegree, Entity* entity);
 
 public:
 	void Initialize(Entity* entity) override;
