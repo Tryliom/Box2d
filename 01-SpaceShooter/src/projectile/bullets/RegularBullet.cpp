@@ -5,7 +5,7 @@
 
 RegularBullet::RegularBullet(b2Body* body, sf::Vector2f position, float angle, b2Vec2 velocity,
                          sf::Time lifeTime, float damage, bool canPierce, Group groupIndex) :
-	Projectile(body, position, Assets::GetInstance().GetTexture(Texture::CANON_BULLET), angle, velocity, lifeTime, damage, canPierce, groupIndex)
+	Projectile(body, position, Assets::GetInstance().GetTexture(Texture::CANON_BULLET), ShapeType::CIRCLE, angle, velocity, lifeTime, damage, canPierce, groupIndex)
 {}
 
 void RegularBullet::Update(const sf::Time elapsed)

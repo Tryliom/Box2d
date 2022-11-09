@@ -4,7 +4,7 @@
 #include "Group.h"
 
 Spark::Spark(b2Body* body, const sf::Vector2f position, const float angle, const b2Vec2 velocity, const float damage, Group group) :
-	Projectile(body, position, Assets::GetInstance().GetTexture(Texture::SPARKS),
+	Projectile(body, position, Assets::GetInstance().GetTexture(Texture::SPARKS), ShapeType::RECTANGLE,
 		angle, velocity, sf::seconds(0.5f),
 		damage, true, group
 	)

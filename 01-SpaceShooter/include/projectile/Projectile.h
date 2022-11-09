@@ -2,7 +2,11 @@
 #include "DrawableObject.h"
 #include "Group.h"
 
-//TODO: Add a projectile type shape (circle, rectangle, etc.)
+enum class ShapeType
+{
+	RECTANGLE,
+	CIRCLE
+};
 
 class Projectile : public DrawableObject
 {
@@ -12,6 +16,7 @@ public:
 	 * \param body The body of the projectile
 	 * \param position The position of the projectile
 	 * \param texture The texture of the projectile
+	 * \param shapeType The shape of the projectile
 	 * \param angle The angle of the projectile in degrees
 	 * \param velocity The velocity of the projectile
 	 * \param lifeTime The lifetime of the projectile (in seconds)
@@ -19,7 +24,9 @@ public:
 	 * \param canPierce Can the projectile pierce through multiple enemies?
 	 * \param groupIndex The group index of the projectile
 	 */
-	Projectile(b2Body* body, sf::Vector2f position, const sf::Texture& texture,
+	Projectile(
+		b2Body* body, sf::Vector2f position, 
+		const sf::Texture& texture, ShapeType shapeType,
 		float angle, b2Vec2 velocity, sf::Time lifeTime,
 		float damage, bool canPierce, Group groupIndex
 	);

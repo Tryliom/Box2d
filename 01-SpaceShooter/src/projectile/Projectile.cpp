@@ -2,9 +2,10 @@
 
 #include "Game.h"
 
-Projectile::Projectile(b2Body* body, const sf::Vector2f position, const sf::Texture& texture,
-                       const float angle, const b2Vec2 velocity, const sf::Time lifeTime,
-                       const float damage, const bool canPierce, const Group groupIndex) :
+Projectile::Projectile(b2Body* body, const sf::Vector2f position, 
+						const sf::Texture& texture, ShapeType shapeType,
+						const float angle, const b2Vec2 velocity, const sf::Time lifeTime,
+						const float damage, const bool canPierce, const Group groupIndex) :
 	DrawableObject(body, position)
 {
 	_lifeTime = lifeTime;
@@ -17,11 +18,23 @@ Projectile::Projectile(b2Body* body, const sf::Vector2f position, const sf::Text
 	_sprite.setOrigin(texture.getSize().x / 2.f, texture.getSize().y / 2.f);
 	_sprite.setRotation(angle);
 
-	b2PolygonShape dynamicBox;
-	dynamicBox.SetAsBox(Game::PixelToMeter(_sprite.getGlobalBounds().width / 2.f), Game::PixelToMeter(_sprite.getGlobalBounds().height / 2.f));
-
 	b2FixtureDef fixtureDef;
-	fixtureDef.shape = &dynamicBox;
+	b2PolygonShape dynamicBox;
+	b2CircleShape circleShape;
+
+	if (shapeType == ShapeType::RECTANGLE)
+	{
+		dynamicBox.SetAsBox(Game::PixelToMeter(_sprite.getGlobalBounds().width / 2.f), Game::PixelToMeter(_sprite.getGlobalBounds().height / 2.f));
+
+		fixtureDef.shape = &dynamicBox;
+	}
+	else
+	{
+		circleShape.m_radius = Game::PixelToMeter(_sprite.getGlobalBounds().width / 2.f);
+
+		fixtureDef.shape = &circleShape;
+	}
+
 	fixtureDef.density = 0.f;
 	fixtureDef.restitution = 0.f;
 	fixtureDef.friction = 0.f;
