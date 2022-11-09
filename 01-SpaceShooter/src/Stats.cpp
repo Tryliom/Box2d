@@ -32,6 +32,18 @@ namespace Stats
 		return CollisionReductionDamage * (1.f + CollisionReductionDamagePercentage);
 	}
 
+	float EntityStats::GetCollisionDamage(const float collisionDamage) const
+	{
+		float damage = (collisionDamage - CollisionReductionDamage) * (1.f - CollisionReductionDamagePercentage);
+
+		if (damage < 0.f)
+		{
+			damage = 0.f;
+		}
+
+		return damage;
+	}
+
 	float EntityStats::GetSize() const
 	{
 		return Size;

@@ -4,7 +4,7 @@
 #include "Random.h"
 
 Game::Game() :
-	_window(sf::RenderWindow(sf::VideoMode(1920, 1080), "Space Shooter", sf::Style::Close)),
+	_window(sf::RenderWindow(sf::VideoMode(1920, 1080), "Space Shooter", sf::Style::Fullscreen)),
 	_world(b2World(b2Vec2(0.0f, 0.f))),
 	_player(*this, sf::Vector2f(100.f, 100.f))
 {
@@ -25,6 +25,10 @@ Game::Game() :
 	_backgroundStep = 0.f;
 
 	_player.SetPosition(sf::Vector2f(-100.f, HEIGHT + 100.f));
+
+	_world.SetContactListener(&_contactListener);
+
+	_stopBurstSound = false;
 }
 
 void Game::update(const sf::Time elapsed)

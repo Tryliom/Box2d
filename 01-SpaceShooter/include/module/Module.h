@@ -22,8 +22,9 @@ public:
 	// Events
 	virtual void Update(sf::Time elapsed, Entity* entity) = 0;
 
-	virtual void OnEntityDeath(Entity* entity) {};
-	virtual void OnEntityHit(Entity* entity, Projectile* projectile) {};
-	virtual void OnEntityCollision(Entity* entity) {};
-	virtual void OnEntityMove(Entity* entity) {};
+	virtual void OnEntityDeath(Entity* entity) {}
+	virtual void OnEntityHit(Entity* entity, Projectile* projectile) {}
+	virtual void OnEntityHit(Entity* entity, Entity* projectile) {}
+	virtual void OnEntityCollision(Entity* entity) {}
+	virtual void OnEntityMove(Entity* entity) {}
 };

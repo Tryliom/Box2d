@@ -10,7 +10,8 @@ public:
 	CircleAnimation(sf::Vector2f position, float radius, float duration);
 
 protected:
-	sf::CircleShape _shape;
+	sf::Sprite _sprite;
+	sf::Vector2f _originalScale;
 	sf::Time _duration;
 	sf::Time _currentDuration;
 

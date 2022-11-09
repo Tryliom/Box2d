@@ -26,6 +26,7 @@ namespace Stats
 		float GetRotationSpeed() const;
 		float GetCollisionDamage() const;
 		float GetCollisionReductionDamage() const;
+		float GetCollisionDamage(float collisionDamage) const;
 		float GetSize() const;
 	};
 

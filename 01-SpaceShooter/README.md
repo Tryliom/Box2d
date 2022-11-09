@@ -1,6 +1,6 @@
 # TODO
 
-- Apply spread and multiple bullets per shots in weapons
+- Apply spread, size and multiple bullets per shots in weapons
 - Create a weapon that shoot regular bullets with short cooldown but low damage and 0.5 size
 
 - Create an enemy space ship (looks like a camper)

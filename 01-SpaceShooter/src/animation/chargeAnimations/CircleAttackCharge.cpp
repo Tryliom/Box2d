@@ -1,13 +1,16 @@
 #include "animation/chargeAnimations/CircleAttackCharge.h"
 
+#include "Assets.h"
+
 CircleAnimation::CircleAnimation(const sf::Vector2f position, const float radius, const float duration)
 {
-	_shape.setRadius(radius);
-	_shape.setOrigin(radius, radius);
-	_shape.setPosition(position);
-	_shape.setFillColor(sf::Color::Transparent);
-	_shape.setOutlineColor(sf::Color(255, 255, 255, 20));
-	_shape.setOutlineThickness(5.0f);
+	sf::Texture& texture = Assets::GetInstance().GetTexture(Texture::CHARGE_CIRCLE);
+
+	_sprite.setTexture(texture);
+	_sprite.setOrigin(sf::Vector2f(texture.getSize()) / 2.0f);
+	_sprite.setScale(1.5f * radius / texture.getSize().x, 1.5f * radius / texture.getSize().y);
+
+	_originalScale = _sprite.getScale();
 
 	_duration = sf::seconds(duration);
 	_currentDuration = sf::Time::Zero;
@@ -15,7 +18,7 @@ CircleAnimation::CircleAnimation(const sf::Vector2f position, const float radius
 
 void CircleAnimation::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(_shape, states);
+	target.draw(_sprite, states);
 }
 
 void CircleAnimation::Update(const sf::Time elapsed)
@@ -24,13 +27,14 @@ void CircleAnimation::Update(const sf::Time elapsed)
 
 	const float percentage = _currentDuration.asSeconds() / _duration.asSeconds();
 	
-	_shape.setOutlineColor(sf::Color(255, 255, 255, 20 + 235 * percentage));
-	_shape.setScale(1.0f - 1.f * percentage, 1.0f - 1.f * percentage);
+	_sprite.setColor(sf::Color(255, 255, 255, 255 * percentage));
+	_sprite.setScale(_originalScale * (1.f - 1.f * percentage));
+	_sprite.setRotation(_sprite.getRotation() + 360.f * elapsed.asSeconds());
 }
 
 void CircleAnimation::UpdatePosition(const sf::Vector2f position)
 {
-	_shape.setPosition(position);
+	_sprite.setPosition(position);
 }
 
 CircleAttackCharge::CircleAttackCharge(const sf::Vector2f position, const float radius, const float duration) :

@@ -6,8 +6,10 @@
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
 
+#include "ContactListener.h"
 #include "box2d/b2_body.h"
 #include "box2d/b2_world.h"
+#include "projectile/bullets/RegularBullet.h"
 
 class Game final
 {
@@ -19,6 +21,7 @@ private:
 	b2World _world;
 	sf::Music _music;
 	std::vector<sf::Sound> _sounds;
+	ContactListener _contactListener;
 
 	sf::Sound _burstSound;
 	bool _stopBurstSound;

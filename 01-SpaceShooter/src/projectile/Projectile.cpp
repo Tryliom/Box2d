@@ -27,6 +27,7 @@ Projectile::Projectile(b2Body* body, const sf::Vector2f position, const sf::Text
 	fixtureDef.friction = 0.f;
 	fixtureDef.filter.groupIndex = static_cast<int16>(_groupIndex);
 	fixtureDef.isSensor = true;
+	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t>(this);
 
 	_body->CreateFixture(&fixtureDef);
 

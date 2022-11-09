@@ -18,8 +18,6 @@ Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& textu
 	_groupIndex = groupIndex;
 	_weapon = weapon;
 	_modules = {};
-	
-	//_hitCooldown = {};
 
 	_shape.setTexture(&texture);
 	_shape.setSize(sf::Vector2f(texture.getSize()));
@@ -37,6 +35,8 @@ Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& textu
 	fixtureDef.density = 1.f;
 	fixtureDef.restitution = 0.1f;
 	fixtureDef.friction = 0.5f;
+	fixtureDef.filter.groupIndex = static_cast<int16>(_groupIndex);
+	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t>(this);
 
 	_body->CreateFixture(&fixtureDef);
 
@@ -131,20 +131,6 @@ void Entity::Update(const sf::Time elapsed)
 	{
 		module->Update(elapsed, this);
 	}
-
-	//for (auto it = _hitCooldown.begin(); it != _hitCooldown.end();)
-	//{
-	//	it->second -= elapsed;
-
-	//	if (it->second <= sf::Time::Zero)
-	//	{
-	//		it = _hitCooldown.erase(it);
-	//	}
-	//	else
-	//	{
-	//		++it;
-	//	}
-	//}
 }
 
 void Entity::Move()
@@ -181,16 +167,21 @@ Group Entity::GetProjectileGroup() const
 
 void Entity::TakeDamage(Projectile* projectile)
 {
-	/*if (std::find(_hitCooldown.begin(), _hitCooldown.end(), projectile) == _hitCooldown.end())
-	{
-		_health -= projectile->GetDamage();
-
-		_hitCooldown.emplace_back(projectile, sf::seconds(1.f));
-	}*/
+	_health -= projectile->GetDamage();
 
 	for (auto* module : _modules)
 	{
 		module->OnEntityHit(this, projectile);
+	}
+}
+
+void Entity::TakeDamage(Entity* entity)
+{
+	_health -= GetTotalStats().GetCollisionDamage(entity->GetTotalStats().GetCollisionDamage());
+
+	for (auto* module : _modules)
+	{
+		module->OnEntityHit(this, entity);
 	}
 }
 

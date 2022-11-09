@@ -12,7 +12,8 @@ Canon::Canon(Stats::WeaponStats& userStats) :
 		.Speed = 50.f,
 		.Range = 500.f,
 		.BulletsPerShot = 1,
-		.Cooldown = 1.5f
+		.Cooldown = 1.f,
+		.Size = 1.5f
 	}, userStats)
 {
 	
@@ -43,7 +44,7 @@ void Canon::Shoot(const Entity entity, const Group bulletGroup)
 {
 	Weapon::Shoot(entity, bulletGroup);
 
-	//TODO: Apply spread and multiple bullets per shot
+	//TODO: Apply spread, size and multiple bullets per shot
 
 	const Stats::WeaponStats stats = getTotalStats();
 	const float angle = Game::RadToDegree(entity.GetBody()->GetAngle());

@@ -2,6 +2,8 @@
 #include "DrawableObject.h"
 #include "Group.h"
 
+//TODO: Add a projectile type shape (circle, rectangle, etc.)
+
 class Projectile : public DrawableObject
 {
 public:
@@ -44,4 +46,6 @@ public:
 	float GetDamage() const { return _damage; }
 	bool CanPierce() const { return _canPierce; }
 	Group GetGroupIndex() const { return _groupIndex; }
+
+	void Destroy() { _currentLifeTime = _lifeTime; }
 };

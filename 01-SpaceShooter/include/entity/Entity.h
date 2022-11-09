@@ -30,8 +30,6 @@ protected:
 
 	Game& _game;
 
-	//std::vector<std::pair<Projectile*, sf::Time>> _hitCooldown;
-
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	float getDeltaAngle(float angle) const;
@@ -51,6 +49,7 @@ public:
 	Group GetProjectileGroup() const;
 
 	void TakeDamage(Projectile* projectile);
+	void TakeDamage(Entity* entity);
 
 	void ChargeWeapon() const;
 	void StopChargingWeapon() const;
