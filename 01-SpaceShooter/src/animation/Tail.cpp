@@ -5,7 +5,7 @@
 
 Tail::Tail(const sf::Vector2f position, const float angle)
 {
-	const sf::Texture& texture = Assets::GetInstance().GetTexture(Texture::TRAIL);
+	const sf::Texture& texture = Assets::GetInstance().GetTexture(Texture::TAIL);
 
 	_sprite.setTexture(texture);
 	_sprite.setOrigin(texture.getSize().x / 2.f, 0.f);

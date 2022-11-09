@@ -55,4 +55,5 @@ public:
 	Group GetGroupIndex() const { return _groupIndex; }
 
 	void Destroy() { _currentLifeTime = _lifeTime; }
+	Group GetGroup() const { return _groupIndex; }
 };

@@ -1,7 +1,5 @@
 # TODO
 
-- Add an effect on Penetration bullets
-
 - Create an enemy space ship (looks like a camper)
 	
 - Create an enemy class that can charge an attack, shoot it, have a reload time between shots, etc.
