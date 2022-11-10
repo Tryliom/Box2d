@@ -1,5 +1,7 @@
 #include "projectile/Projectile.h"
 
+#include <iostream>
+
 #include "Game.h"
 
 Projectile::Projectile(b2Body* body, const sf::Vector2f position, 
@@ -69,7 +71,12 @@ void Projectile::Update(const sf::Time elapsed)
 {
 	_currentLifeTime += elapsed;
 
-	const float scale = _size * (1.f - _currentLifeTime.asSeconds() / _lifeTime.asSeconds());
+	float scale = _size * (1.f - _currentLifeTime.asSeconds() / _lifeTime.asSeconds());
+
+	if (scale < 0.f)
+	{
+		scale = 0.f;
+	}
 
 	_sprite.setScale(scale, scale);
 	_sprite.setPosition(Game::MeterToPixel(_body->GetPosition()));
@@ -91,14 +98,14 @@ void Projectile::Update(const sf::Time elapsed)
 	), _hitAnimations.end());
 }
 
-void Projectile::OnImpact()
+void Projectile::OnImpact(sf::Vector2f impactPoint)
 {
 	if (!_canPierce)
 	{
 		_currentLifeTime = _lifeTime;
 	}
 
-	_hitAnimations.emplace_back(HitAnimation(_sprite.getPosition(), GetColor(_groupIndex)));
+	_hitAnimations.emplace_back(impactPoint);
 }
 
 bool Projectile::IsDead() const

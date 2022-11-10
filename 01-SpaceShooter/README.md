@@ -1,5 +1,6 @@
 # TODO
 	
+- Add a hit animation on the impact point instead of the projectile position
 - Check if the enemy has the time to do an attack or force it to finish his attack
 - Add an animation when an entity is destroyed (maybe keep entity shape living while animation is not finished)
 - Display hp bar of the boss

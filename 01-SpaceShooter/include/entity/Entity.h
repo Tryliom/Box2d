@@ -26,7 +26,7 @@ protected:
 	Group _groupIndex;
 	Weapon* _weapon;
 	Stats::WeaponStats _weaponStats;
-	std::vector<Module*> _modules;
+	std::list<Module*> _modules;
 
 	Game& _game;
 

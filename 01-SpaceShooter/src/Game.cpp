@@ -6,7 +6,7 @@
 #include "entity/enemies/Imperator.h"
 
 Game::Game() :
-	_window(sf::RenderWindow(sf::VideoMode(1920, 1080), "Space Shooter", sf::Style::Fullscreen)),
+	_window(sf::RenderWindow(sf::VideoMode(1920, 1080), "Space Shooter", sf::Style::Close)),
 	_world(b2World(b2Vec2(0.0f, 0.f))),
 	_player(*this, sf::Vector2f(100.f, 100.f))
 {

@@ -2,7 +2,7 @@
 
 #include "Assets.h"
 
-HitAnimation::HitAnimation(const sf::Vector2f position, const sf::Color color)
+HitAnimation::HitAnimation(const sf::Vector2f position)
 {
 	const sf::Texture& texture = Assets::GetInstance().GetHitAnimationTexture(_currentFrame);
 

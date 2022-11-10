@@ -1,7 +1,10 @@
 #include "ContactListener.h"
 
+#include <iostream>
+
 #include "entity/Entity.h"
 #include "box2d/b2_contact.h"
+#include "Game.h"
 
 void ContactListener::BeginContact(b2Contact* contact)
 {
@@ -12,8 +15,8 @@ void ContactListener::BeginContact(b2Contact* contact)
 	const auto groupA = static_cast<Group>(bodyA->GetFixtureList()->GetFilterData().groupIndex);
 	const auto groupB = static_cast<Group>(bodyB->GetFixtureList()->GetFilterData().groupIndex);
 
-	const auto aPointer = contact->GetFixtureA()->GetUserData().pointer;
-	const auto bPointer = contact->GetFixtureB()->GetUserData().pointer;
+	auto aPointer = contact->GetFixtureA()->GetUserData().pointer;
+	auto bPointer = contact->GetFixtureB()->GetUserData().pointer;
 
 	if (groupA == Group::PLAYER && groupB == Group::ENEMY || groupA == Group::ENEMY && groupB == Group::PLAYER)
 	{
@@ -24,12 +27,12 @@ void ContactListener::BeginContact(b2Contact* contact)
 		entityA->TakeDamage(entityB);
 		entityB->TakeDamage(entityA);
 	}
-	else if (groupA == Group::PLAYER && groupB == Group::ENEMY_PROJECTILE || groupA == Group::ENEMY_PROJECTILE && groupB == Group::PLAYER ||
-		groupA == Group::PLAYER_PROJECTILE && groupB == Group::ENEMY || groupA == Group::ENEMY && groupB == Group::PLAYER_PROJECTILE)
+	else if ((groupA == Group::PLAYER && groupB == Group::ENEMY_PROJECTILE) || (groupA == Group::ENEMY_PROJECTILE && groupB == Group::PLAYER) ||
+			 (groupA == Group::PLAYER_PROJECTILE && groupB == Group::ENEMY) || (groupA == Group::ENEMY && groupB == Group::PLAYER_PROJECTILE))
 	{
 		// Player hit an enemy projectile
-		Entity* entity;
-		Projectile* projectile;
+		Entity* entity = nullptr;
+		Projectile* projectile = nullptr;
 
 		if (groupA == Group::PLAYER || groupA == Group::ENEMY)
 		{
@@ -42,8 +45,19 @@ void ContactListener::BeginContact(b2Contact* contact)
 			projectile = reinterpret_cast<Projectile*>(aPointer);
 		}
 
-		entity->TakeDamage(projectile);
-		projectile->OnImpact();
+		if (projectile->Mask == -1 && projectile->Mask2 == -1)
+		{
+			//TODO: Get impact position
+
+			auto worldManifold = b2WorldManifold();
+			contact->GetWorldManifold(&worldManifold);
+
+			std::cout << "Impact at: " << worldManifold.points[0].x << ", " << worldManifold.points[0].y << std::endl;
+			std::cout << "Impact2 at: " << contact->GetManifold()->points[0].localPoint.x << ", " << contact->GetManifold()->points[0].localPoint.y << std::endl;
+
+			entity->TakeDamage(projectile);
+			projectile->OnImpact(Game::MeterToPixel(worldManifold.points[0]));
+		}
 	}
 }
 

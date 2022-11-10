@@ -7,13 +7,14 @@ constexpr float HIT_ANIMATION_DURATION = 1.f / 24.f;
 class HitAnimation final : public sf::Drawable
 {
 public:
-	HitAnimation(sf::Vector2f position, sf::Color color);
+	HitAnimation(sf::Vector2f position);
 
 private:
 	sf::Sprite _sprite;
 	int _currentFrame{ 0 };
-	sf::Time _currentDuration;
 	sf::Vector2f _position;
+
+	sf::Time _currentDuration;
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 

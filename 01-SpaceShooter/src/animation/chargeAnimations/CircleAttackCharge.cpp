@@ -18,7 +18,7 @@ CircleAnimation::CircleAnimation(const sf::Vector2f position, const float radius
 	_currentDuration = sf::Time::Zero;
 }
 
-void CircleAnimation::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void CircleAnimation::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
 	target.draw(_sprite, states);
 }

@@ -22,7 +22,7 @@ void Weapon::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 		target.draw(*_chargeAnimation, states);
 	}
 
-	for (const Projectile* bullet : _bullets)
+	for (const auto* bullet : _bullets)
 	{
 		target.draw(*bullet, states);
 	}
