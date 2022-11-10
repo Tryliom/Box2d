@@ -20,6 +20,7 @@ Projectile::Projectile(b2Body* body, const sf::Vector2f position,
 	_sprite.setOrigin(texture.getSize().x / 2.f, texture.getSize().y / 2.f);
 	_sprite.setRotation(angle);
 	_sprite.setScale(size, size);
+	_sprite.setPosition(position);
 
 	b2FixtureDef fixtureDef;
 	b2PolygonShape dynamicBox;

@@ -25,7 +25,7 @@ protected:
 
 	std::vector<Projectile*> _bullets;
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	[[nodiscard]] Stats::WeaponStats getTotalStats() const { return _stats + _userStats; }
 	[[nodiscard]] sf::Time getLifeTime() const;

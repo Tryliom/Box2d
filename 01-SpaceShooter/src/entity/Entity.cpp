@@ -1,5 +1,7 @@
 #include "entity/Entity.h"
 
+#include <iostream>
+
 #include "Game.h"
 
 Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& texture,
@@ -19,20 +21,22 @@ Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& textu
 	_weapon = nullptr;
 	_modules = {};
 
+	const float scale = 1.f + GetTotalStats().Size;
 	_shape.setTexture(&texture);
 	_shape.setSize(sf::Vector2f(texture.getSize()));
 	_shape.setOrigin(_shape.getSize() / 2.f);
 	_shape.setPosition(position);
+	_shape.setScale(scale, scale);
 	
 	_shape.setFillColor(GetColor(_groupIndex));
 
 	b2CircleShape circle;
-	circle.m_radius = Game::PixelToMeter(_shape.getSize().x / 2.f);
+	circle.m_radius = Game::PixelToMeter(_shape.getSize().x / 3.f);
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &circle;
 	fixtureDef.density = 1.f;
-	fixtureDef.restitution = 0.1f;
+	fixtureDef.restitution = 1.f;
 	fixtureDef.friction = 0.5f;
 	fixtureDef.filter.groupIndex = static_cast<int16>(_groupIndex);
 	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t>(this);
@@ -195,6 +199,19 @@ void Entity::StopChargingWeapon() const
 	if (_weapon != nullptr)
 	{
 		_weapon->StopCharging();
+	}
+}
+
+void Entity::AddBonusStats(const Stats::EntityStats bonusStats)
+{
+	_bonusStats += bonusStats;
+
+	if (bonusStats.Size != 0.f)
+	{
+		const float scale = 1.f + GetTotalStats().Size;
+
+		_shape.setScale(scale, scale);
+		_body->GetFixtureList()->GetShape()->m_radius = Game::PixelToMeter(_shape.getSize().x / 3.f * scale);
 	}
 }
 

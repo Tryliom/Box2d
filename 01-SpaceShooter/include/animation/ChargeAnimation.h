@@ -16,6 +16,7 @@ protected:
 	sf::Time _currentTimeBetweenAnimations;
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
 	// Called each time between animations
 	virtual void addAnimation();
 
@@ -24,5 +25,5 @@ public:
 	virtual void Stop();
 	virtual void UpdatePosition(sf::Vector2f position);
 
-	bool IsFullyCharged() const { return _currentDuration >= _duration; }
+	[[nodiscard]] bool IsFullyCharged() const { return _currentDuration >= _duration; }
 };

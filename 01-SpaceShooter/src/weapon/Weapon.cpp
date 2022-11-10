@@ -17,7 +17,7 @@ Weapon::Weapon(const Stats::WeaponStats stats, Stats::WeaponStats& userStats) : 
 
 void Weapon::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
-	if (_chargeAnimation != nullptr)
+	if (_chargeAnimation != nullptr && _isCharging)
 	{
 		target.draw(*_chargeAnimation, states);
 	}

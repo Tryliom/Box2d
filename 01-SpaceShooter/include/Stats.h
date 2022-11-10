@@ -62,6 +62,6 @@ namespace Stats
 
 	WeaponStats operator+(WeaponStats stats, WeaponStats otherStats);
 	EntityStats operator+(EntityStats stats, EntityStats otherStats);
-	WeaponStats operator+=(WeaponStats stats, WeaponStats otherStats);
-	EntityStats operator+=(EntityStats stats, EntityStats otherStats);
+	WeaponStats operator+=(WeaponStats& stats, WeaponStats otherStats);
+	EntityStats operator+=(EntityStats& stats, EntityStats otherStats);
 };

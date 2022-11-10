@@ -27,7 +27,6 @@ public:
 class CircleAttackCharge final : public ChargeAnimation
 {
 public:
-	CircleAttackCharge() = default;
 	CircleAttackCharge(sf::Vector2f position, float radius, float duration);
 
 protected:

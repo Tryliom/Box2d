@@ -12,10 +12,11 @@ Imperator::Imperator(Game& game, sf::Vector2f position) :
 			.Speed = 0.1f,
 			.RotationSpeed = 10.f,
 			.CollisionDamage = 20.f,
-			.Size = 2.f
+			.Size = 3.f
 		},
 		Stats::WeaponStats{
-			.SpeedPercentage = -0.5f
+			.SpeedPercentage = -0.5f,
+			.Size = 2.f
 		},
 		{
 			Pattern(ActionType::MOVE_TO_PLAYER, sf::seconds(3.f)),
@@ -43,7 +44,7 @@ void Imperator::Update(const sf::Time elapsed)
 	}
 }
 
-void Imperator::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void Imperator::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
 	Enemy::draw(target, states);
 
@@ -57,6 +58,18 @@ void Imperator::onEndCycle()
 {
 	// Change weapon
 	nextWeapon();
+
+	if (_weaponStats.CooldownReductionPercentage < 0.5f)
+	{
+		_weaponStats.CooldownReductionPercentage += 0.01f;
+	}
+	else if (_weaponStats.BulletsPerShotPercentage < 1.f)
+	{
+		_weaponStats.BulletsPerShotPercentage += 0.02f;
+	}
+		
+	AddBonusStats(Stats::EntityStats{ .Size = 0.01f });
+	_weaponStats.Size = GetTotalStats().Size - 1.f;
 }
 
 void Imperator::nextWeapon()

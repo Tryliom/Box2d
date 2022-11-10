@@ -200,17 +200,39 @@ void Game::renderHealthBar()
 void Game::spawnEnemies()
 {
 	// Spawn enemies outside the screen
-	const float x = Random::GetFloat(0.f, 1.f) < 0.5f ? -100.f : Game::WIDTH + 100.f;
-	const float y = Random::GetFloat(0.f, 1.f) < 0.5f ? -100.f : Game::HEIGHT + 100.f;
 	const int number = Random::GetInt(1, 10);
 
-	if (Random::GetFloat() < 0.3f)
+	if (Random::GetFloat() < 1.f)
 	{
-		_enemies.emplace_back(new Imperator(*this, sf::Vector2f(x, y)));
+		_enemies.emplace_back(new Imperator(*this, sf::Vector2f(WIDTH / 2.f, -200.f)));
 	}
 
 	for (int i = 0; i < number; ++i)
 	{
+		const float rand = Random::GetFloat();
+		float x, y;
+
+		if (rand < 0.25f)
+		{
+			x = Random::GetFloat(0.f, WIDTH);
+			y = Random::GetFloat(-100.f, -50.f);
+		}
+		else if (rand < 0.5f)
+		{
+			x = Random::GetFloat(0.f, WIDTH);
+			y = Random::GetFloat(HEIGHT + 50.f, HEIGHT + 100.f);
+		}
+		else if (rand < 0.75f)
+		{
+			x = Random::GetFloat(-100.f, -50.f);
+			y = Random::GetFloat(0.f, HEIGHT);
+		}
+		else
+		{
+			x = Random::GetFloat(WIDTH + 50.f, WIDTH + 100.f);
+			y = Random::GetFloat(0.f, HEIGHT);
+		}
+
 		_enemies.emplace_back(new Camper(*this, sf::Vector2f(x, y)));
 	}
 }

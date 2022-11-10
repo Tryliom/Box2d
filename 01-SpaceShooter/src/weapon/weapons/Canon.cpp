@@ -18,7 +18,7 @@ void Canon::shootBullet(b2Body* body, const sf::Vector2f position, const float a
 {
 	const Stats::WeaponStats stats = getTotalStats();
 
-	_bullets.push_back(new RegularBullet(
+	_bullets.emplace_back(new RegularBullet(
 		body, position, angle, 
 		stats.GetSize(), velocity, getLifeTime(),
 		stats.GetDamage(), bulletGroup

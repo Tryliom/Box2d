@@ -133,13 +133,13 @@ namespace Stats
 		return newStats;
 	}
 
-	WeaponStats operator+=(WeaponStats stats, const WeaponStats otherStats)
+	WeaponStats operator+=(WeaponStats& stats, const WeaponStats otherStats)
 	{
 		stats = stats + otherStats;
 		return stats;
 	}
 
-	EntityStats operator+=(EntityStats stats, const EntityStats otherStats)
+	EntityStats operator+=(EntityStats& stats, const EntityStats otherStats)
 	{
 		stats = stats + otherStats;
 		return stats;

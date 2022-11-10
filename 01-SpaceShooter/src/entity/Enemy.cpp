@@ -59,7 +59,7 @@ void Enemy::Update(const sf::Time elapsed)
 			const float x = GetPosition().x + _shape.getSize().x / 2.f;
 			const float y = GetPosition().y + _shape.getSize().y / 2.f;
 
-			if (x < 0.f || x > _game.GetWindow().getSize().x || y < 0.f || y > _game.GetWindow().getSize().y)
+			if (Game::IsOutOfScreen(sf::Vector2f(x, y)))
 			{
 				_health = 0.f;
 			}

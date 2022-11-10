@@ -18,6 +18,7 @@ public:
 	 * \param texture The texture of the projectile
 	 * \param shapeType The shape of the projectile
 	 * \param angle The angle of the projectile in degrees
+	 * \param size The size of the projectile
 	 * \param velocity The velocity of the projectile
 	 * \param lifeTime The lifetime of the projectile (in seconds)
 	 * \param damage The damage of the projectile, if it can pierce, it will be divided by seconds

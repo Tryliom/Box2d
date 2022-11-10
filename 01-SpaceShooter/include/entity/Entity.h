@@ -54,8 +54,8 @@ public:
 	void ChargeWeapon();
 	void StopChargingWeapon() const;
 
-	void AddBonusStats(const Stats::EntityStats bonusStats) const { _bonusStats += bonusStats; }
-	void AddBonusStats(const Stats::WeaponStats bonusStats) const { _weaponStats += bonusStats; }
+	void AddBonusStats(const Stats::EntityStats bonusStats);
+	void AddBonusStats(const Stats::WeaponStats bonusStats) { _weaponStats += bonusStats; }
 
 	Stats::EntityStats GetTotalStats() const { return _stats + _bonusStats; }
 	Stats::WeaponStats GetWeaponStats() const { return _weaponStats; }
