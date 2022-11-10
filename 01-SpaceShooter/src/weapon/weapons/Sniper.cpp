@@ -49,8 +49,7 @@ Sniper::Sniper(Stats::WeaponStats& userStats) :
 	_trails = {};
 }
 
-void Sniper::shootBullet(b2Body* body, const sf::Vector2f position, const float angle, const b2Vec2 velocity,
-	const Group bulletGroup)
+void Sniper::shootBullet(b2Body* body, const sf::Vector2f position, const float angle, const b2Vec2 velocity, const Group bulletGroup)
 {
 	const Stats::WeaponStats stats = getTotalStats();
 

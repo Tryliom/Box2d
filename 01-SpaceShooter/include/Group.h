@@ -3,6 +3,7 @@
 
 enum class Group
 {
+	UNKNOWN,
 	PLAYER,
 	ENEMY,
 	PLAYER_PROJECTILE,
