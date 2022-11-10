@@ -4,6 +4,7 @@
 - Check if the enemy has the time to do an attack or force it to finish his attack
 - Add an animation when an entity is destroyed (maybe keep entity shape living while animation is not finished)
 - Fix the bug of the circle animation displaying at 0 0 after an attack
+- Try to calculate the future position of the player with the enemy
 
 - Make animation when a bullet hit something
 - Create experience shards that rotate on themselves and are attracted by the player when a enemy is destroyed
