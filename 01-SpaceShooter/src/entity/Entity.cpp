@@ -4,7 +4,7 @@
 
 Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& texture,
                const float health, const float maxHealth, 
-               const Stats::EntityStats stats, const Group groupIndex, Weapon* weapon, const float angle) :
+               const Stats::EntityStats stats, const Group groupIndex) :
 	DrawableObject(game.GetNewBody(), position),
 	_game(game)
 {
@@ -16,22 +16,21 @@ Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& textu
 	_weaponStats = {};
 
 	_groupIndex = groupIndex;
-	_weapon = weapon;
+	_weapon = nullptr;
 	_modules = {};
 
 	_shape.setTexture(&texture);
 	_shape.setSize(sf::Vector2f(texture.getSize()));
 	_shape.setOrigin(_shape.getSize() / 2.f);
 	_shape.setPosition(position);
-	_shape.setRotation(angle);
 	
 	_shape.setFillColor(GetColor(_groupIndex));
 
-	b2PolygonShape dynamicBox;
-	dynamicBox.SetAsBox(Game::PixelToMeter(_shape.getSize().x / 2.f), Game::PixelToMeter(_shape.getSize().y / 2.f));
+	b2CircleShape circle;
+	circle.m_radius = Game::PixelToMeter(_shape.getSize().x / 2.f);
 
 	b2FixtureDef fixtureDef;
-	fixtureDef.shape = &dynamicBox;
+	fixtureDef.shape = &circle;
 	fixtureDef.density = 1.f;
 	fixtureDef.restitution = 0.1f;
 	fixtureDef.friction = 0.5f;
@@ -113,18 +112,16 @@ void Entity::Update(const sf::Time elapsed)
 	// Update the rotation of the shape
 	_shape.setRotation(Game::RadToDegree(_body->GetAngle()));
 
+	if (_weapon != nullptr)
+	{
+		_weapon->UpdatePosition(_shape.getPosition());
+		_weapon->Update(elapsed);
+	}
+
 	if (_weapon != nullptr && _weapon->CanShoot())
 	{
-		if (_groupIndex == Group::PLAYER)
-		{
-			_weapon->Shoot(this, Group::PLAYER_PROJECTILE);
-
-			_weapon->StartCharging(this);
-		}
-		else
-		{
-			_weapon->Shoot(this, Group::ENEMY_PROJECTILE);
-		}
+		_weapon->Shoot(this, _groupIndex == Group::PLAYER ? Group::PLAYER_PROJECTILE : Group::ENEMY_PROJECTILE);
+		_weapon->StartCharging(this);
 	}
 
 	for (auto* module : _modules)

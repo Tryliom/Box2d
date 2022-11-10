@@ -12,6 +12,7 @@ Assets::Assets()
 	_textures[static_cast<int>(Texture::CHARGE_CIRCLE)].loadFromFile("data/images/charge_circle.png");
 	_textures[static_cast<int>(Texture::SNIPER_TRAIL)].loadFromFile("data/images/trail.png");
 	_textures[static_cast<int>(Texture::ENEMY_CAMPER)].loadFromFile("data/images/enemies/camper.png");
+	_textures[static_cast<int>(Texture::ENEMY_IMPERATOR)].loadFromFile("data/images/enemies/imperator.png");
 
 	_fonts[static_cast<int>(Font::PIXELMIX)].loadFromFile("data/fonts/pixelmix.ttf");
 

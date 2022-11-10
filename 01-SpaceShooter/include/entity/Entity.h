@@ -11,7 +11,7 @@ class Entity : public DrawableObject
 public:
 	Entity(Game& game, sf::Vector2f position, const sf::Texture& texture,
 		float health, float maxHealth, Stats::EntityStats stats, 
-		Group groupIndex, Weapon* weapon = nullptr, float angle = 0.f
+		Group groupIndex
 	);
 private:
 	Stats::EntityStats _stats;

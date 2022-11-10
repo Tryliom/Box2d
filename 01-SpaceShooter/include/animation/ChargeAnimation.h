@@ -4,7 +4,6 @@
 class ChargeAnimation : public sf::Drawable
 {
 public:
-	ChargeAnimation();
 	ChargeAnimation(sf::Vector2f position, float duration);
 
 protected:

@@ -76,7 +76,7 @@ namespace Stats
 
 	float WeaponStats::GetCooldown() const
 	{
-		return (Cooldown - CooldownReduction) * (1.f - CoolDownReductionPercentage);
+		return (Cooldown - CooldownReduction) * (1.f - CooldownReductionPercentage);
 	}
 
 	float WeaponStats::GetSize() const
@@ -103,7 +103,7 @@ namespace Stats
 
 		newStats.Cooldown = stats.Cooldown + otherStats.Cooldown;
 		newStats.CooldownReduction = stats.CooldownReduction + otherStats.CooldownReduction;
-		newStats.CoolDownReductionPercentage = stats.CoolDownReductionPercentage + otherStats.CoolDownReductionPercentage;
+		newStats.CooldownReductionPercentage = stats.CooldownReductionPercentage + otherStats.CooldownReductionPercentage;
 
 		newStats.Size = stats.Size + otherStats.Size;
 

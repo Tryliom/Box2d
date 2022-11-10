@@ -8,7 +8,7 @@ Canon::Canon(Stats::WeaponStats& userStats) :
 		.Damage = 20.f,
 		.Speed = 50.f,
 		.Spread = 15.f,
-		.Range = 500.f,
+		.Range = 100.f,
 		.BulletsPerShot = 1,
 		.Cooldown = 0.8f,
 		.Size = 1.5f

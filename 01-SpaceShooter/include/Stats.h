@@ -47,7 +47,7 @@ namespace Stats
 
 		float Cooldown{ 0.f };
 		float CooldownReduction{ 0.f };
-		float CoolDownReductionPercentage{ 0.f };
+		float CooldownReductionPercentage{ 0.f };
 
 		float Size{ 0.f };
 

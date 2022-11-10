@@ -2,6 +2,8 @@
 
 #include "Assets.h"
 #include "Random.h"
+#include "entity/enemies/Camper.h"
+#include "entity/enemies/Imperator.h"
 
 Game::Game() :
 	_window(sf::RenderWindow(sf::VideoMode(1920, 1080), "Space Shooter", sf::Style::Fullscreen)),
@@ -25,6 +27,8 @@ Game::Game() :
 	_backgroundStep = 0.f;
 
 	_player.SetPosition(sf::Vector2f(-100.f, HEIGHT + 100.f));
+
+	_enemies = {};
 
 	_world.SetContactListener(&_contactListener);
 
@@ -63,6 +67,16 @@ void Game::update(const sf::Time elapsed)
 
 	_player.Update(elapsed);
 
+	if (_enemies.size() == 0)
+	{
+		spawnEnemies();
+	}
+
+	for (auto* enemy : _enemies)
+	{
+		enemy->Update(elapsed);
+	}
+
 	// If the player go out of the screen, teleport him to the other side
 	if (_player.GetPosition().x < 0)
 	{
@@ -86,6 +100,20 @@ void Game::update(const sf::Time elapsed)
 	{
 		return sound.getStatus() == sf::Sound::Status::Stopped;
 	}), _sounds.end());
+
+	// Remove the enemies that are dead
+	_enemies.erase(std::remove_if(_enemies.begin(), _enemies.end(), [](Enemy* enemy)
+		{
+			if (enemy->IsDead())
+			{
+				enemy->GetBody()->GetWorld()->DestroyBody(enemy->GetBody());
+
+				return true;
+			}
+
+			return false;
+		}
+	), _enemies.end());
 }
 
 void Game::checkInputs(const sf::Event event)
@@ -130,6 +158,11 @@ void Game::render()
 	// Render entities
 	_window.draw(_player);
 
+	for (const auto* enemy : _enemies)
+	{
+		_window.draw(*enemy);
+	}
+
 	renderHealthBar();
 
 	_window.display();
@@ -162,6 +195,24 @@ void Game::renderHealthBar()
 	healthBar.setPosition(healthBackgroundBar.getPosition());
 
 	_window.draw(healthBar);
+}
+
+void Game::spawnEnemies()
+{
+	// Spawn enemies outside the screen
+	const float x = Random::GetFloat(0.f, 1.f) < 0.5f ? -100.f : Game::WIDTH + 100.f;
+	const float y = Random::GetFloat(0.f, 1.f) < 0.5f ? -100.f : Game::HEIGHT + 100.f;
+	const int number = Random::GetInt(1, 10);
+
+	if (Random::GetFloat() < 0.3f)
+	{
+		_enemies.emplace_back(new Imperator(*this, sf::Vector2f(x, y)));
+	}
+
+	for (int i = 0; i < number; ++i)
+	{
+		_enemies.emplace_back(new Camper(*this, sf::Vector2f(x, y)));
+	}
 }
 
 sf::Vector2f Game::MeterToPixel(const b2Vec2 meter)
@@ -252,9 +303,19 @@ b2Body* Game::GetNewBody()
 	return _world.CreateBody(&bodyDef);
 }
 
+Player& Game::GetPlayer()
+{
+	return _player;
+}
+
 void Game::PlaySound(const Sound sound)
 {
 	_sounds.emplace_back();
 	_sounds.back().setBuffer(Assets::GetInstance().GetSound(sound));
 	_sounds.back().play();
+}
+
+bool Game::IsOutOfScreen(const sf::Vector2f position)
+{
+	return position.x < 0.f || position.x > Game::WIDTH || position.y < 0.f || position.y > Game::HEIGHT;
 }

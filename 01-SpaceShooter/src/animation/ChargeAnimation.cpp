@@ -1,16 +1,5 @@
 #include "animation/ChargeAnimation.h"
 
-ChargeAnimation::ChargeAnimation()
-{
-	_position = sf::Vector2f(0.0f, 0.0f);
-
-	_duration = sf::seconds(0.f);
-	_currentDuration = sf::Time::Zero;
-
-	_timeBetweenAnimations = sf::seconds(0.f);
-	_currentTimeBetweenAnimations = sf::Time::Zero;
-}
-
 ChargeAnimation::ChargeAnimation(sf::Vector2f position, float duration)
 {
 	_position = position;

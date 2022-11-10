@@ -9,6 +9,7 @@
 #include "ContactListener.h"
 #include "box2d/b2_body.h"
 #include "box2d/b2_world.h"
+#include "entity/Enemy.h"
 #include "projectile/bullets/RegularBullet.h"
 
 class Game final
@@ -31,11 +32,13 @@ private:
 
 	// Entities
 	Player _player;
+	std::vector<Enemy*> _enemies;
 
 	void update(sf::Time elapsed);
 	void checkInputs(sf::Event event);
 	void render();
 	void renderHealthBar();
+	void spawnEnemies();
 
 public:
 	inline static float HEIGHT = 0.f;
@@ -61,9 +64,11 @@ public:
 	int Loop();
 
 	b2Body* GetNewBody();
+	Player& GetPlayer();
 
 	sf::RenderWindow& GetWindow() { return _window; }
 	b2World& GetWorld() { return _world; }
 
 	void PlaySound(Sound sound);
+	static bool IsOutOfScreen(sf::Vector2f position);
 };

@@ -18,7 +18,10 @@ CircleAnimation::CircleAnimation(const sf::Vector2f position, const float radius
 
 void CircleAnimation::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(_sprite, states);
+	if (_sprite.getPosition() != sf::Vector2f(0.f, 0.f))
+	{
+		target.draw(_sprite, states);
+	}
 }
 
 void CircleAnimation::Update(const sf::Time elapsed)

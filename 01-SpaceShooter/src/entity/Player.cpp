@@ -3,7 +3,7 @@
 #include "Assets.h"
 #include "Game.h"
 #include "module/modules/SparksModule.h"
-#include "weapon/weapons/Sniper.h"
+#include "weapon/weapons/MachineGun.h"
 
 Player::Player(Game& game, const sf::Vector2f position) :
 	Entity(
@@ -13,11 +13,14 @@ Player::Player(Game& game, const sf::Vector2f position) :
 			.Speed = 0.5f,
 			.RotationSpeed = 15.f,
 		},
-		Group::PLAYER, nullptr, 45.f
+		Group::PLAYER
 	)
 {
-	_weapon = new Sniper(_weaponStats);
+	_weapon = new MachineGun(_weaponStats);
 	AddModule(new SparksModule());
+
+	_shape.setRotation(45.f);
+	_body->SetTransform(Game::PixelToMeter(position), Game::DegreeToRad(_shape.getRotation()));
 
 	// Add a linear velocity to the body to make it move to the angle it is facing by default to add some style
 	_body->SetLinearVelocity(Game::GetLinearVelocity(GetTotalStats().GetSpeed() * 100.f, _shape.getRotation()));
@@ -66,12 +69,6 @@ void Player::Update(const sf::Time elapsed)
 		tail.Update(elapsed);
 		tail.SetAngle(_shape.getRotation());
 		tail.SetPosition(getTrailPosition());
-	}
-
-	if (_weapon != nullptr)
-	{
-		_weapon->UpdatePosition(_shape.getPosition());
-		_weapon->Update(elapsed);
 	}
 
 	// Remove tails that are dead

@@ -6,7 +6,7 @@ MachineGun::MachineGun(Stats::WeaponStats& userStats) :
 	Weapon(Stats::WeaponStats{
 		.Damage = 5.f,
 		.Speed = 120.f,
-		.Spread = 5.f,
+		.Spread = 15.f,
 		.Range = 500.f,
 		.BulletsPerShot = 3,
 		.Cooldown = 0.3f,

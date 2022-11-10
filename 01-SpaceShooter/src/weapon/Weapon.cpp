@@ -12,12 +12,15 @@ Weapon::Weapon(const Stats::WeaponStats stats, Stats::WeaponStats& userStats) : 
 	_currentCooldown = getTotalStats().GetCooldown();
 	_isCharging = false;
 
-	_chargeAnimation = new ChargeAnimation();
+	_chargeAnimation = nullptr;
 }
 
 void Weapon::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
-	target.draw(*_chargeAnimation, states);
+	if (_chargeAnimation != nullptr)
+	{
+		target.draw(*_chargeAnimation, states);
+	}
 
 	for (const Projectile* bullet : _bullets)
 	{
@@ -46,23 +49,33 @@ sf::Vector2f Weapon::getFrontPosition(const Entity* entity) const
 
 void Weapon::StartCharging(Entity* entity)
 {
-	_isCharging = true;
-	_currentCooldown = getTotalStats().GetCooldown();
+	if (!_isCharging)
+	{
+		_isCharging = true;
+		_currentCooldown = getTotalStats().GetCooldown();
 
-	const sf::Vector2f size = entity->GetShape().getSize();
+		const sf::Vector2f size = entity->GetShape().getSize();
+		const sf::Vector2f position = entity->GetShape().getPosition();
 
-	_chargeAnimation = new CircleAttackCharge(entity->GetPosition(), (size.x + size.y) / 2.f, getTotalStats().GetCooldown());
+		_chargeAnimation = new CircleAttackCharge(position, (size.x + size.y) / 2.f, getTotalStats().GetCooldown());
+	}
 }
 
 void Weapon::StopCharging()
 {
-	_isCharging = false;
-	_currentCooldown = getTotalStats().GetCooldown();
+	if (_isCharging)
+	{
+		_isCharging = false;
+		_currentCooldown = getTotalStats().GetCooldown();
 
-	_chargeAnimation->Stop();
+		if (_chargeAnimation != nullptr)
+		{
+			_chargeAnimation->Stop();
+		}
+	}
 }
 
-void Weapon::Shoot(Entity* entity, Group bulletGroup)
+void Weapon::Shoot(Entity* entity, const Group bulletGroup)
 {
 	StopCharging();
 
@@ -95,7 +108,10 @@ void Weapon::Update(const sf::Time elapsed)
 		_currentCooldown -= elapsed.asSeconds();
 	}
 
-	_chargeAnimation->Update(elapsed);
+	if (_chargeAnimation != nullptr)
+	{
+		_chargeAnimation->Update(elapsed);
+	}
 
 	for (Projectile* bullet : _bullets)
 	{
@@ -118,5 +134,8 @@ void Weapon::Update(const sf::Time elapsed)
 
 void Weapon::UpdatePosition(const sf::Vector2f position)
 {
-	_chargeAnimation->UpdatePosition(position);
+	if (_chargeAnimation != nullptr)
+	{
+		_chargeAnimation->UpdatePosition(position);
+	}
 }

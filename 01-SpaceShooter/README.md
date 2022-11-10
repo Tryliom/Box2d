@@ -1,10 +1,11 @@
 # TODO
-
-- Create an enemy space ship (looks like a camper)
 	
-- Create an enemy class that can charge an attack, shoot it, have a reload time between shots, etc.
-- Create basic enemy (camper) that move slowly in the direction of the player and charge attacks every 5sec that shoot a projectile with an animation, charge sound, shoot sound
+- Fix the MOVE_AROUND_PLAYER action in enemy
+- Check if the enemy has the time to do an attack or force it to finish his attack
+- Add an animation when an entity is destroyed (maybe keep entity shape living while animation is not finished)
+- Fix the bug of the circle animation displaying at 0 0 after an attack
 
+- Make animation when a bullet hit something
 - Create experience shards that rotate on themselves and are attracted by the player when a enemy is destroyed
 - Make enemies drop xp shards when destroyed
 

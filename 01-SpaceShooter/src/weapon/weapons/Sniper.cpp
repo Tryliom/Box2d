@@ -2,6 +2,7 @@
 
 #include "projectile/bullets/PenetrationBullet.h"
 #include "Game.h"
+#include "Random.h"
 
 Trail::Trail(const sf::Vector2f position, const float angle, const Group group)
 {
