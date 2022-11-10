@@ -1,6 +1,9 @@
 #pragma once
+#include <list>
+
 #include "DrawableObject.h"
 #include "Group.h"
+#include "animation/HitAnimation.h"
 
 enum class ShapeType
 {
@@ -38,6 +41,9 @@ protected:
 	sf::Time _lifeTime;
 	sf::Time _currentLifeTime;
 
+	std::list<HitAnimation> _hitAnimations;
+
+	float _size;
 	float _damage;
 	bool _canPierce;
 	Group _groupIndex;
@@ -47,14 +53,12 @@ protected:
 public:
 	void Update(sf::Time elapsed) override;
 
-	virtual void OnImpact();
+	void OnImpact();
 
-	bool IsDead() const { return _currentLifeTime >= _lifeTime; }
+	bool IsDead() const;
 
 	float GetDamage() const { return _damage; }
 	bool CanPierce() const { return _canPierce; }
 	Group GetGroupIndex() const { return _groupIndex; }
-
-	void Destroy() { _currentLifeTime = _lifeTime; }
 	Group GetGroup() const { return _groupIndex; }
 };

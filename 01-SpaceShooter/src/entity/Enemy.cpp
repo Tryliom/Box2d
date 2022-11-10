@@ -1,5 +1,7 @@
 #include "entity/Enemy.h"
 
+#include <iostream>
+
 #include "Game.h"
 
 Enemy::Enemy(Game& game, sf::Vector2f position, const sf::Texture& texture, float health, float maxHealth,
@@ -18,6 +20,15 @@ void Enemy::rotateToPlayer(const float angle) const
 	float flatAngle = Game::RadToDegree(atan2(direction.y, direction.x));
 
 	//TODO: Apply angle offset
+
+	if (flatAngle < 0.f)
+	{
+		flatAngle += angle;
+	}
+	else if (flatAngle > 0.f)
+	{
+		flatAngle -= angle;
+	}
 
 	rotate(flatAngle);
 }
@@ -55,9 +66,13 @@ void Enemy::Update(const sf::Time elapsed)
 
 		if (_patterns[_currentPatternIndex].Action == ActionType::RUN_AWAY)
 		{
+			AddBonusStats(Stats::EntityStats{ 
+				.SpeedPercentage = 1.f * elapsed.asSeconds()
+			});
+
 			// If out of screen, destroy
-			const float x = GetPosition().x + _shape.getSize().x / 2.f;
-			const float y = GetPosition().y + _shape.getSize().y / 2.f;
+			const float x = GetPosition().x - _shape.getSize().x / 2.f;
+			const float y = GetPosition().y - _shape.getSize().y / 2.f;
 
 			if (Game::IsOutOfScreen(sf::Vector2f(x, y)))
 			{
@@ -77,4 +92,16 @@ void Enemy::Update(const sf::Time elapsed)
 		rotateToPlayer(90.f);
 		Move();
 	}
+}
+
+void Enemy::RunAway()
+{
+	_currentPatternIndex = 0;
+	_currentPatternTime = sf::Time::Zero;
+	_patterns = { { ActionType::RUN_AWAY, sf::seconds(30.f) } };
+
+	StopChargingWeapon();
+	AddBonusStats(Stats::EntityStats{
+		.RotationSpeed = 10.f
+	});
 }

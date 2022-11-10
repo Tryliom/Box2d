@@ -44,7 +44,7 @@ public:
 
 	sf::RectangleShape GetShape() const { return _shape; }
 	float GetHealthPercentage() const { return _health / _maxHealth; }
-	bool IsDead() const { return _health <= 0.f; }
+	bool IsDead() const;
 	Game& GetGame() const { return _game; }
 	Group GetProjectileGroup() const;
 

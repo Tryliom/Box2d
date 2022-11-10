@@ -5,9 +5,9 @@
 #include "weapon/weapons/MachineGun.h"
 #include "weapon/weapons/Sniper.h"
 
-Imperator::Imperator(Game& game, sf::Vector2f position) :
+Imperator::Imperator(Game& game, const sf::Vector2f position) :
 	Enemy(game, position, Assets::GetInstance().GetTexture(Texture::ENEMY_IMPERATOR),
-		150.f, 150.f, Group::ENEMY,
+		500.f, 500.f, Group::ENEMY,
 		Stats::EntityStats{
 			.Speed = 0.1f,
 			.RotationSpeed = 10.f,

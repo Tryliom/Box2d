@@ -17,6 +17,15 @@ Assets::Assets()
 	_fonts[static_cast<int>(Font::PIXELMIX)].loadFromFile("data/fonts/pixelmix.ttf");
 
 	_sounds[static_cast<int>(Sound::BURST)].loadFromFile("data/sounds/burst.wav");
+
+	_musics[static_cast<int>(Music::MAIN_THEME)].openFromFile("data/musics/main_theme1.wav");
+	_musics[static_cast<int>(Music::MAIN_THEME2)].openFromFile("data/musics/main_theme2.wav");
+	_musics[static_cast<int>(Music::DEATH)].openFromFile("data/musics/death.wav");
+
+	for (int i = 0; i < _hitAnimationTextures.max_size(); i++)
+	{
+		_hitAnimationTextures[i].loadFromFile("data/images/hit_animation/0" + std::to_string(i) + ".png");
+	}
 }
 
 sf::Texture& Assets::GetTexture(const Texture texture)
@@ -37,4 +46,9 @@ sf::SoundBuffer& Assets::GetSound(const Sound sound)
 sf::Music& Assets::GetMusic(const Music music)
 {
 	return _musics[static_cast<int>(music)];
+}
+
+sf::Texture& Assets::GetHitAnimationTexture(const int index)
+{
+	return _hitAnimationTextures[index];
 }

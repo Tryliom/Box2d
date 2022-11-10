@@ -67,7 +67,9 @@ void Game::update(const sf::Time elapsed)
 
 	_player.Update(elapsed);
 
-	if (_enemies.size() == 0)
+	_waveTime += elapsed;
+
+	if (_enemies.size() == 0 || _waveTime >= _waveDuration && _wave % 5 != 0)
 	{
 		spawnEnemies();
 	}
@@ -96,16 +98,28 @@ void Game::update(const sf::Time elapsed)
 	}
 
 	// Remove the sounds that are finished
-	_sounds.erase(std::remove_if(_sounds.begin(), _sounds.end(), [](sf::Sound& sound)
+	_sounds.erase(std::remove_if(_sounds.begin(), _sounds.end(), [](const sf::Sound& sound)
 	{
 		return sound.getStatus() == sf::Sound::Status::Stopped;
 	}), _sounds.end());
 
 	// Remove the enemies that are dead
-	_enemies.erase(std::remove_if(_enemies.begin(), _enemies.end(), [](Enemy* enemy)
+	_enemies.erase(std::remove_if(_enemies.begin(), _enemies.end(), [this](const Enemy* enemy)
 		{
 			if (enemy->IsDead())
 			{
+				// Temporary
+				_player.AddBonusStats(Stats::EntityStats{ .SpeedPercentage = 0.05f, .RotationSpeed = 0.05f });
+
+				if (Random::GetFloat() < 0.5f)
+				{
+					_player.AddBonusStats(Stats::WeaponStats{ .SpeedPercentage = 0.1f, .Size = 0.1f });
+				}
+				else
+				{
+					_player.AddBonusStats(Stats::WeaponStats{ .Spread = 1.f, .BulletsPerShotPercentage = 0.1f });
+				}
+
 				enemy->GetBody()->GetWorld()->DestroyBody(enemy->GetBody());
 
 				return true;
@@ -199,12 +213,26 @@ void Game::renderHealthBar()
 
 void Game::spawnEnemies()
 {
-	// Spawn enemies outside the screen
-	const int number = Random::GetInt(1, 10);
+	_wave++;
+	_waveTime = sf::Time::Zero;
+	_waveDuration += sf::seconds(2.f);
 
-	if (Random::GetFloat() < 1.f)
+	for (auto* enemy : _enemies)
+	{
+		enemy->RunAway();
+	}
+
+	// Spawn enemies outside the screen
+	const int number = Random::GetInt(_wave, 10 + _wave);
+
+	if (_wave % 5 == 0)
 	{
 		_enemies.emplace_back(new Imperator(*this, sf::Vector2f(WIDTH / 2.f, -200.f)));
+
+		if (_wave % 20 == 0)
+		{
+			_enemies.emplace_back(new Imperator(*this, sf::Vector2f(WIDTH / 2.f, HEIGHT + 200.f)));
+		}
 	}
 
 	for (int i = 0; i < number; ++i)
@@ -339,5 +367,5 @@ void Game::PlaySound(const Sound sound)
 
 bool Game::IsOutOfScreen(const sf::Vector2f position)
 {
-	return position.x < 0.f || position.x > Game::WIDTH || position.y < 0.f || position.y > Game::HEIGHT;
+	return position.x < -100.f || position.x > Game::WIDTH + 100.f || position.y < -100.f || position.y > Game::HEIGHT + 100.f;
 }

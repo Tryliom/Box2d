@@ -1,4 +1,5 @@
 #pragma once
+#include <list>
 #include <SFML/System/Time.hpp>
 
 #include "Group.h"
@@ -23,7 +24,7 @@ protected:
 
 	ChargeAnimation* _chargeAnimation;
 
-	std::vector<Projectile*> _bullets;
+	std::list<Projectile*> _bullets;
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 

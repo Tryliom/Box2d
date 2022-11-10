@@ -28,6 +28,11 @@ void SparksModule::updateData(Entity* entity)
 	_sparksAngle = 90.0f * (0.5f + stats.GetSpeed());
 	_sparksPerSecond = 20.f * (0.5f + stats.GetSpeed());
 	_sparksCooldown = sf::seconds(1.0f / _sparksPerSecond);
+
+	if (_sparksAngle > 160.f)
+	{
+		_sparksAngle = 160.f;
+	}
 }
 
 void SparksModule::addSparks(float angleDegree, Entity* entity)
@@ -46,7 +51,7 @@ void SparksModule::addSparks(float angleDegree, Entity* entity)
 
 	_sparks.emplace_back(
 		entity->GetGame().GetNewBody(), sf::Vector2f(x, y),
-		angleDegree, 1.5f + weaponStats.GetSize(), Game::GetLinearVelocity(sparksSpeed, angleDegree), sf::seconds(0.5f), 
+		angleDegree, 2.f + weaponStats.GetSize(), Game::GetLinearVelocity(sparksSpeed, angleDegree), sf::seconds(stats.GetSpeed()),
 		stats.GetSpeed() * 20.f, entity->GetProjectileGroup()
 	);
 }

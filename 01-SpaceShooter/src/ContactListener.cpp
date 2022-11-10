@@ -9,11 +9,11 @@ void ContactListener::BeginContact(b2Contact* contact)
 	b2Body* bodyA = contact->GetFixtureA()->GetBody();
 	b2Body* bodyB = contact->GetFixtureB()->GetBody();
 
-	auto groupA = static_cast<Group>(bodyA->GetFixtureList()->GetFilterData().groupIndex);
-	auto groupB = static_cast<Group>(bodyB->GetFixtureList()->GetFilterData().groupIndex);
+	const auto groupA = static_cast<Group>(bodyA->GetFixtureList()->GetFilterData().groupIndex);
+	const auto groupB = static_cast<Group>(bodyB->GetFixtureList()->GetFilterData().groupIndex);
 
-	auto aPointer = contact->GetFixtureA()->GetUserData().pointer;
-	auto bPointer = contact->GetFixtureB()->GetUserData().pointer;
+	const auto aPointer = contact->GetFixtureA()->GetUserData().pointer;
+	const auto bPointer = contact->GetFixtureB()->GetUserData().pointer;
 
 	if (groupA == Group::PLAYER && groupB == Group::ENEMY || groupA == Group::ENEMY && groupB == Group::PLAYER)
 	{
@@ -24,13 +24,14 @@ void ContactListener::BeginContact(b2Contact* contact)
 		entityA->TakeDamage(entityB);
 		entityB->TakeDamage(entityA);
 	}
-	else if (groupA == Group::PLAYER && groupB == Group::ENEMY_PROJECTILE || groupA == Group::ENEMY_PROJECTILE && groupB == Group::PLAYER)
+	else if (groupA == Group::PLAYER && groupB == Group::ENEMY_PROJECTILE || groupA == Group::ENEMY_PROJECTILE && groupB == Group::PLAYER ||
+		groupA == Group::PLAYER_PROJECTILE && groupB == Group::ENEMY || groupA == Group::ENEMY && groupB == Group::PLAYER_PROJECTILE)
 	{
 		// Player hit an enemy projectile
 		Entity* entity;
 		Projectile* projectile;
 
-		if (groupA == Group::PLAYER)
+		if (groupA == Group::PLAYER || groupA == Group::ENEMY)
 		{
 			entity = reinterpret_cast<Entity*>(aPointer);
 			projectile = reinterpret_cast<Projectile*>(bPointer);
@@ -42,37 +43,8 @@ void ContactListener::BeginContact(b2Contact* contact)
 		}
 
 		entity->TakeDamage(projectile);
-
-		if (!projectile->CanPierce())
-		{
-			projectile->Destroy();
-		}
+		projectile->OnImpact();
 	}
-	else if (groupA == Group::PLAYER_PROJECTILE && groupB == Group::ENEMY || groupA == Group::ENEMY && groupB == Group::PLAYER_PROJECTILE)
-	{
-		// Player projectile hit an enemy
-		Entity* entity;
-		Projectile* projectile;
-
-		if (groupA == Group::PLAYER_PROJECTILE)
-		{
-			entity = reinterpret_cast<Entity*>(bPointer);
-			projectile = reinterpret_cast<Projectile*>(aPointer);
-		}
-		else
-		{
-			entity = reinterpret_cast<Entity*>(aPointer);
-			projectile = reinterpret_cast<Projectile*>(bPointer);
-		}
-
-		entity->TakeDamage(projectile);
-
-		if (!projectile->CanPierce())
-		{
-			projectile->Destroy();
-		}
-	}
-	
 }
 
 void ContactListener::EndContact(b2Contact* contact)

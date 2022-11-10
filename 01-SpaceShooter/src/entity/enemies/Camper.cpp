@@ -17,6 +17,7 @@ Camper::Camper(Game& game, sf::Vector2f position) :
 		{
 			Pattern(ActionType::MOVE_TO_PLAYER, sf::seconds(5.f)),
 			Pattern(ActionType::ATTACK, sf::seconds(2.f)),
+			Pattern(ActionType::MOVE_AROUND_PLAYER, sf::seconds(3.f))
 		})
 {
 	_weapon = new Canon(_weaponStats);

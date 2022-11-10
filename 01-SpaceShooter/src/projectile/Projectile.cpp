@@ -1,7 +1,5 @@
 #include "projectile/Projectile.h"
 
-#include <iostream>
-
 #include "Game.h"
 
 Projectile::Projectile(b2Body* body, const sf::Vector2f position, 
@@ -12,6 +10,10 @@ Projectile::Projectile(b2Body* body, const sf::Vector2f position,
 {
 	_lifeTime = lifeTime;
 	_currentLifeTime = sf::Time::Zero;
+
+	_hitAnimations = {};
+
+	_size = size;
 	_damage = damage;
 	_canPierce = canPierce;
 	_groupIndex = groupIndex;
@@ -56,21 +58,37 @@ Projectile::Projectile(b2Body* body, const sf::Vector2f position,
 void Projectile::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
 	target.draw(_sprite, states);
+
+	for (const auto& hitAnimation : _hitAnimations)
+	{
+		target.draw(hitAnimation);
+	}
 }
 
 void Projectile::Update(const sf::Time elapsed)
 {
 	_currentLifeTime += elapsed;
 
+	const float scale = _size * (1.f - _currentLifeTime.asSeconds() / _lifeTime.asSeconds());
+
+	_sprite.setScale(scale, scale);
 	_sprite.setPosition(Game::MeterToPixel(_body->GetPosition()));
 	_sprite.setRotation(Game::RadToDegree(_body->GetAngle()));
+	_sprite.setColor(GetColor(_groupIndex));
 
-	const sf::Uint8 alpha = 255 - (255 * _currentLifeTime.asSeconds() / _lifeTime.asSeconds());
+	_body->GetFixtureList()->GetShape()->m_radius = Game::PixelToMeter(_sprite.getGlobalBounds().width / 2.f);
 
-	sf::Color color = GetColor(_groupIndex);
-	color.a = alpha;
+	for (auto& hitAnimation : _hitAnimations)
+	{
+		hitAnimation.Update(elapsed);
+	}
 
-	_sprite.setColor(color);
+	// Remove finished hit animations
+	_hitAnimations.erase(std::remove_if(_hitAnimations.begin(), _hitAnimations.end(), [](const HitAnimation& hitAnimation)
+		{
+			return hitAnimation.IsFinished();
+		}
+	), _hitAnimations.end());
 }
 
 void Projectile::OnImpact()
@@ -79,4 +97,11 @@ void Projectile::OnImpact()
 	{
 		_currentLifeTime = _lifeTime;
 	}
+
+	_hitAnimations.emplace_back(HitAnimation(_sprite.getPosition(), GetColor(_groupIndex)));
+}
+
+bool Projectile::IsDead() const
+{
+	return _currentLifeTime >= _lifeTime && _hitAnimations.empty();
 }

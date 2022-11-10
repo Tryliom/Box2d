@@ -10,7 +10,6 @@
 #include "box2d/b2_body.h"
 #include "box2d/b2_world.h"
 #include "entity/Enemy.h"
-#include "projectile/bullets/RegularBullet.h"
 
 class Game final
 {
@@ -32,7 +31,11 @@ private:
 
 	// Entities
 	Player _player;
-	std::vector<Enemy*> _enemies;
+	std::list<Enemy*> _enemies;
+
+	int _wave{ 0 };
+	sf::Time _waveTime{ sf::Time::Zero };
+	sf::Time _waveDuration{ sf::seconds(30.f) };
 
 	void update(sf::Time elapsed);
 	void checkInputs(sf::Event event);

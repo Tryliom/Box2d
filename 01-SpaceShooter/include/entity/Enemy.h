@@ -36,4 +36,6 @@ protected:
 
 public:
 	void Update(sf::Time elapsed) override;
+
+	void RunAway();
 };

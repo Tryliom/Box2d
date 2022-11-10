@@ -21,7 +21,7 @@ enum class Sound
 
 enum class Music
 {
-	MAIN_THEME, END
+	MAIN_THEME, MAIN_THEME2, DEATH, END
 };
 
 class Assets
@@ -33,6 +33,7 @@ private:
 	std::array<sf::Font, static_cast<int>(Font::END)> _fonts;
 	std::array<sf::SoundBuffer, static_cast<int>(Sound::END)> _sounds;
 	std::array<sf::Music, static_cast<int>(Music::END)> _musics;
+	std::array<sf::Texture, 10> _hitAnimationTextures;
 
 public:
 	Assets(const Assets&) = delete;
@@ -44,6 +45,7 @@ public:
 	sf::Font& GetFont(Font font);
 	sf::SoundBuffer& GetSound(Sound sound);
 	sf::Music& GetMusic(Music music);
+	sf::Texture& GetHitAnimationTexture(int index);
 
 	static auto& GetInstance() {
 		static Assets instance;

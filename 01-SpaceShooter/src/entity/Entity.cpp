@@ -1,7 +1,5 @@
 #include "entity/Entity.h"
 
-#include <iostream>
-
 #include "Game.h"
 
 Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& texture,
@@ -159,6 +157,11 @@ sf::Vector2f Entity::GetPosition() const
 void Entity::SetPosition(const sf::Vector2f position)
 {
 	_body->SetTransform(Game::PixelToMeter(position), _body->GetAngle()); _shape.setPosition(position);
+}
+
+bool Entity::IsDead() const
+{
+	return _health <= 0.f;
 }
 
 Group Entity::GetProjectileGroup() const
