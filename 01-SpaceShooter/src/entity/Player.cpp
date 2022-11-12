@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "module/modules/SparksModule.h"
 #include "weapon/weapons/MachineGun.h"
+#include "weapon/weapons/Sniper.h"
 
 Player::Player(Game& game, const sf::Vector2f position) :
 	Entity(
@@ -16,7 +17,7 @@ Player::Player(Game& game, const sf::Vector2f position) :
 		Group::PLAYER
 	)
 {
-	_weapon = new MachineGun(_weaponStats);
+	_weapon = new Sniper(_weaponStats);
 	AddModule(new SparksModule());
 
 	_shape.setRotation(45.f);
@@ -28,9 +29,9 @@ Player::Player(Game& game, const sf::Vector2f position) :
 
 void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
-	for (const auto& trail : _tails)
+	for (const auto& tail : _tails)
 	{
-		target.draw(trail, states);
+		target.draw(tail, states);
 	}
 
 	Entity::draw(target, states);

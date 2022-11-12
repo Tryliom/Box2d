@@ -26,6 +26,8 @@ void ContactListener::BeginContact(b2Contact* contact)
 
 		entityA->TakeDamage(entityB);
 		entityB->TakeDamage(entityA);
+
+		//TODO: Add collision animation
 	}
 	else if ((groupA == Group::PLAYER && groupB == Group::ENEMY_PROJECTILE) || (groupA == Group::ENEMY_PROJECTILE && groupB == Group::PLAYER) ||
 			 (groupA == Group::PLAYER_PROJECTILE && groupB == Group::ENEMY) || (groupA == Group::ENEMY && groupB == Group::PLAYER_PROJECTILE))
@@ -47,16 +49,13 @@ void ContactListener::BeginContact(b2Contact* contact)
 
 		if (projectile->IsMaskValid())
 		{
-			//TODO: Get impact position
-
-			auto worldManifold = b2WorldManifold();
-			contact->GetWorldManifold(&worldManifold);
-
-			std::cout << "Impact at: " << worldManifold.points[0].x << ", " << worldManifold.points[0].y << std::endl;
-			std::cout << "Impact2 at: " << contact->GetManifold()->points[0].localPoint.x << ", " << contact->GetManifold()->points[0].localPoint.y << std::endl;
+			// Get the point between the two bodies
+			const sf::Vector2f bodyPosition = Game::MeterToPixel(entity->GetBody()->GetPosition());
+			const sf::Vector2f projectilePosition = Game::MeterToPixel(projectile->GetBody()->GetPosition());
+			const sf::Vector2f impactPosition = bodyPosition + (projectilePosition - bodyPosition) / 2.f;
 
 			entity->TakeDamage(projectile);
-			projectile->OnImpact(Game::MeterToPixel(worldManifold.points[0]));
+			projectile->OnImpact(impactPosition);
 		}
 	}
 }

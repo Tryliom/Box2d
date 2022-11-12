@@ -6,7 +6,7 @@ AnimationManager::AnimationManager()
 	_trails = {};
 }
 
-void AnimationManager::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void AnimationManager::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
 	for (const auto& hitAnimation : _hitAnimations)
 	{
