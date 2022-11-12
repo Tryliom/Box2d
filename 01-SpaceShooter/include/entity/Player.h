@@ -15,8 +15,8 @@ protected:
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-	// Get trail position at the bottom of the ship that change with the rotation
-	sf::Vector2f getTrailPosition() const;
+	// Get tail position at the bottom of the ship that change with the rotation
+	sf::Vector2f getTailPosition() const;
 
 public:
 	void Update(sf::Time elapsed) override;

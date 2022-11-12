@@ -10,6 +10,8 @@
 #include "box2d/b2_body.h"
 #include "box2d/b2_world.h"
 #include "entity/Enemy.h"
+#include "manager/AnimationManager.h"
+#include "manager/ProjectileManager.h"
 
 class Game final
 {
@@ -22,6 +24,8 @@ private:
 	sf::Music _music;
 	std::vector<sf::Sound> _sounds;
 	ContactListener _contactListener;
+	ProjectileManager _projectileManager;
+	AnimationManager _animationManager;
 
 	sf::Sound _burstSound;
 	bool _stopBurstSound;
@@ -74,4 +78,7 @@ public:
 
 	void PlaySound(Sound sound);
 	static bool IsOutOfScreen(sf::Vector2f position);
+
+	ProjectileManager& GetProjectileManager() { return _projectileManager; }
+	AnimationManager& GetAnimationManager() { return _animationManager; }
 };

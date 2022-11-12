@@ -32,7 +32,7 @@ public:
 		b2Body* body, sf::Vector2f position, 
 		const sf::Texture& texture, ShapeType shapeType,
 		float angle, float size, b2Vec2 velocity, sf::Time lifeTime,
-		float damage, bool canPierce, Group groupIndex
+		float damage, bool canPierce, Group groupIndex, bool trail = false
 	);
 
 protected:
@@ -47,6 +47,7 @@ protected:
 	float _damage;
 	bool _canPierce;
 	Group _groupIndex;
+	bool _trail;
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 

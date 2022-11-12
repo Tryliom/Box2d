@@ -21,11 +21,6 @@ void Weapon::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 	{
 		target.draw(*_chargeAnimation, states);
 	}
-
-	for (const auto* bullet : _bullets)
-	{
-		target.draw(*bullet, states);
-	}
 }
 
 sf::Time Weapon::getLifeTime() const
@@ -112,24 +107,6 @@ void Weapon::Update(const sf::Time elapsed)
 	{
 		_chargeAnimation->Update(elapsed);
 	}
-
-	for (Projectile* bullet : _bullets)
-	{
-		bullet->Update(elapsed);
-	}
-
-	// Remove bullets that have finished their life time
-	_bullets.erase(std::remove_if(_bullets.begin(), _bullets.end(), [](const Projectile* bullet)
-	{
-		if (bullet->IsDead())
-		{
-			bullet->GetBody()->GetWorld()->DestroyBody(bullet->GetBody());
-
-			return true;
-		}
-
-		return false;
-	}), _bullets.end());
 }
 
 void Weapon::UpdatePosition(const sf::Vector2f position)

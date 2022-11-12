@@ -12,7 +12,7 @@ public:
 	Module() = default;
 
 protected:
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override = 0;
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override = 0;
 
 	virtual void updateData(Entity* entity) = 0;
 

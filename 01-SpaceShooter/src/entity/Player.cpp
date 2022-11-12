@@ -36,7 +36,7 @@ void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 	Entity::draw(target, states);
 }
 
-sf::Vector2f Player::getTrailPosition() const
+sf::Vector2f Player::getTailPosition() const
 {
 	const float angle = Game::RadToDegree(_body->GetAngle()) - 90.f;
 
@@ -68,11 +68,11 @@ void Player::Update(const sf::Time elapsed)
 		// Update the position of the trail at the bottom of the ship
 		tail.Update(elapsed);
 		tail.SetAngle(_shape.getRotation());
-		tail.SetPosition(getTrailPosition());
+		tail.SetPosition(getTailPosition());
 	}
 
 	// Remove tails that are dead
-	_tails.erase(std::remove_if(_tails.begin(), _tails.end(), [](const Tail& tail) { return tail.IsDead(); }), _tails.end());
+	std::erase_if(_tails, [](const Tail& tail) { return tail.IsDead(); });
 }
 
 void Player::Move()
@@ -83,6 +83,6 @@ void Player::Move()
 	{
 		_tailCooldown = sf::Time::Zero;
 
-		_tails.emplace_back(Tail(getTrailPosition(), _shape.getRotation()));
+		_tails.emplace_back(Tail(getTailPosition(), _shape.getRotation()));
 	}
 }

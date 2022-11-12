@@ -7,18 +7,17 @@
 Projectile::Projectile(b2Body* body, const sf::Vector2f position, 
 						const sf::Texture& texture, ShapeType shapeType,
 						const float angle, float size, const b2Vec2 velocity, const sf::Time lifeTime,
-						const float damage, const bool canPierce, const Group groupIndex) :
+                       const float damage, const bool canPierce, const Group groupIndex, bool trail) :
 	DrawableObject(body, position)
 {
 	_lifeTime = lifeTime;
 	_currentLifeTime = sf::Time::Zero;
 
-	_hitAnimations = {};
-
 	_size = size;
 	_damage = damage;
 	_canPierce = canPierce;
 	_groupIndex = groupIndex;
+	_trail = trail;
 
 	_sprite.setTexture(texture);
 	_sprite.setOrigin(texture.getSize().x / 2.f, texture.getSize().y / 2.f);
@@ -60,11 +59,6 @@ Projectile::Projectile(b2Body* body, const sf::Vector2f position,
 void Projectile::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
 	target.draw(_sprite, states);
-
-	for (const auto& hitAnimation : _hitAnimations)
-	{
-		target.draw(hitAnimation);
-	}
 }
 
 void Projectile::Update(const sf::Time elapsed)
@@ -85,20 +79,13 @@ void Projectile::Update(const sf::Time elapsed)
 
 	_body->GetFixtureList()->GetShape()->m_radius = Game::PixelToMeter(_sprite.getGlobalBounds().width / 2.f);
 
-	for (auto& hitAnimation : _hitAnimations)
+	if (_trail)
 	{
-		hitAnimation.Update(elapsed);
+		Game::GetInstance().GetAnimationManager().AddTrail(Game::MeterToPixel(_body->GetPosition()), Game::RadToDegree(_body->GetAngle()), _groupIndex);
 	}
-
-	// Remove finished hit animations
-	_hitAnimations.erase(std::remove_if(_hitAnimations.begin(), _hitAnimations.end(), [](const HitAnimation& hitAnimation)
-		{
-			return hitAnimation.IsFinished();
-		}
-	), _hitAnimations.end());
 }
 
-void Projectile::OnImpact(sf::Vector2f impactPoint)
+void Projectile::OnImpact(const sf::Vector2f impactPoint)
 {
 	if (!_canPierce)
 	{
@@ -106,9 +93,10 @@ void Projectile::OnImpact(sf::Vector2f impactPoint)
 	}
 
 	_hitAnimations.emplace_back(impactPoint);
+	//TODO: Add text for damages
 }
 
 bool Projectile::IsDead() const
 {
-	return _currentLifeTime >= _lifeTime && _hitAnimations.empty();
+	return _currentLifeTime >= _lifeTime;
 }
