@@ -39,8 +39,8 @@ void Game::update(const sf::Time elapsed)
 {
 	_world.Step(elapsed.asSeconds(), 8, 3);
 
-	_projectileManager.Update(elapsed);
-	_animationManager.Update(elapsed);
+	ProjectileManager::GetInstance().Update(elapsed);
+	//_animationManager.Update(elapsed);
 
 	_backgroundStep += elapsed.asSeconds() / 100.f;
 	const float y = (HEIGHT - _background.getSize().y) / 2.f + std::cos(_backgroundStep * b2_pi) * (HEIGHT - _background.getSize().y) / 2.f;
@@ -172,7 +172,7 @@ void Game::render()
 	// Render background
 	_window.draw(_background);
 	
-	_window.draw(_animationManager);
+	//_window.draw(_animationManager);
 
 	// Render entities
 	_window.draw(_player);
@@ -182,7 +182,7 @@ void Game::render()
 		_window.draw(*enemy);
 	}
 
-	_window.draw(_projectileManager);
+	_window.draw(ProjectileManager::GetInstance());
 
 	renderHealthBar();
 

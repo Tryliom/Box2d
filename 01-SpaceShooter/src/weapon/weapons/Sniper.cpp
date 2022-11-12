@@ -19,9 +19,9 @@ void Sniper::shootBullet(b2Body* body, const sf::Vector2f position, const float 
 {
 	const Stats::WeaponStats stats = getTotalStats();
 
-	/*_game.GetProjectileManager().AddProjectile(new PenetrationBullet(
-		position, angle,
+	ProjectileManager::GetInstance().AddProjectile(new PenetrationBullet(
+		body, position, angle,
 		stats.GetSize(), velocity, getLifeTime(),
 		stats.GetDamage(), bulletGroup, true
-	));*/
+	));
 }

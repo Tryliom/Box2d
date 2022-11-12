@@ -1,5 +1,6 @@
 #include "weapon/weapons/MachineGun.h"
 
+#include "manager/ProjectileManager.h"
 #include "projectile/bullets/RegularBullet.h"
 
 MachineGun::MachineGun(Stats::WeaponStats& userStats) :
@@ -21,7 +22,7 @@ void MachineGun::shootBullet(b2Body* body, const sf::Vector2f position, const fl
 {
 	const Stats::WeaponStats stats = getTotalStats();
 
-	_bullets.emplace_back(new RegularBullet(
+	ProjectileManager::GetInstance().AddProjectile(new RegularBullet(
 		body, position, angle,
 		stats.GetSize(), velocity, getLifeTime(),
 		stats.GetDamage(), bulletGroup

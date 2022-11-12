@@ -24,8 +24,6 @@ protected:
 
 	ChargeAnimation* _chargeAnimation;
 
-	std::list<Projectile*> _bullets;
-
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	[[nodiscard]] Stats::WeaponStats getTotalStats() const { return _stats + _userStats; }
