@@ -81,7 +81,7 @@ void Projectile::Update(const sf::Time elapsed)
 
 	if (_trail)
 	{
-		Game::GetInstance().GetAnimationManager().AddTrail(Game::MeterToPixel(_body->GetPosition()), Game::RadToDegree(_body->GetAngle()), _groupIndex);
+		//_game.GetAnimationManager().AddTrail(Game::MeterToPixel(_body->GetPosition()), Game::RadToDegree(_body->GetAngle()), _groupIndex);
 	}
 }
 
@@ -92,7 +92,7 @@ void Projectile::OnImpact(const sf::Vector2f impactPoint)
 		_currentLifeTime = _lifeTime;
 	}
 
-	_hitAnimations.emplace_back(impactPoint);
+	// _game.GetAnimationManager().AddHitAnimation(impactPoint);
 	//TODO: Add text for damages
 }
 

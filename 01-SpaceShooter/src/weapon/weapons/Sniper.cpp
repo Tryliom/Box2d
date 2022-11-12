@@ -15,13 +15,13 @@ Sniper::Sniper(Stats::WeaponStats& userStats) :
 	}, userStats)
 {}
 
-void Sniper::shootBullet(const sf::Vector2f position, const float angle, const b2Vec2 velocity, const Group bulletGroup)
+void Sniper::shootBullet(b2Body* body, const sf::Vector2f position, const float angle, const b2Vec2 velocity, const Group bulletGroup)
 {
 	const Stats::WeaponStats stats = getTotalStats();
 
-	Game::GetInstance().GetProjectileManager().AddProjectile(new PenetrationBullet(
+	/*_game.GetProjectileManager().AddProjectile(new PenetrationBullet(
 		position, angle,
 		stats.GetSize(), velocity, getLifeTime(),
 		stats.GetDamage(), bulletGroup, true
-	));
+	));*/
 }
