@@ -74,6 +74,8 @@ void Weapon::Shoot(Entity* entity, const Group bulletGroup)
 {
 	StopCharging();
 
+	AudioManager::GetInstance().PlaySound(Sound::WEAPON_SHOOT);
+
 	const Stats::WeaponStats stats = getTotalStats();
 	const float angle = Game::RadToDegree(entity->GetBody()->GetAngle());
 	const sf::Time lifeTime = getLifeTime();

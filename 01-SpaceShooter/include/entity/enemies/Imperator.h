@@ -15,4 +15,6 @@ protected:
 
 	void onEndCycle() override;
 	void nextWeapon();
+
+	void onDeath() override;
 };

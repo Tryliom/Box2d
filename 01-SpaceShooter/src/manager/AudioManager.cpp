@@ -6,6 +6,8 @@ AudioManager::AudioManager()
 	_nextMusic = Music::END;
 	_stopMusic = false;
 
+	_sounds = {};
+
 	_continuousSounds[static_cast<int>(ContinuousSoundType::BURST)] = { sf::Sound(Assets::GetInstance().GetSound(Sound::BURST)), false, false };
 }
 
@@ -101,6 +103,7 @@ void AudioManager::PlaySound(const Sound sound)
 {
 	_sounds.emplace_back(sf::Sound(Assets::GetInstance().GetSound(sound)));
 	_sounds.back().play();
+	_sounds.back().setVolume(50.f);
 }
 
 void AudioManager::PlayContinuousSound(ContinuousSoundType sound)

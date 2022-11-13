@@ -9,7 +9,7 @@ TextAnimation::TextAnimation(sf::Vector2f position, sf::Vector2f velocity, sf::T
 	_text.setFillColor(color);
 	_text.setOrigin(_text.getLocalBounds().width / 2.f, _text.getLocalBounds().height / 2.f);
 	_text.setPosition(position);
-	_text.setColor(color);
+	_text.setFillColor(color);
 
 	_velocity = velocity;
 	_animationEffects = animationEffects;
@@ -39,7 +39,10 @@ void TextAnimation::Update(const sf::Time elapsed)
 		if (animationEffect.Type == EndAnimationType::FADE)
 		{
 			const float alpha = 255.f * (animationEffect.BaseValue - animationEffect.EndValue * percent);
-			_text.setFillColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha)));
+			sf::Color color = _text.getFillColor();
+			color.a = static_cast<sf::Uint8>(alpha);
+
+			_text.setFillColor(color);
 		}
 		else if (animationEffect.Type == EndAnimationType::SCALE_UP)
 		{

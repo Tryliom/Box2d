@@ -26,8 +26,6 @@ void ContactListener::BeginContact(b2Contact* contact)
 
 		entityA->TakeDamage(entityB);
 		entityB->TakeDamage(entityA);
-
-		//TODO: Add collision animation
 	}
 	else if ((groupA == Group::PLAYER && groupB == Group::ENEMY_PROJECTILE) || (groupA == Group::ENEMY_PROJECTILE && groupB == Group::PLAYER) ||
 			 (groupA == Group::PLAYER_PROJECTILE && groupB == Group::ENEMY) || (groupA == Group::ENEMY && groupB == Group::PLAYER_PROJECTILE))

@@ -19,7 +19,7 @@ Game::Game() :
 	Game::HEIGHT = _window.getSize().y;
 	Game::WIDTH = _window.getSize().x;
 
-	const std::vector<Texture> backgrounds = { Texture::BACKGROUND, Texture::BACKGROUND2, Texture::BACKGROUND3 };
+	const std::vector backgrounds = { Texture::BACKGROUND, Texture::BACKGROUND2, Texture::BACKGROUND3 };
 
 	const sf::Texture& backgroundTexture = Assets::GetInstance().GetTexture(backgrounds[Random::GetInt(0, backgrounds.size() - 1)]);
 	

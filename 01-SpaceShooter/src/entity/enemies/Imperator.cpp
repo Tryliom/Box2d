@@ -1,6 +1,7 @@
 #include "entity/enemies/Imperator.h"
 
 #include "Assets.h"
+#include "manager/AudioManager.h"
 #include "weapon/weapons/Canon.h"
 #include "weapon/weapons/MachineGun.h"
 #include "weapon/weapons/Sniper.h"
@@ -15,8 +16,10 @@ Imperator::Imperator(Game& game, const sf::Vector2f position) :
 			.Size = 3.f
 		},
 		Stats::WeaponStats{
+			.Damage = 10.f,
 			.SpeedPercentage = -0.5f,
-			.Size = 1.f
+			.CooldownReductionPercentage = 0.5f,
+			.Size = 5.f
 		},
 		{
 			Pattern(ActionType::MOVE_TO_PLAYER, sf::seconds(3.f)),
@@ -59,17 +62,33 @@ void Imperator::onEndCycle()
 	// Change weapon
 	nextWeapon();
 
-	if (_weaponStats.CooldownReductionPercentage < 0.5f)
+	if (_currentWeaponIndex == 0)
 	{
-		_weaponStats.CooldownReductionPercentage += 0.03f;
+		_weaponStats = Stats::WeaponStats{
+			.Damage = 10.f,
+			.SpeedPercentage = -0.5f,
+			.CooldownReductionPercentage = 0.5f,
+			.Size = 5.f
+		};
 	}
-	else if (_weaponStats.BulletsPerShotPercentage < 1.f)
+	else if (_currentWeaponIndex == 1)
 	{
-		_weaponStats.BulletsPerShotPercentage += 0.03f;
+		_weaponStats = Stats::WeaponStats{
+			.Damage = -4.f,
+			.SpeedPercentage = -0.5f,
+			.Spread = 10.f,
+			.BulletsPerShotPercentage = 3.f,
+			.CooldownReductionPercentage = 0.5f
+		};
 	}
-		
-	AddBonusStats(Stats::EntityStats{ .Size = 0.03f });
-	_weaponStats.Size = GetTotalStats().Size - 2.f;
+	else if (_currentWeaponIndex == 2)
+	{
+		_weaponStats = Stats::WeaponStats{
+			.SpeedPercentage = 1.f,
+			.CooldownReductionPercentage = 0.5f,
+			.Size = 3.f
+		};
+	}
 }
 
 void Imperator::nextWeapon()
@@ -77,4 +96,9 @@ void Imperator::nextWeapon()
 	_weapons[_currentWeaponIndex]->StopCharging();
 	_currentWeaponIndex = (_currentWeaponIndex + 1) % _weapons.size();
 	_weapon = _weapons[_currentWeaponIndex];
+}
+
+void Imperator::onDeath()
+{
+	AudioManager::GetInstance().PlaySound(Sound::BOSS_DEATH);
 }

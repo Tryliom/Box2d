@@ -18,6 +18,12 @@ Assets::Assets()
 	_fonts[static_cast<int>(Font::PIXELMIX)].loadFromFile("data/fonts/pixelmix.ttf");
 
 	_sounds[static_cast<int>(Sound::BURST)].loadFromFile("data/sounds/burst.wav");
+	_sounds[static_cast<int>(Sound::WEAPON_SHOOT)].loadFromFile("data/sounds/weapon_shoot.wav");
+	_sounds[static_cast<int>(Sound::LEVEL_UP)].loadFromFile("data/sounds/level_up.wav");
+	_sounds[static_cast<int>(Sound::UPGRADE_CHOOSE)].loadFromFile("data/sounds/upgrade_choose.wav");
+	_sounds[static_cast<int>(Sound::BOSS_DEATH)].loadFromFile("data/sounds/boss_death.wav");
+	_sounds[static_cast<int>(Sound::ENTITY_COLLISION)].loadFromFile("data/sounds/entity_collision.wav");
+	_sounds[static_cast<int>(Sound::ENEMY_DEATH)].loadFromFile("data/sounds/enemy_death.wav");
 
 	_musicPaths[static_cast<int>(Music::MAIN_THEME)] = "data/musics/main_theme1.wav";
 	_musicPaths[static_cast<int>(Music::MAIN_THEME2)] = "data/musics/main_theme2.wav";

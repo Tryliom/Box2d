@@ -1,6 +1,8 @@
 #include "entity/Entity.h"
 
 #include "Game.h"
+#include "animation/TextAnimation.h"
+#include "manager/AnimationManager.h"
 
 Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& texture,
                const float health, const float maxHealth, 
@@ -177,15 +179,35 @@ void Entity::TakeDamage(Projectile* projectile)
 	{
 		module->OnEntityHit(this, projectile);
 	}
+
+	if (IsDead())
+	{
+		onDeath();
+	}
 }
 
 void Entity::TakeDamage(Entity* entity)
 {
-	_health -= GetTotalStats().GetCollisionDamage(entity->GetTotalStats().GetCollisionDamage());
+	const float collisionDamage = GetTotalStats().GetCollisionDamage(entity->GetTotalStats().GetCollisionDamage());
+	_health -= collisionDamage;
+
+	AudioManager::GetInstance().PlaySound(Sound::ENTITY_COLLISION);
+
+	AnimationManager& animationManager = AnimationManager::GetInstance();
+	animationManager.AddTextAnimation(DamageTextAnimation(
+		_shape.getPosition(),
+		std::to_string(static_cast<int>(collisionDamage)),
+		_groupIndex == Group::PLAYER ? sf::Color::Red : sf::Color::Yellow
+	));
 
 	for (auto* module : _modules)
 	{
 		module->OnEntityHit(this, entity);
+	}
+
+	if (IsDead())
+	{
+		onDeath();
 	}
 }
 
@@ -222,4 +244,17 @@ void Entity::AddModule(Module* module)
 {
 	module->Initialize(this);
 	_modules.push_back(module);
+}
+
+void Entity::onDeath()
+{
+	// Play sound according to the group
+	if (_groupIndex == Group::ENEMY)
+	{
+		AudioManager::GetInstance().PlaySound(Sound::ENEMY_DEATH);
+	}
+	else
+	{
+		AudioManager::GetInstance().PlayMusic(Music::DEATH);
+	}
 }

@@ -35,6 +35,8 @@ protected:
 	float getDeltaAngle(float angle) const;
 	void rotate(float angle) const;
 
+	virtual void onDeath();
+
 public:
 	void Update(sf::Time elapsed) override;
 	virtual void Move();

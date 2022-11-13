@@ -16,7 +16,7 @@ enum class Font
 
 enum class Sound
 {
-	BURST, END
+	BURST, WEAPON_SHOOT, LEVEL_UP, UPGRADE_CHOOSE, BOSS_DEATH, ENTITY_COLLISION, ENEMY_DEATH, END
 };
 
 enum class Music
