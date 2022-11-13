@@ -6,27 +6,43 @@ AnimationManager::AnimationManager()
 	_trails = {};
 }
 
-void AnimationManager::draw(sf::RenderTarget& target, const sf::RenderStates states) const
+void AnimationManager::AddHitAnimation(const HitAnimation& hitAnimation)
+{
+	_hitAnimations.emplace_back(hitAnimation);
+}
+
+void AnimationManager::AddTrail(const Trail& trail)
+{
+	_trails.emplace_back(trail);
+}
+
+void AnimationManager::AddTextAnimation(const TextAnimation& textAnimation)
+{
+	_textAnimations.emplace_back(textAnimation);
+}
+
+void AnimationManager::DrawHitAnimations(sf::RenderWindow& window) const
 {
 	for (const auto& hitAnimation : _hitAnimations)
 	{
-		target.draw(hitAnimation, states);
+		window.draw(hitAnimation);
 	}
+}
 
+void AnimationManager::DrawTrails(sf::RenderWindow& window) const
+{
 	for (const auto& trail : _trails)
 	{
-		target.draw(trail, states);
+		window.draw(trail);
 	}
 }
 
-void AnimationManager::AddHitAnimation(const sf::Vector2f position)
+void AnimationManager::DrawTextAnimations(sf::RenderWindow& window) const
 {
-	_hitAnimations.emplace_back(position);
-}
-
-void AnimationManager::AddTrail(const sf::Vector2f position, const float angle, const Group group)
-{
-	_trails.emplace_back(position, angle, group);
+	for (const auto& textAnimation : _textAnimations)
+	{
+		window.draw(textAnimation);
+	}
 }
 
 void AnimationManager::Update(const sf::Time elapsed)
@@ -52,6 +68,20 @@ void AnimationManager::Update(const sf::Time elapsed)
 		if (it->IsDead())
 		{
 			it = _trails.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+
+	for (auto it = _textAnimations.begin(); it != _textAnimations.end();)
+	{
+		it->Update(elapsed);
+
+		if (it->IsFinished())
+		{
+			it = _textAnimations.erase(it);
 		}
 		else
 		{

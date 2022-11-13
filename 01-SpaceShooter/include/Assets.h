@@ -6,7 +6,7 @@
 
 enum class Texture
 {
-	BACKGROUND, BACKGROUND2, BACKGROUND3, SPACE_SHIP, TAIL, SPARKS, CANON_BULLET, CHARGE_CIRCLE, SNIPER_TRAIL, ENEMY_CAMPER, ENEMY_IMPERATOR, END
+	BACKGROUND, BACKGROUND2, BACKGROUND3, SPACE_SHIP, TAIL, SPARKS, CANON_BULLET, MACHINE_GUN_BULLET, CHARGE_CIRCLE, SNIPER_TRAIL, ENEMY_CAMPER, ENEMY_IMPERATOR, END
 };
 
 enum class Font
@@ -21,7 +21,7 @@ enum class Sound
 
 enum class Music
 {
-	MAIN_THEME, MAIN_THEME2, DEATH, END
+	MAIN_THEME, MAIN_THEME2, DEATH, BOSS_THEME, END
 };
 
 class Assets
@@ -32,7 +32,7 @@ private:
 	std::array<sf::Texture, static_cast<int>(Texture::END)> _textures;
 	std::array<sf::Font, static_cast<int>(Font::END)> _fonts;
 	std::array<sf::SoundBuffer, static_cast<int>(Sound::END)> _sounds;
-	std::array<sf::Music, static_cast<int>(Music::END)> _musics;
+	std::array<std::string, static_cast<int>(Music::END)> _musicPaths;
 	std::array<sf::Texture, 10> _hitAnimationTextures;
 
 public:
@@ -44,7 +44,7 @@ public:
 	sf::Texture& GetTexture(Texture texture);
 	sf::Font& GetFont(Font font);
 	sf::SoundBuffer& GetSound(Sound sound);
-	sf::Music& GetMusic(Music music);
+	std::string GetMusicPath(Music music);
 	sf::Texture& GetHitAnimationTexture(int index);
 
 	static auto& GetInstance() {

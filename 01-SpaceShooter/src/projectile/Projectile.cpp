@@ -1,12 +1,11 @@
 #include "projectile/Projectile.h"
 
-#include <iostream>
-
 #include "Game.h"
+#include "manager/AnimationManager.h"
 
 Projectile::Projectile(b2Body* body, const sf::Vector2f position, 
-						const sf::Texture& texture, ShapeType shapeType,
-						const float angle, float size, const b2Vec2 velocity, const sf::Time lifeTime,
+                       const sf::Texture& texture, ShapeType shapeType,
+                       const float angle, float size, const b2Vec2 velocity, const sf::Time lifeTime,
                        const float damage, const bool canPierce, const Group groupIndex, bool trail) :
 	DrawableObject(body, position)
 {
@@ -81,7 +80,7 @@ void Projectile::Update(const sf::Time elapsed)
 
 	if (_trail)
 	{
-		AnimationManager::GetInstance().AddTrail(Game::MeterToPixel(_body->GetPosition()), Game::RadToDegree(_body->GetAngle()), _groupIndex);
+		AnimationManager::GetInstance().AddTrail({Game::MeterToPixel(_body->GetPosition()), Game::RadToDegree(_body->GetAngle()), _groupIndex});
 	}
 }
 
@@ -92,8 +91,13 @@ void Projectile::OnImpact(const sf::Vector2f impactPoint)
 		_currentLifeTime = _lifeTime;
 	}
 
-	AnimationManager::GetInstance().AddHitAnimation(impactPoint);
-	//TODO: Add text for damages
+	AnimationManager& animationManager = AnimationManager::GetInstance();
+	animationManager.AddHitAnimation(impactPoint);
+	animationManager.AddTextAnimation(DamageTextAnimation(
+		impactPoint, 
+		std::to_string(static_cast<int>(_damage)),
+		_groupIndex == Group::ENEMY_PROJECTILE ? sf::Color::Red : sf::Color::Yellow
+	));
 }
 
 bool Projectile::IsDead() const

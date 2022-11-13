@@ -20,7 +20,7 @@ inline sf::Color GetColor(const Group group)
 
 	if (group == Group::ENEMY_PROJECTILE)
 	{
-		return { 231, 87, 36 };
+		return { 193, 45, 45 };
 	}
 
 	if (group == Group::PLAYER)
@@ -30,7 +30,7 @@ inline sf::Color GetColor(const Group group)
 
 	if (group == Group::PLAYER_PROJECTILE)
 	{
-		return { 46, 186, 225 };
+		return { 63, 223, 231 };
 	}
 
 	if (group == Group::XP)

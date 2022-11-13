@@ -4,7 +4,6 @@
 #include "Game.h"
 #include "module/modules/SparksModule.h"
 #include "weapon/weapons/MachineGun.h"
-#include "weapon/weapons/Sniper.h"
 
 Player::Player(Game& game, const sf::Vector2f position) :
 	Entity(
@@ -17,7 +16,7 @@ Player::Player(Game& game, const sf::Vector2f position) :
 		Group::PLAYER
 	)
 {
-	_weapon = new Sniper(_weaponStats);
+	_weapon = new MachineGun(_weaponStats);
 	AddModule(new SparksModule());
 
 	_shape.setRotation(45.f);

@@ -16,7 +16,7 @@ Imperator::Imperator(Game& game, const sf::Vector2f position) :
 		},
 		Stats::WeaponStats{
 			.SpeedPercentage = -0.5f,
-			.Size = 2.f
+			.Size = 1.f
 		},
 		{
 			Pattern(ActionType::MOVE_TO_PLAYER, sf::seconds(3.f)),
@@ -61,15 +61,15 @@ void Imperator::onEndCycle()
 
 	if (_weaponStats.CooldownReductionPercentage < 0.5f)
 	{
-		_weaponStats.CooldownReductionPercentage += 0.01f;
+		_weaponStats.CooldownReductionPercentage += 0.03f;
 	}
 	else if (_weaponStats.BulletsPerShotPercentage < 1.f)
 	{
-		_weaponStats.BulletsPerShotPercentage += 0.02f;
+		_weaponStats.BulletsPerShotPercentage += 0.03f;
 	}
 		
-	AddBonusStats(Stats::EntityStats{ .Size = 0.01f });
-	_weaponStats.Size = GetTotalStats().Size - 1.f;
+	AddBonusStats(Stats::EntityStats{ .Size = 0.03f });
+	_weaponStats.Size = GetTotalStats().Size - 2.f;
 }
 
 void Imperator::nextWeapon()

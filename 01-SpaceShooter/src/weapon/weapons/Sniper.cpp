@@ -2,6 +2,7 @@
 
 #include "projectile/bullets/PenetrationBullet.h"
 #include "Game.h"
+#include "manager/ProjectileManager.h"
 
 Sniper::Sniper(Stats::WeaponStats& userStats) :
 	Weapon(Stats::WeaponStats{

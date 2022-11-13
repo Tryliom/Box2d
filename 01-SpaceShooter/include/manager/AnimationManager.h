@@ -1,19 +1,18 @@
 #pragma once
 #include <list>
-#include <SFML/Graphics/Drawable.hpp>
 
 #include "animation/HitAnimation.h"
+#include "animation/TextAnimation.h"
 #include "animation/Trail.h"
 
-class AnimationManager final : public sf::Drawable
+class AnimationManager final
 {
 private:
 	AnimationManager();
 
 	std::list<HitAnimation> _hitAnimations;
 	std::list<Trail> _trails;
-
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	std::list<TextAnimation> _textAnimations;
 
 public:
 	AnimationManager(const AnimationManager&) = delete;
@@ -25,8 +24,13 @@ public:
 		return instance;
 	}
 
-	void AddHitAnimation(sf::Vector2f position);
-	void AddTrail(sf::Vector2f position, float angle, Group group);
+	void AddHitAnimation(const HitAnimation& hitAnimation);
+	void AddTrail(const Trail& trail);
+	void AddTextAnimation(const TextAnimation& textAnimation);
+
+	void DrawHitAnimations(sf::RenderWindow& window) const;
+	void DrawTrails(sf::RenderWindow& window) const;
+	void DrawTextAnimations(sf::RenderWindow& window) const;
 
 	void Update(sf::Time elapsed);
 };

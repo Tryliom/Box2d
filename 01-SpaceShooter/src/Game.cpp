@@ -4,6 +4,8 @@
 #include "Random.h"
 #include "entity/enemies/Camper.h"
 #include "entity/enemies/Imperator.h"
+#include "manager/AnimationManager.h"
+#include "manager/ProjectileManager.h"
 
 Game::Game() :
 	_window(sf::RenderWindow(sf::VideoMode(1920, 1080), "Space Shooter", sf::Style::Close)),
@@ -32,7 +34,7 @@ Game::Game() :
 
 	_world.SetContactListener(&_contactListener);
 
-	_stopBurstSound = false;
+	AudioManager::GetInstance().StartMainTheme();
 }
 
 void Game::update(const sf::Time elapsed)
@@ -41,27 +43,12 @@ void Game::update(const sf::Time elapsed)
 
 	ProjectileManager::GetInstance().Update(elapsed);
 	AnimationManager::GetInstance().Update(elapsed);
+	AudioManager::GetInstance().Update(elapsed);
 
 	_backgroundStep += elapsed.asSeconds() / 100.f;
 	const float y = (HEIGHT - _background.getSize().y) / 2.f + std::cos(_backgroundStep * b2_pi) * (HEIGHT - _background.getSize().y) / 2.f;
 
 	_background.setPosition(0.f, y);
-
-	if (_stopBurstSound && _burstSound.getStatus() != sf::SoundSource::Stopped)
-	{
-		const float volume = _burstSound.getVolume() - 200.f * elapsed.asSeconds();
-
-		if (volume <= 0.f)
-		{
-			_burstSound.stop();
-			_stopBurstSound = false;
-			_burstSound.setVolume(100.f);
-		}
-		else
-		{
-			_burstSound.setVolume(volume);
-		}
-	}
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
@@ -100,29 +87,11 @@ void Game::update(const sf::Time elapsed)
 		_player.SetPosition(sf::Vector2f(_player.GetPosition().x, 0));
 	}
 
-	// Remove the sounds that are finished
-	_sounds.erase(std::remove_if(_sounds.begin(), _sounds.end(), [](const sf::Sound& sound)
-	{
-		return sound.getStatus() == sf::Sound::Status::Stopped;
-	}), _sounds.end());
-
 	// Remove the enemies that are dead
 	_enemies.erase(std::remove_if(_enemies.begin(), _enemies.end(), [this](const Enemy* enemy)
 		{
 			if (enemy->IsDead())
 			{
-				// Temporary
-				_player.AddBonusStats(Stats::EntityStats{ .SpeedPercentage = 0.05f, .RotationSpeed = 0.05f });
-
-				if (Random::GetFloat() < 0.5f)
-				{
-					_player.AddBonusStats(Stats::WeaponStats{ .SpeedPercentage = 0.1f, .Size = 0.1f });
-				}
-				else
-				{
-					_player.AddBonusStats(Stats::WeaponStats{ .Spread = 1.f, .BulletsPerShotPercentage = 0.1f });
-				}
-
 				enemy->GetBody()->GetWorld()->DestroyBody(enemy->GetBody());
 
 				return true;
@@ -140,17 +109,12 @@ void Game::checkInputs(const sf::Event event)
 
 	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 	{
-		_burstSound.setBuffer(Assets::GetInstance().GetSound(Sound::BURST));
-		_burstSound.setLoop(true);
-		_burstSound.play();
-		_stopBurstSound = false;
-		_burstSound.setVolume(100.f);
+		AudioManager::GetInstance().PlayContinuousSound(ContinuousSoundType::BURST);
 	}
 
 	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 	{
-		_burstSound.setLoop(false);
-		_stopBurstSound = true;
+		AudioManager::GetInstance().StopContinuousSound(ContinuousSoundType::BURST);
 	}
 
 	// Player can charge a special attack (if he has any), for test purpose actually
@@ -167,12 +131,15 @@ void Game::checkInputs(const sf::Event event)
 
 void Game::render()
 {
+	const AnimationManager& animationManager = AnimationManager::GetInstance();
+
 	_window.clear();
 
 	// Render background
 	_window.draw(_background);
-	
-	_window.draw(AnimationManager::GetInstance());
+
+	animationManager.DrawTrails(_window);
+	_window.draw(ProjectileManager::GetInstance());
 
 	// Render entities
 	_window.draw(_player);
@@ -182,7 +149,8 @@ void Game::render()
 		_window.draw(*enemy);
 	}
 
-	_window.draw(ProjectileManager::GetInstance());
+	animationManager.DrawHitAnimations(_window);
+	animationManager.DrawTextAnimations(_window);
 
 	renderHealthBar();
 
@@ -236,28 +204,35 @@ void Game::spawnEnemies()
 	{
 		_enemies.emplace_back(new Imperator(*this, sf::Vector2f(WIDTH / 2.f, -200.f)));
 
-		if (_wave % 20 == 0)
+		if (_wave >= 20)
 		{
 			_enemies.emplace_back(new Imperator(*this, sf::Vector2f(WIDTH / 2.f, HEIGHT + 200.f)));
 		}
+
+		AudioManager::GetInstance().PlayMusic(Music::BOSS_THEME);
 	}
+	else if ((_wave - 1) % 5 == 0)
+	{
+		AudioManager::GetInstance().StartMainTheme();
+	}
+
+	const float sideRandom = Random::GetFloat();
 
 	for (int i = 0; i < number; ++i)
 	{
-		const float rand = Random::GetFloat();
 		float x, y;
 
-		if (rand < 0.25f)
+		if (sideRandom < 0.25f)
 		{
 			x = Random::GetFloat(0.f, WIDTH);
 			y = Random::GetFloat(-100.f, -50.f);
 		}
-		else if (rand < 0.5f)
+		else if (sideRandom < 0.5f)
 		{
 			x = Random::GetFloat(0.f, WIDTH);
 			y = Random::GetFloat(HEIGHT + 50.f, HEIGHT + 100.f);
 		}
-		else if (rand < 0.75f)
+		else if (sideRandom < 0.75f)
 		{
 			x = Random::GetFloat(-100.f, -50.f);
 			y = Random::GetFloat(0.f, HEIGHT);
@@ -363,13 +338,6 @@ b2Body* Game::GetNewBody()
 Player& Game::GetPlayer()
 {
 	return _player;
-}
-
-void Game::PlaySound(const Sound sound)
-{
-	_sounds.emplace_back();
-	_sounds.back().setBuffer(Assets::GetInstance().GetSound(sound));
-	_sounds.back().play();
 }
 
 bool Game::IsOutOfScreen(const sf::Vector2f position)

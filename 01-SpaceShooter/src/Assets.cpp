@@ -9,6 +9,7 @@ Assets::Assets()
 	_textures[static_cast<int>(Texture::TAIL)].loadFromFile("data/images/tail.png");
 	_textures[static_cast<int>(Texture::SPARKS)].loadFromFile("data/images/sparks.png");
 	_textures[static_cast<int>(Texture::CANON_BULLET)].loadFromFile("data/images/canon_bullet.png");
+	_textures[static_cast<int>(Texture::MACHINE_GUN_BULLET)].loadFromFile("data/images/machine_gun_bullet.png");
 	_textures[static_cast<int>(Texture::CHARGE_CIRCLE)].loadFromFile("data/images/charge_circle.png");
 	_textures[static_cast<int>(Texture::SNIPER_TRAIL)].loadFromFile("data/images/trail.png");
 	_textures[static_cast<int>(Texture::ENEMY_CAMPER)].loadFromFile("data/images/enemies/camper.png");
@@ -18,9 +19,10 @@ Assets::Assets()
 
 	_sounds[static_cast<int>(Sound::BURST)].loadFromFile("data/sounds/burst.wav");
 
-	_musics[static_cast<int>(Music::MAIN_THEME)].openFromFile("data/musics/main_theme1.wav");
-	_musics[static_cast<int>(Music::MAIN_THEME2)].openFromFile("data/musics/main_theme2.wav");
-	_musics[static_cast<int>(Music::DEATH)].openFromFile("data/musics/death.wav");
+	_musicPaths[static_cast<int>(Music::MAIN_THEME)] = "data/musics/main_theme1.wav";
+	_musicPaths[static_cast<int>(Music::MAIN_THEME2)] = "data/musics/main_theme2.wav";
+	_musicPaths[static_cast<int>(Music::DEATH)] = "data/musics/death.wav";
+	_musicPaths[static_cast<int>(Music::BOSS_THEME)] = "data/musics/boss_theme.wav";
 
 	for (int i = 0; i < _hitAnimationTextures.max_size(); i++)
 	{
@@ -43,9 +45,9 @@ sf::SoundBuffer& Assets::GetSound(const Sound sound)
 	return _sounds[static_cast<int>(sound)];
 }
 
-sf::Music& Assets::GetMusic(const Music music)
+std::string Assets::GetMusicPath(const Music music)
 {
-	return _musics[static_cast<int>(music)];
+	return _musicPaths[static_cast<int>(music)];
 }
 
 sf::Texture& Assets::GetHitAnimationTexture(const int index)
