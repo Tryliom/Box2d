@@ -20,6 +20,7 @@ private:
 	sf::RenderWindow _window;
 	b2World _world;
 	ContactListener _contactListener;
+	bool _pause;
 
 	sf::RectangleShape _background;
 	float _backgroundStep;

@@ -15,6 +15,7 @@ Game::Game() :
 {
 	_window.setFramerateLimit(144);
 	_window.setVerticalSyncEnabled(true);
+	_pause = false;
 
 	// Set the size of the game
 	Game::HEIGHT = _window.getSize().y;
@@ -40,6 +41,11 @@ Game::Game() :
 
 void Game::update(const sf::Time elapsed)
 {
+	if (_pause)
+	{
+		return;
+	}
+
 	_world.Step(elapsed.asSeconds(), 8, 3);
 
 	ProjectileManager::GetInstance().Update(elapsed);
@@ -127,6 +133,11 @@ void Game::checkInputs(const sf::Event event)
 	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Right)
 	{
 		_player.StopChargingWeapon();
+	}
+
+	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+	{
+		_pause = !_pause;
 	}
 }
 
