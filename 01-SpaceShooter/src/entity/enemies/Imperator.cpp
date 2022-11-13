@@ -84,7 +84,6 @@ void Imperator::onEndCycle()
 	else if (_currentWeaponIndex == 2)
 	{
 		_weaponStats = Stats::WeaponStats{
-			.CooldownReductionPercentage = 0.5f,
 			.Size = 3.f
 		};
 	}
