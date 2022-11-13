@@ -10,7 +10,6 @@
 #include "box2d/b2_body.h"
 #include "box2d/b2_world.h"
 #include "entity/Enemy.h"
-#include "manager/AudioManager.h"
 
 class Game final
 {
@@ -42,7 +41,7 @@ private:
 public:
 	inline static float HEIGHT = 0.f;
 	inline static float WIDTH = 0.f;
-	inline static float SCALE = 10.0f;
+	inline static float SCALE = 100.0f;
 
 	static sf::Vector2f MeterToPixel(b2Vec2 meter);
 	static b2Vec2 PixelToMeter(sf::Vector2f pixel);

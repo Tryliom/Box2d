@@ -10,8 +10,9 @@ Player::Player(Game& game, const sf::Vector2f position) :
 		game, position, Assets::GetInstance().GetTexture(Texture::SPACE_SHIP),
 		100.f, 100.f, Stats::EntityStats{
 			.HealthRegeneration = 0.5f,
-			.Speed = 0.5f,
+			.Speed = 5.f,
 			.RotationSpeed = 15.f,
+			.CollisionDamage = 20.f
 		},
 		Group::PLAYER
 	)

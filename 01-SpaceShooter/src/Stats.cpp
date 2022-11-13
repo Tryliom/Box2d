@@ -1,5 +1,7 @@
 #include "Stats.h"
 
+#include "Game.h"
+
 namespace Stats
 {
 	float EntityStats::GetHealthRegeneration() const
@@ -9,7 +11,7 @@ namespace Stats
 
 	float EntityStats::GetSpeed() const
 	{
-		return Speed * (1.f + SpeedPercentage);
+		return Speed * (1.f + SpeedPercentage) / Game::SCALE;
 	}
 
 	float EntityStats::GetMaxSpeed() const
@@ -56,7 +58,7 @@ namespace Stats
 
 	float WeaponStats::GetSpeed() const
 	{
-		return Speed * (1.f + SpeedPercentage);
+		return Speed * (1.f + SpeedPercentage) / Game::SCALE;
 	}
 
 	float WeaponStats::GetSpread() const
@@ -66,7 +68,7 @@ namespace Stats
 
 	float WeaponStats::GetRange() const
 	{
-		return Range;
+		return Range / Game::SCALE;
 	}
 
 	int WeaponStats::GetBulletsPerShot() const

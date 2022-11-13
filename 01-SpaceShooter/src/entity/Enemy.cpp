@@ -1,7 +1,5 @@
 #include "entity/Enemy.h"
 
-#include <iostream>
-
 #include "Game.h"
 
 Enemy::Enemy(Game& game, sf::Vector2f position, const sf::Texture& texture, float health, float maxHealth,

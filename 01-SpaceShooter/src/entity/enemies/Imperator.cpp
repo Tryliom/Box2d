@@ -10,7 +10,7 @@ Imperator::Imperator(Game& game, const sf::Vector2f position) :
 	Enemy(game, position, Assets::GetInstance().GetTexture(Texture::ENEMY_IMPERATOR),
 		500.f, 500.f, Group::ENEMY,
 		Stats::EntityStats{
-			.Speed = 0.1f,
+			.Speed = 1.f,
 			.RotationSpeed = 10.f,
 			.CollisionDamage = 20.f,
 			.Size = 3.f
@@ -84,7 +84,6 @@ void Imperator::onEndCycle()
 	else if (_currentWeaponIndex == 2)
 	{
 		_weaponStats = Stats::WeaponStats{
-			.SpeedPercentage = 1.f,
 			.CooldownReductionPercentage = 0.5f,
 			.Size = 3.f
 		};

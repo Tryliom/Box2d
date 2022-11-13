@@ -5,6 +5,7 @@
 #include "animation/chargeAnimations/CircleAttackCharge.h"
 
 #include "box2d/b2_world.h"
+#include "manager/AudioManager.h"
 
 Weapon::Weapon(const Stats::WeaponStats stats, Stats::WeaponStats& userStats) : _userStats(userStats)
 {

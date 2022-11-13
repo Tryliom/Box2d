@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "animation/TextAnimation.h"
 #include "manager/AnimationManager.h"
+#include "manager/AudioManager.h"
 
 Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& texture,
                const float health, const float maxHealth, 

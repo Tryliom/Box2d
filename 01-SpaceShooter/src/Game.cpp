@@ -5,6 +5,7 @@
 #include "entity/enemies/Camper.h"
 #include "entity/enemies/Imperator.h"
 #include "manager/AnimationManager.h"
+#include "manager/AudioManager.h"
 #include "manager/ProjectileManager.h"
 
 Game::Game() :
