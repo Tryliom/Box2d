@@ -136,7 +136,7 @@ void Entity::Update(const sf::Time elapsed)
 {
 	_healthDifferenceTime += elapsed;
 
-	if (_healthDifferenceTime >= sf::seconds(1.f))
+	if (_healthDifferenceTime >= sf::seconds(.5f))
 	{
 		updateHealthDifference();
 	}

@@ -1,6 +1,7 @@
 #include "entity/enemies/Camper.h"
 
 #include "Assets.h"
+#include "Random.h"
 #include "weapon/weapons/Canon.h"
 
 Camper::Camper(Game& game, sf::Vector2f position) :
@@ -16,8 +17,8 @@ Camper::Camper(Game& game, sf::Vector2f position) :
 			.CooldownReductionPercentage = -0.7f
 		},
 		{
-			Pattern(ActionType::MOVE_AROUND_PLAYER, sf::seconds(5.f)),
-			Pattern(ActionType::ATTACK, sf::seconds(2.f))
+			Pattern(ActionType::MOVE_AROUND_PLAYER, sf::seconds(Random::GetFloat(3.5f, 5.f))),
+			Pattern(ActionType::ATTACK, sf::seconds(Random::GetFloat(1.5f, 3.f)))
 		})
 {
 	_weapon = new Canon(_weaponStats);
