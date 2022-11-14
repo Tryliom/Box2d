@@ -22,12 +22,12 @@ void HitAnimation::Update(const sf::Time elapsed)
 {
 	_currentDuration += elapsed;
 
-	if (_currentDuration >= sf::seconds(HIT_ANIMATION_DURATION))
+	if (_currentDuration >= sf::seconds(ANIMATION_DURATION))
 	{
 		_currentDuration = sf::Time::Zero;
 		_currentFrame++;
 
-		if (_currentFrame >= HIT_ANIMATION_FRAMES)
+		if (_currentFrame >= Assets::GetInstance().GetHitAnimationTextureCount())
 		{
 			return;
 		}
@@ -44,5 +44,5 @@ void HitAnimation::Update(const sf::Time elapsed)
 
 bool HitAnimation::IsFinished() const
 {
-	return _currentFrame >= HIT_ANIMATION_FRAMES;
+	return _currentFrame >= Assets::GetInstance().GetHitAnimationTextureCount();
 }

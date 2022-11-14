@@ -38,6 +38,8 @@ protected:
 	float getDeltaAngle(float angle) const;
 	void rotate(float angle) const;
 
+	void updateHealthDifference();
+
 	virtual void onDeath();
 
 public:

@@ -4,6 +4,8 @@
 #include "SFML/Graphics.hpp"
 #include "SFML/Audio.hpp"
 
+constexpr float ANIMATION_DURATION = 1.f / 24.f;
+
 enum class Texture
 {
 	BACKGROUND, BACKGROUND2, BACKGROUND3, SPACE_SHIP, TAIL, SPARKS, CANON_BULLET, MACHINE_GUN_BULLET, CHARGE_CIRCLE, SNIPER_TRAIL, ENEMY_CAMPER, ENEMY_IMPERATOR, ENEMY_ANGEL, END
@@ -16,7 +18,7 @@ enum class Font
 
 enum class Sound
 {
-	BURST, WEAPON_SHOOT, LEVEL_UP, UPGRADE_CHOOSE, BOSS_DEATH, ENTITY_COLLISION, ENEMY_DEATH, END
+	BURST, WEAPON_SHOOT, LEVEL_UP, UPGRADE_CHOOSE, ENTITY_COLLISION, ENEMY_DEATH, END
 };
 
 enum class Music
@@ -34,6 +36,7 @@ private:
 	std::array<sf::SoundBuffer, static_cast<int>(Sound::END)> _sounds;
 	std::array<std::string, static_cast<int>(Music::END)> _musicPaths;
 	std::array<sf::Texture, 10> _hitAnimationTextures;
+	std::array<sf::Texture, 12> _deathAnimationTextures;
 
 public:
 	Assets(const Assets&) = delete;
@@ -46,6 +49,10 @@ public:
 	sf::SoundBuffer& GetSound(Sound sound);
 	std::string GetMusicPath(Music music);
 	sf::Texture& GetHitAnimationTexture(int index);
+	sf::Texture& GetDeathAnimationTexture(int index);
+
+	int GetHitAnimationTextureCount() const;
+	int GetDeathAnimationTextureCount() const;
 
 	static auto& GetInstance() {
 		static Assets instance;

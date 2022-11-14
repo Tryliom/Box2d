@@ -21,6 +21,11 @@ void AnimationManager::AddTextAnimation(const TextAnimation& textAnimation)
 	_textAnimations.emplace_back(textAnimation);
 }
 
+void AnimationManager::AddDeathAnimation(const DeathAnimation& deathAnimation)
+{
+	_deathAnimations.emplace_back(deathAnimation);
+}
+
 void AnimationManager::DrawHitAnimations(sf::RenderWindow& window) const
 {
 	for (const auto& hitAnimation : _hitAnimations)
@@ -42,6 +47,14 @@ void AnimationManager::DrawTextAnimations(sf::RenderWindow& window) const
 	for (const auto& textAnimation : _textAnimations)
 	{
 		window.draw(textAnimation);
+	}
+}
+
+void AnimationManager::DrawDeathAnimations(sf::RenderWindow& window) const
+{
+	for (const auto& deathAnimation : _deathAnimations)
+	{
+		window.draw(deathAnimation);
 	}
 }
 
@@ -82,6 +95,20 @@ void AnimationManager::Update(const sf::Time elapsed)
 		if (it->IsFinished())
 		{
 			it = _textAnimations.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+
+	for (auto it = _deathAnimations.begin(); it != _deathAnimations.end();)
+	{
+		it->Update(elapsed);
+
+		if (it->IsFinished())
+		{
+			it = _deathAnimations.erase(it);
 		}
 		else
 		{

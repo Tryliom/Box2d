@@ -4,7 +4,6 @@
 #include "manager/AudioManager.h"
 #include "weapon/weapons/Canon.h"
 #include "weapon/weapons/MachineGun.h"
-#include "weapon/weapons/Sniper.h"
 
 Imperator::Imperator(Game& game, const sf::Vector2f position) :
 	Enemy(game, position, Assets::GetInstance().GetTexture(Texture::ENEMY_IMPERATOR),
@@ -90,9 +89,4 @@ void Imperator::nextWeapon()
 	_weapons[_currentWeaponIndex]->StopCharging();
 	_currentWeaponIndex = (_currentWeaponIndex + 1) % _weapons.size();
 	_weapon = _weapons[_currentWeaponIndex];
-}
-
-void Imperator::onDeath()
-{
-	AudioManager::GetInstance().PlaySound(Sound::BOSS_DEATH);
 }

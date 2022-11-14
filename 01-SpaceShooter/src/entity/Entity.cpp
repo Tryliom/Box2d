@@ -102,38 +102,43 @@ void Entity::rotate(float angle) const
 	_body->SetAngularVelocity(Game::DegreeToRad(angle * 10.f));
 }
 
+void Entity::updateHealthDifference()
+{
+	const float healthDifference = _lastHealth - _health;
+
+	if (static_cast<int>(healthDifference) != 0)
+	{
+		if (healthDifference > 0.f)
+		{
+			AnimationManager& animationManager = AnimationManager::GetInstance();
+			animationManager.AddTextAnimation(DamageTextAnimation(
+				_shape.getPosition(),
+				std::to_string(static_cast<int>(healthDifference)),
+				_groupIndex == Group::PLAYER ? sf::Color::Red : sf::Color::Yellow
+			));
+		}
+		else if (healthDifference < 0.f)
+		{
+			AnimationManager& animationManager = AnimationManager::GetInstance();
+			animationManager.AddTextAnimation(DamageTextAnimation(
+				_shape.getPosition(),
+				std::to_string(static_cast<int>(healthDifference * -1.f)),
+				sf::Color::Green
+			));
+		}
+	}
+
+	_healthDifferenceTime = sf::Time::Zero;
+	_lastHealth = _health;
+}
+
 void Entity::Update(const sf::Time elapsed)
 {
 	_healthDifferenceTime += elapsed;
 
 	if (_healthDifferenceTime >= sf::seconds(1.f))
 	{
-		const float healthDifference = _lastHealth - _health;
-
-		if (static_cast<int>(healthDifference) != 0)
-		{
-			if (healthDifference > 0.f)
-			{
-				AnimationManager& animationManager = AnimationManager::GetInstance();
-				animationManager.AddTextAnimation(DamageTextAnimation(
-					_shape.getPosition(),
-					std::to_string(static_cast<int>(healthDifference)),
-					_groupIndex == Group::PLAYER ? sf::Color::Red : sf::Color::Yellow
-				));
-			}
-			else if (healthDifference < 0.f)
-			{
-				AnimationManager& animationManager = AnimationManager::GetInstance();
-				animationManager.AddTextAnimation(DamageTextAnimation(
-					_shape.getPosition(),
-					std::to_string(static_cast<int>(healthDifference * -1.f)),
-					sf::Color::Green
-				));
-			}
-		}
-
-		_healthDifferenceTime = sf::Time::Zero;
-		_lastHealth = _health;
+		updateHealthDifference();
 	}
 
 	if (_health < _maxHealth)
@@ -303,4 +308,8 @@ void Entity::onDeath()
 	{
 		AudioManager::GetInstance().PlayMusic(Music::DEATH);
 	}
+
+	AnimationManager::GetInstance().AddDeathAnimation(DeathAnimation(_shape.getPosition()));
+
+	updateHealthDifference();
 }

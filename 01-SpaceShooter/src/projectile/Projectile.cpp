@@ -92,7 +92,7 @@ void Projectile::OnImpact(const sf::Vector2f impactPoint)
 	}
 
 	AnimationManager& animationManager = AnimationManager::GetInstance();
-	animationManager.AddHitAnimation(impactPoint);
+	animationManager.AddHitAnimation(HitAnimation(impactPoint));
 }
 
 bool Projectile::IsDead() const

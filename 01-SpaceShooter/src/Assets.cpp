@@ -22,7 +22,6 @@ Assets::Assets()
 	_sounds[static_cast<int>(Sound::WEAPON_SHOOT)].loadFromFile("data/sounds/weapon_shoot.wav");
 	_sounds[static_cast<int>(Sound::LEVEL_UP)].loadFromFile("data/sounds/level_up.wav");
 	_sounds[static_cast<int>(Sound::UPGRADE_CHOOSE)].loadFromFile("data/sounds/upgrade_choose.wav");
-	_sounds[static_cast<int>(Sound::BOSS_DEATH)].loadFromFile("data/sounds/boss_death.wav");
 	_sounds[static_cast<int>(Sound::ENTITY_COLLISION)].loadFromFile("data/sounds/entity_collision.wav");
 	_sounds[static_cast<int>(Sound::ENEMY_DEATH)].loadFromFile("data/sounds/enemy_death.wav");
 
@@ -33,7 +32,26 @@ Assets::Assets()
 
 	for (int i = 0; i < _hitAnimationTextures.max_size(); i++)
 	{
-		_hitAnimationTextures[i].loadFromFile("data/images/hit_animation/0" + std::to_string(i) + ".png");
+		std::string prefix = "data/images/hit_animation/";
+
+		if (i < 10)
+		{
+			prefix += "0";
+		}
+
+		_hitAnimationTextures[i].loadFromFile(prefix + std::to_string(i) + ".png");
+	}
+
+	for (int i = 0; i < _deathAnimationTextures.max_size(); i++)
+	{
+		std::string prefix = "data/images/death_animation/";
+
+		if (i < 10)
+		{
+			prefix += "0";
+		}
+
+		_deathAnimationTextures[i].loadFromFile(prefix + std::to_string(i) + ".png");
 	}
 }
 
@@ -60,4 +78,19 @@ std::string Assets::GetMusicPath(const Music music)
 sf::Texture& Assets::GetHitAnimationTexture(const int index)
 {
 	return _hitAnimationTextures[index];
+}
+
+sf::Texture& Assets::GetDeathAnimationTexture(const int index)
+{
+	return _deathAnimationTextures[index];
+}
+
+int Assets::GetHitAnimationTextureCount() const
+{
+	return static_cast<int>(_hitAnimationTextures.size());
+}
+
+int Assets::GetDeathAnimationTextureCount() const
+{
+	return static_cast<int>(_deathAnimationTextures.size());
 }

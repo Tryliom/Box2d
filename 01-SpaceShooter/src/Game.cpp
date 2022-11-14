@@ -150,7 +150,9 @@ void Game::render()
 	// Render background
 	_window.draw(_background);
 
+	animationManager.DrawDeathAnimations(_window);
 	animationManager.DrawTrails(_window);
+
 	_window.draw(ProjectileManager::GetInstance());
 
 	// Render entities

@@ -1,10 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-class HitAnimation final : public sf::Drawable
+class DeathAnimation final : public sf::Drawable
 {
 public:
-	explicit HitAnimation(sf::Vector2f position);
+	explicit DeathAnimation(sf::Vector2f position);
 
 private:
 	sf::Sprite _sprite;
