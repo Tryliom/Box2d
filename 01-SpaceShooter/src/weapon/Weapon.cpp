@@ -31,18 +31,6 @@ sf::Time Weapon::getLifeTime() const
 	return sf::seconds(stats.GetRange() / stats.GetSpeed());
 }
 
-sf::Vector2f Weapon::getFrontPosition(const Entity* entity) const
-{
-	const sf::Vector2f size = entity->GetShape().getSize();
-	const sf::Vector2f position = entity->GetShape().getPosition();
-
-	const float angle = entity->GetShape().getRotation() + 90.f;
-	const float x = position.x - (size.x * 0.5f) * std::cos(Game::DegreeToRad(angle));
-	const float y = position.y - (size.y * 0.5f) * std::sin(Game::DegreeToRad(angle));
-
-	return { x, y };
-}
-
 void Weapon::StartCharging(Entity* entity)
 {
 	if (!_isCharging)
@@ -51,9 +39,10 @@ void Weapon::StartCharging(Entity* entity)
 		_currentCooldown = getTotalStats().GetCooldown();
 
 		const sf::Vector2f size = entity->GetShape().getSize();
-		const sf::Vector2f position = entity->GetShape().getPosition();
+		const sf::Vector2f position = entity->GetWeaponPosition();
+		const float radius = (size.x + size.y) * entity->GetShape().getScale().x * 0.5f;
 
-		_chargeAnimation = new CircleAttackCharge(position, (size.x + size.y) / 2.f, getTotalStats().GetCooldown());
+		_chargeAnimation = new CircleAttackCharge(position, radius, getTotalStats().GetCooldown());
 	}
 }
 
@@ -80,7 +69,7 @@ void Weapon::Shoot(Entity* entity, const Group bulletGroup)
 	const Stats::WeaponStats stats = getTotalStats();
 	const float angle = Game::RadToDegree(entity->GetBody()->GetAngle());
 	const sf::Time lifeTime = getLifeTime();
-	const sf::Vector2f frontPosition = getFrontPosition(entity);
+	const sf::Vector2f frontPosition = entity->GetWeaponPosition();
 	const int bulletPerShot = stats.GetBulletsPerShot();
 	const float spread = stats.GetSpread() / 2.f;
 
@@ -112,10 +101,10 @@ void Weapon::Update(const sf::Time elapsed)
 	}
 }
 
-void Weapon::UpdatePosition(const sf::Vector2f position)
+void Weapon::UpdatePosition(const Entity* entity)
 {
 	if (_chargeAnimation != nullptr)
 	{
-		_chargeAnimation->UpdatePosition(position);
+		_chargeAnimation->UpdatePosition(entity->GetWeaponPosition());
 	}
 }

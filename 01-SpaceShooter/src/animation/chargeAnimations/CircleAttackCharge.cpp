@@ -31,7 +31,7 @@ void CircleAnimation::Update(const sf::Time elapsed)
 	
 	_sprite.setColor(sf::Color(255, 255, 255, 255 * percentage));
 	_sprite.setScale(_originalScale * (1.f - 1.f * percentage));
-	_sprite.setRotation(_sprite.getRotation() + 360.f * elapsed.asSeconds());
+	_sprite.setRotation(_sprite.getRotation() + 720.f * elapsed.asSeconds());
 }
 
 void CircleAnimation::UpdatePosition(const sf::Vector2f position)

@@ -41,7 +41,7 @@ void Imperator::Update(const sf::Time elapsed)
 	{
 		if (weapon != _weapons[_currentWeaponIndex])
 		{
-			weapon->UpdatePosition(GetPosition());
+			weapon->UpdatePosition(this);
 			weapon->Update(elapsed);
 		}
 	}

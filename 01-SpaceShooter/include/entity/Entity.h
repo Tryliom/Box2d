@@ -55,6 +55,7 @@ public:
 
 	void ChargeWeapon();
 	void StopChargingWeapon() const;
+	virtual sf::Vector2f GetWeaponPosition() const;
 
 	void AddBonusStats(const Stats::EntityStats bonusStats);
 	void AddBonusStats(const Stats::WeaponStats bonusStats) { _weaponStats += bonusStats; }

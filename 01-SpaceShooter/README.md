@@ -12,3 +12,6 @@
 
 - Add an enemy that load his attack in 5sec (with an animation) and gain high velocity in the direction his facing
 - Faire une struct TextComponent qui a lui même un vector de struct Text avec couleur et tout pour les interfaces
+- Mettre 2 ennemis qui ont le module sparks et un sniper avec le boss sans les petits et retirer le sniper du boss
+- Donner plus de rotation speed et de speed quand les enemis n'attaquent pas
+- Ajouter un shotgun qui tire à courte distance avec masse bullets

@@ -119,7 +119,7 @@ void Entity::Update(const sf::Time elapsed)
 
 	if (_weapon != nullptr)
 	{
-		_weapon->UpdatePosition(_shape.getPosition());
+		_weapon->UpdatePosition(this);
 		_weapon->Update(elapsed);
 	}
 
@@ -226,6 +226,19 @@ void Entity::StopChargingWeapon() const
 	{
 		_weapon->StopCharging();
 	}
+}
+
+sf::Vector2f Entity::GetWeaponPosition() const
+{
+	const sf::Vector2f size = _shape.getSize();
+	const sf::Vector2f scale = _shape.getScale();
+	const sf::Vector2f position = _shape.getPosition();
+	const float angle = _shape.getRotation() + 90.f;
+
+	const float x = position.x - (size.x * scale.x * 0.5f) * std::cos(Game::DegreeToRad(angle));
+	const float y = position.y - (size.y * scale.y * 0.5f) * std::sin(Game::DegreeToRad(angle));
+
+	return { x, y };
 }
 
 void Entity::AddBonusStats(const Stats::EntityStats bonusStats)
