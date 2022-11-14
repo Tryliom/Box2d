@@ -10,7 +10,7 @@ Player::Player(Game& game, const sf::Vector2f position) :
 		game, position, Assets::GetInstance().GetTexture(Texture::SPACE_SHIP),
 		100.f, 100.f, Stats::EntityStats{
 			.HealthRegeneration = 0.5f,
-			.Speed = 5.f,
+			.Speed = 600.f,
 			.RotationSpeed = 15.f,
 			.CollisionDamage = 20.f
 		},
@@ -20,11 +20,18 @@ Player::Player(Game& game, const sf::Vector2f position) :
 	_weapon = new MachineGun(_weaponStats);
 	AddModule(new SparksModule());
 
+	_weaponStats = Stats::WeaponStats{
+		.DamagePercentage = 0.5f,
+		.BulletsPerShotPercentage = 1.f,
+		.CooldownReductionPercentage = 0.7f,
+		.Size = 1.f
+	};
+
 	_shape.setRotation(45.f);
 	_body->SetTransform(Game::PixelToMeter(position), Game::DegreeToRad(_shape.getRotation()));
 
 	// Add a linear velocity to the body to make it move to the angle it is facing by default to add some style
-	_body->SetLinearVelocity(Game::GetLinearVelocity(GetTotalStats().GetSpeed() * 100.f, _shape.getRotation()));
+	_body->SetLinearVelocity(Game::GetLinearVelocity(GetTotalStats().GetSpeed(), _shape.getRotation()));
 }
 
 void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
@@ -76,9 +83,9 @@ void Player::Update(const sf::Time elapsed)
 	std::erase_if(_tails, [](const Tail& tail) { return tail.IsDead(); });
 }
 
-void Player::Move()
+void Player::Move(sf::Time elapsed)
 {
-	Entity::Move();
+	Entity::Move(elapsed);
 
 	if (_tailCooldown >= sf::Time(sf::seconds(TAIL_COOLDOWN)))
 	{

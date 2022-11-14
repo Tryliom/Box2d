@@ -1,5 +1,7 @@
 #include "module/modules/SparksModule.h"
 
+#include <iostream>
+
 #include "Game.h"
 #include "Random.h"
 #include "entity/Entity.h"
@@ -23,7 +25,6 @@ void SparksModule::draw(sf::RenderTarget& target, const sf::RenderStates states)
 
 void SparksModule::updateData(Entity* entity)
 {
-	const Stats::EntityStats stats = entity->GetTotalStats();
 	const Stats::WeaponStats weaponStats = entity->GetWeaponStats();
 
 	_sparksAngle = 90.0f + weaponStats.GetSpread();
@@ -39,21 +40,21 @@ void SparksModule::updateData(Entity* entity)
 void SparksModule::addSparks(float angleDegree, Entity* entity)
 {
 	const sf::RectangleShape shape = entity->GetShape();
+	const sf::Vector2f scale = shape.getScale();
 	const sf::Vector2f position = shape.getPosition();
 	const Stats::EntityStats stats = entity->GetTotalStats();
 	const Stats::WeaponStats weaponStats = entity->GetWeaponStats();
 
 	// Calculate the position of the sparks
-	const float x = position.x - (shape.getSize().x / 5.f) * std::cos(Game::DegreeToRad(angleDegree));
-	const float y = position.y - (shape.getSize().y / 5.f) * std::sin(Game::DegreeToRad(angleDegree));
+	const float x = position.x - (shape.getSize().x * scale.x / 5.f) * std::cos(Game::DegreeToRad(angleDegree));
+	const float y = position.y - (shape.getSize().y * scale.y / 5.f) * std::sin(Game::DegreeToRad(angleDegree));
 
-	const float sparksSpeed = stats.GetSpeed() * 50.f;
 	angleDegree -= 90.f;
 
 	_sparks.emplace_back(
 		entity->GetGame().GetNewBody(), sf::Vector2f(x, y),
-		angleDegree, 2.f + weaponStats.GetSize(), Game::GetLinearVelocity(sparksSpeed, angleDegree), sf::seconds(0.5f),
-		stats.GetSpeed() * 200.f, entity->GetProjectileGroup()
+		angleDegree, 2.f + weaponStats.GetSize(), Game::GetLinearVelocity(stats.GetSpeed(), angleDegree), sf::seconds(0.5f),
+		stats.GetSpeed(), entity->GetProjectileGroup()
 	);
 }
 

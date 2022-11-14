@@ -34,8 +34,8 @@ public:
 			sf::Vector2f(0.f, 0.f),
 			sf::seconds(0.75f),
 			{
-				{ EndAnimationType::FADE, 1.f, -1.f },
-				{ EndAnimationType::SCALE_UP, 0.f, 1.f },
+				{ EndAnimationType::FADE, 1.f, -2.f },
+				{ EndAnimationType::SCALE_UP, 0.5f, 1.f },
 			},
 			text,
 			20,

@@ -7,8 +7,8 @@ enum class ActionType
 	MOVE_TO_PLAYER,
 	MOVE_AROUND_PLAYER,
 	RUN_AWAY,
-	RUN_AWAY_FROM_PLAYER,
-	ATTACK
+	ATTACK,
+	ROTATE
 };
 
 struct Pattern

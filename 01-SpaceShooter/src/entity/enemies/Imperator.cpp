@@ -10,7 +10,7 @@ Imperator::Imperator(Game& game, const sf::Vector2f position) :
 	Enemy(game, position, Assets::GetInstance().GetTexture(Texture::ENEMY_IMPERATOR),
 		500.f, 500.f, Group::ENEMY,
 		Stats::EntityStats{
-			.Speed = 1.f,
+			.Speed = 50.f,
 			.RotationSpeed = 10.f,
 			.CollisionDamage = 20.f,
 			.Size = 3.f
@@ -22,15 +22,17 @@ Imperator::Imperator(Game& game, const sf::Vector2f position) :
 			.Size = 5.f
 		},
 		{
-			Pattern(ActionType::MOVE_TO_PLAYER, sf::seconds(3.f)),
+			Pattern(ActionType::MOVE_AROUND_PLAYER, sf::seconds(3.f)),
+			Pattern(ActionType::ROTATE, sf::seconds(1.f)),
 			Pattern(ActionType::ATTACK, sf::seconds(2.f)),
 		})
 {
 	_weapons = {
 		new Canon(_weaponStats),
-		new MachineGun(_weaponStats),
-		new Sniper(_weaponStats)
+		new MachineGun(_weaponStats)
 	};
+
+	_weapon = _weapons[_currentWeaponIndex];
 }
 
 void Imperator::Update(const sf::Time elapsed)
@@ -79,12 +81,6 @@ void Imperator::onEndCycle()
 			.Spread = 10.f,
 			.BulletsPerShotPercentage = 3.f,
 			.CooldownReductionPercentage = 0.5f
-		};
-	}
-	else if (_currentWeaponIndex == 2)
-	{
-		_weaponStats = Stats::WeaponStats{
-			.Size = 3.f
 		};
 	}
 }

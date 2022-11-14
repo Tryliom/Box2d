@@ -93,11 +93,6 @@ void Projectile::OnImpact(const sf::Vector2f impactPoint)
 
 	AnimationManager& animationManager = AnimationManager::GetInstance();
 	animationManager.AddHitAnimation(impactPoint);
-	animationManager.AddTextAnimation(DamageTextAnimation(
-		impactPoint, 
-		std::to_string(static_cast<int>(_damage)),
-		_groupIndex == Group::ENEMY_PROJECTILE ? sf::Color::Red : sf::Color::Yellow
-	));
 }
 
 bool Projectile::IsDead() const

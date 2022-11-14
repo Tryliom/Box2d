@@ -7,6 +7,7 @@
 #include "manager/AnimationManager.h"
 #include "manager/AudioManager.h"
 #include "manager/ProjectileManager.h"
+#include "entity/enemies/Angel.h"
 
 Game::Game() :
 	_window(sf::RenderWindow(sf::VideoMode(1920, 1080), "Space Shooter", sf::Style::Close)),
@@ -59,7 +60,7 @@ void Game::update(const sf::Time elapsed)
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
-		_player.Move();
+		_player.Move(elapsed);
 	}
 
 	_player.Update(elapsed);
@@ -124,7 +125,6 @@ void Game::checkInputs(const sf::Event event)
 		AudioManager::GetInstance().StopContinuousSound(ContinuousSoundType::BURST);
 	}
 
-	// Player can charge a special attack (if he has any), for test purpose actually
 	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
 	{
 		_player.ChargeWeapon();
@@ -215,10 +215,14 @@ void Game::spawnEnemies()
 	if (_wave % 5 == 0)
 	{
 		_enemies.emplace_back(new Imperator(*this, sf::Vector2f(WIDTH / 2.f, -200.f)));
+		_enemies.emplace_back(new Angel(*this, sf::Vector2f(WIDTH / 4.f, -200.f)));
+		_enemies.emplace_back(new Angel(*this, sf::Vector2f(WIDTH * 3.f / 4.f, -200.f)));
 
 		if (_wave >= 20)
 		{
 			_enemies.emplace_back(new Imperator(*this, sf::Vector2f(WIDTH / 2.f, HEIGHT + 200.f)));
+			_enemies.emplace_back(new Angel(*this, sf::Vector2f(WIDTH / 4.f, HEIGHT + 200.f)));
+			_enemies.emplace_back(new Angel(*this, sf::Vector2f(WIDTH * 3.f / 4.f, HEIGHT + 200.f)));
 		}
 
 		AudioManager::GetInstance().PlayMusic(Music::BOSS_THEME);
@@ -227,35 +231,39 @@ void Game::spawnEnemies()
 	{
 		AudioManager::GetInstance().StartMainTheme();
 	}
+	
 
-	const float sideRandom = Random::GetFloat();
-
-	for (int i = 0; i < number; ++i)
+	if (_wave % 5 != 0)
 	{
-		float x, y;
+		const float sideRandom = Random::GetFloat();
 
-		if (sideRandom < 0.25f)
+		for (int i = 0; i < number; ++i)
 		{
-			x = Random::GetFloat(0.f, WIDTH);
-			y = Random::GetFloat(-100.f, -50.f);
-		}
-		else if (sideRandom < 0.5f)
-		{
-			x = Random::GetFloat(0.f, WIDTH);
-			y = Random::GetFloat(HEIGHT + 50.f, HEIGHT + 100.f);
-		}
-		else if (sideRandom < 0.75f)
-		{
-			x = Random::GetFloat(-100.f, -50.f);
-			y = Random::GetFloat(0.f, HEIGHT);
-		}
-		else
-		{
-			x = Random::GetFloat(WIDTH + 50.f, WIDTH + 100.f);
-			y = Random::GetFloat(0.f, HEIGHT);
-		}
+			float x, y;
 
-		_enemies.emplace_back(new Camper(*this, sf::Vector2f(x, y)));
+			if (sideRandom < 0.25f)
+			{
+				x = Random::GetFloat(0.f, WIDTH);
+				y = Random::GetFloat(-100.f, -50.f);
+			}
+			else if (sideRandom < 0.5f)
+			{
+				x = Random::GetFloat(0.f, WIDTH);
+				y = Random::GetFloat(HEIGHT + 50.f, HEIGHT + 100.f);
+			}
+			else if (sideRandom < 0.75f)
+			{
+				x = Random::GetFloat(-100.f, -50.f);
+				y = Random::GetFloat(0.f, HEIGHT);
+			}
+			else
+			{
+				x = Random::GetFloat(WIDTH + 50.f, WIDTH + 100.f);
+				y = Random::GetFloat(0.f, HEIGHT);
+			}
+
+			_enemies.emplace_back(new Camper(*this, sf::Vector2f(x, y)));
+		}
 	}
 }
 

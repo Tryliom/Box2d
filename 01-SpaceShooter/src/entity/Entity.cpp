@@ -1,5 +1,7 @@
 #include "entity/Entity.h"
 
+#include <iostream>
+
 #include "Game.h"
 #include "animation/TextAnimation.h"
 #include "manager/AnimationManager.h"
@@ -13,6 +15,7 @@ Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& textu
 {
 	_health = health;
 	_maxHealth = maxHealth;
+	_lastHealth = health;
 
 	_stats = stats;
 	_bonusStats = {};
@@ -32,7 +35,7 @@ Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& textu
 	_shape.setFillColor(GetColor(_groupIndex));
 
 	b2CircleShape circle;
-	circle.m_radius = Game::PixelToMeter(_shape.getSize().x / 3.f);
+	circle.m_radius = Game::PixelToMeter(_shape.getSize().x * _shape.getScale().x / 3.f);
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &circle;
@@ -101,6 +104,38 @@ void Entity::rotate(float angle) const
 
 void Entity::Update(const sf::Time elapsed)
 {
+	_healthDifferenceTime += elapsed;
+
+	if (_healthDifferenceTime >= sf::seconds(1.f))
+	{
+		const float healthDifference = _lastHealth - _health;
+
+		if (static_cast<int>(healthDifference) != 0)
+		{
+			if (healthDifference > 0.f)
+			{
+				AnimationManager& animationManager = AnimationManager::GetInstance();
+				animationManager.AddTextAnimation(DamageTextAnimation(
+					_shape.getPosition(),
+					std::to_string(static_cast<int>(healthDifference)),
+					_groupIndex == Group::PLAYER ? sf::Color::Red : sf::Color::Yellow
+				));
+			}
+			else if (healthDifference < 0.f)
+			{
+				AnimationManager& animationManager = AnimationManager::GetInstance();
+				animationManager.AddTextAnimation(DamageTextAnimation(
+					_shape.getPosition(),
+					std::to_string(static_cast<int>(healthDifference * -1.f)),
+					sf::Color::Green
+				));
+			}
+		}
+
+		_healthDifferenceTime = sf::Time::Zero;
+		_lastHealth = _health;
+	}
+
 	if (_health < _maxHealth)
 	{
 		_health += GetTotalStats().GetHealthRegeneration() * elapsed.asSeconds();
@@ -126,7 +161,11 @@ void Entity::Update(const sf::Time elapsed)
 	if (_weapon != nullptr && _weapon->CanShoot())
 	{
 		_weapon->Shoot(this, _groupIndex == Group::PLAYER ? Group::PLAYER_PROJECTILE : Group::ENEMY_PROJECTILE);
-		_weapon->StartCharging(this);
+
+		if (_groupIndex == Group::PLAYER)
+		{
+			_weapon->StartCharging(this);
+		}
 	}
 
 	for (auto* module : _modules)
@@ -135,14 +174,14 @@ void Entity::Update(const sf::Time elapsed)
 	}
 }
 
-void Entity::Move()
+void Entity::Move(const sf::Time elapsed)
 {
 	// Add a linear velocity to the body to make it move to the angle it is facing
 	if (_body->GetLinearVelocity().Length() < GetTotalStats().GetMaxSpeed())
 	{
 		_body->SetLinearVelocity(
 			_body->GetLinearVelocity() + 
-			Game::GetLinearVelocity(GetTotalStats().GetSpeed(), Game::RadToDegree(_body->GetAngle()))
+			Game::GetLinearVelocity(GetTotalStats().GetSpeed() * elapsed.asSeconds(), Game::RadToDegree(_body->GetAngle()))
 		);
 	}
 
@@ -194,13 +233,6 @@ void Entity::TakeDamage(Entity* entity)
 
 	AudioManager::GetInstance().PlaySound(Sound::ENTITY_COLLISION);
 
-	AnimationManager& animationManager = AnimationManager::GetInstance();
-	animationManager.AddTextAnimation(DamageTextAnimation(
-		_shape.getPosition(),
-		std::to_string(static_cast<int>(collisionDamage)),
-		_groupIndex == Group::PLAYER ? sf::Color::Red : sf::Color::Yellow
-	));
-
 	for (auto* module : _modules)
 	{
 		module->OnEntityHit(this, entity);
@@ -250,7 +282,7 @@ void Entity::AddBonusStats(const Stats::EntityStats bonusStats)
 		const float scale = 1.f + GetTotalStats().Size;
 
 		_shape.setScale(scale, scale);
-		_body->GetFixtureList()->GetShape()->m_radius = Game::PixelToMeter(_shape.getSize().x / 3.f * scale);
+		_body->GetFixtureList()->GetShape()->m_radius = Game::PixelToMeter(_shape.getSize().x * scale / 3.f);
 	}
 }
 

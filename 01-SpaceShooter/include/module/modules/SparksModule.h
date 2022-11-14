@@ -8,7 +8,7 @@ public:
 	SparksModule();
 
 protected:
-	std::list<PenetrationBullet> _sparks;
+	std::list<PenetrationBullet> _sparks;	
 	sf::Time _sparksCooldown;
 	sf::Time _sparksCurrentCooldown;
 

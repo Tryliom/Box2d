@@ -15,7 +15,6 @@ public:
 	);
 private:
 	Stats::EntityStats _stats;
-	Stats::EntityStats _bonusStats;
 
 protected:
 	sf::RectangleShape _shape;
@@ -23,9 +22,13 @@ protected:
 	float _health;
 	float _maxHealth;
 
+	float _lastHealth{ 0.f };
+	sf::Time _healthDifferenceTime{ sf::Time::Zero };
+
 	Group _groupIndex;
 	Weapon* _weapon;
 	Stats::WeaponStats _weaponStats;
+	Stats::EntityStats _bonusStats;
 	std::list<Module*> _modules;
 
 	Game& _game;
@@ -39,7 +42,7 @@ protected:
 
 public:
 	void Update(sf::Time elapsed) override;
-	virtual void Move();
+	virtual void Move(sf::Time elapsed);
 
 	sf::Vector2f GetPosition() const;
 	void SetPosition(sf::Vector2f position);

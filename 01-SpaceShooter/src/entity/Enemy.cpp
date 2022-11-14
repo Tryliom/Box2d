@@ -17,7 +17,7 @@ void Enemy::rotateToPlayer(const float angle) const
 	const sf::Vector2f direction = playerPosition - GetPosition();
 	float flatAngle = Game::RadToDegree(atan2(direction.y, direction.x));
 
-	//TODO: Apply angle offset
+	//TODO: Need to adjust it
 
 	if (flatAngle < 0.f)
 	{
@@ -36,8 +36,11 @@ void Enemy::Update(const sf::Time elapsed)
 	Entity::Update(elapsed);
 
 	_currentPatternTime += elapsed;
+	
+	const auto action = _patterns[_currentPatternIndex].Action;
+	const auto duration = _patterns[_currentPatternIndex].Duration;
 
-	if (_currentPatternTime >= _patterns[_currentPatternIndex].Duration)
+	if (_currentPatternTime >= duration && !_weapon->IsCharging())
 	{
 		_currentPatternIndex = (_currentPatternIndex + 1) % _patterns.size();
 		_currentPatternTime = sf::Time::Zero;
@@ -47,25 +50,33 @@ void Enemy::Update(const sf::Time elapsed)
 			onEndCycle();
 		}
 
-		StopChargingWeapon();
+		_bonusStats = Stats::EntityStats();
+
+		if (action != ActionType::ATTACK && action != ActionType::IDLE)
+		{
+			// Add bonus movement speed to the enemy
+			_bonusStats = Stats::EntityStats{
+				.SpeedPercentage = 1.f,
+				.RotationSpeed = 5.f,
+			};
+		}
 	}
 
 	// If the enemy is out the screen and is not running away, make it move to the player
-	if (_patterns[_currentPatternIndex].Action == ActionType::MOVE_TO_PLAYER || 
-		Game::IsOutOfScreen(GetPosition()) && _patterns[_currentPatternIndex].Action != ActionType::RUN_AWAY)
+	if (action == ActionType::MOVE_TO_PLAYER ||
+		Game::IsOutOfScreen(GetPosition()) && action != ActionType::RUN_AWAY)
 	{
 		rotateToPlayer();
-		Move();
+		Move(elapsed);
 	}
-	else if (_patterns[_currentPatternIndex].Action == ActionType::RUN_AWAY_FROM_PLAYER || _patterns[_currentPatternIndex].Action == ActionType::RUN_AWAY)
+	else if (action == ActionType::RUN_AWAY)
 	{
-		rotateToPlayer(180.f);
-		Move();
+		Move(elapsed);
 
-		if (_patterns[_currentPatternIndex].Action == ActionType::RUN_AWAY)
+		if (action == ActionType::RUN_AWAY)
 		{
 			AddBonusStats(Stats::EntityStats{ 
-				.SpeedPercentage = 1.f * elapsed.asSeconds()
+				.SpeedPercentage = 0.5f * elapsed.asSeconds()
 			});
 
 			// If out of screen, destroy
@@ -78,17 +89,24 @@ void Enemy::Update(const sf::Time elapsed)
 			}
 		}
 	}
-	else if (_patterns[_currentPatternIndex].Action == ActionType::ATTACK)
+	else if (action == ActionType::ATTACK)
 	{
-		//TODO: Check if the enemy has the time to do an attack or force it to finish his attack
-
 		rotateToPlayer();
 		ChargeWeapon();
 	}
-	else if (_patterns[_currentPatternIndex].Action == ActionType::MOVE_AROUND_PLAYER)
+	else if (action == ActionType::MOVE_AROUND_PLAYER)
 	{
-		rotateToPlayer(90.f);
-		Move();
+		rotateToPlayer(45.f);
+		Move(elapsed);
+	}
+	else if (action == ActionType::ROTATE)
+	{
+		rotateToPlayer();
+	}
+
+	if (_weapon->IsCharging() && action != ActionType::ATTACK)
+	{
+		_weapon->StopCharging();
 	}
 }
 
@@ -99,7 +117,4 @@ void Enemy::RunAway()
 	_patterns = { { ActionType::RUN_AWAY, sf::seconds(30.f) } };
 
 	StopChargingWeapon();
-	AddBonusStats(Stats::EntityStats{
-		.RotationSpeed = 10.f
-	});
 }

@@ -35,6 +35,8 @@ public:
 	virtual void StopCharging();
 
 	[[nodiscard]] bool CanShoot() const { return _currentCooldown <= 0.f; }
+	float GetCooldown() const { return getTotalStats().GetCooldown(); }
+	bool IsCharging() const { return _isCharging; }
 
 	// You need to override this method and shoot the bullets
 	virtual void Shoot(Entity* entity, Group bulletGroup);

@@ -38,7 +38,17 @@ void TextAnimation::Update(const sf::Time elapsed)
 	{
 		if (animationEffect.Type == EndAnimationType::FADE)
 		{
-			const float alpha = 255.f * (animationEffect.BaseValue - animationEffect.EndValue * percent);
+			float alpha = 255.f * (animationEffect.BaseValue - animationEffect.EndValue * percent);
+
+			if (alpha < 0.f)
+			{
+				alpha = 0.f;
+			}
+			else if (alpha > 255.f)
+			{
+				alpha = 255.f;
+			}
+
 			sf::Color color = _text.getFillColor();
 			color.a = static_cast<sf::Uint8>(alpha);
 

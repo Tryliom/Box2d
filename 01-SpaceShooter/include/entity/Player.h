@@ -20,5 +20,5 @@ protected:
 
 public:
 	void Update(sf::Time elapsed) override;
-	void Move() override;
+	void Move(sf::Time elapsed) override;
 };
