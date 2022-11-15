@@ -5,9 +5,9 @@
 #include "module/modules/SparksModule.h"
 #include "weapon/weapons/MachineGun.h"
 
-Player::Player(Game& game, const sf::Vector2f position) :
+Player::Player(Game& game) :
 	Entity(
-		game, position, Assets::GetInstance().GetTexture(Texture::SPACE_SHIP),
+		game, {0, Game::HEIGHT}, Assets::GetInstance().GetTexture(Texture::SPACE_SHIP),
 		100.f, 100.f, Stats::EntityStats{
 			.HealthRegeneration = 0.5f,
 			.Speed = 600.f,
@@ -20,6 +20,7 @@ Player::Player(Game& game, const sf::Vector2f position) :
 	_weapon = new MachineGun(_weaponStats);
 	AddModule(new SparksModule());
 
+	// Temporary
 	_weaponStats = Stats::WeaponStats{
 		.DamagePercentage = 0.5f,
 		.BulletsPerShotPercentage = 1.f,
@@ -28,10 +29,7 @@ Player::Player(Game& game, const sf::Vector2f position) :
 	};
 
 	_shape.setRotation(45.f);
-	_body->SetTransform(Game::PixelToMeter(position), Game::DegreeToRad(_shape.getRotation()));
-
-	// Add a linear velocity to the body to make it move to the angle it is facing by default to add some style
-	_body->SetLinearVelocity(Game::GetLinearVelocity(GetTotalStats().GetSpeed(), _shape.getRotation()));
+	_body->SetTransform(Game::PixelToMeter(_shape.getPosition()), Game::DegreeToRad(_shape.getRotation()));
 }
 
 void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
@@ -61,15 +59,28 @@ void Player::Update(const sf::Time elapsed)
 	
 	_tailCooldown += elapsed;
 
-	// Make the player rotate slowly to the mouse position angle
-	const auto mousePosition = sf::Vector2f(sf::Mouse::getPosition(_game.GetWindow()));
-	const auto playerPosition = _shape.getPosition();
-	const auto position = mousePosition - playerPosition;
+	if (_copilot)
+	{
+		Move(elapsed);
 
-	// Get angle between two positions
-	const float angle = Game::RadToDegree(atan2(position.y, position.x));
+		// If the player is on the center of the screen, stop it
+		if (_shape.getPosition().x <= Game::WIDTH / 2.f)
+		{
+			_body->SetLinearVelocity({ 0.f, 0.f });
+		}
+	}
+	else
+	{
+		// Make the player rotate slowly to the mouse position angle
+		const auto mousePosition = sf::Vector2f(sf::Mouse::getPosition(_game.GetWindow()));
+		const auto playerPosition = _shape.getPosition();
+		const auto position = mousePosition - playerPosition;
 
-	rotate(angle);
+		// Get angle between two positions
+		const float angle = Game::RadToDegree(atan2(position.y, position.x));
+
+		rotate(angle);
+	}
 
 	for (auto& tail : _tails)
 	{
@@ -93,4 +104,9 @@ void Player::Move(sf::Time elapsed)
 
 		_tails.emplace_back(Tail(getTailPosition(), _shape.getRotation()));
 	}
+}
+
+void Player::TakeLead()
+{
+	_copilot = false;
 }

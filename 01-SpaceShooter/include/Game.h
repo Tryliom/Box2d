@@ -1,15 +1,22 @@
 #pragma once
 #include "entity/Player.h"
-#include "Assets.h"
 
 #include "SFML/Graphics.hpp"
-#include <SFML/Audio/Music.hpp>
-#include <SFML/Audio/Sound.hpp>
 
 #include "ContactListener.h"
 #include "box2d/b2_body.h"
 #include "box2d/b2_world.h"
 #include "entity/Enemy.h"
+#include "gui/Gui.h"
+
+enum class GameState
+{
+	NONE,
+	PLAYING,
+	PAUSED,
+	MAIN_MENU,
+	DEAD
+};
 
 class Game final
 {
@@ -17,16 +24,21 @@ public:
 	Game();
 
 private:
+	// Game display and physics
 	sf::RenderWindow _window;
 	b2World _world;
 	ContactListener _contactListener;
 	bool _pause;
 
+	// Gui
+	Gui* _gui{ nullptr };
+	GameState _state = GameState::NONE;
+
 	sf::RectangleShape _background;
 	float _backgroundStep;
 
 	// Entities
-	Player _player;
+	Player* _player{ nullptr };
 	std::list<Enemy*> _enemies;
 
 	int _wave{ 0 };
@@ -67,6 +79,8 @@ public:
 
 	sf::RenderWindow& GetWindow() { return _window; }
 	b2World& GetWorld() { return _world; }
+
+	void SetState(GameState state);
 
 	static bool IsOutOfScreen(sf::Vector2f position);
 };

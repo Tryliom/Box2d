@@ -1,5 +1,17 @@
 # TODO
 
+## Now
+
+- Faire un HUDManager pour les éléments en jeu
+- Faire un EntityManager qui gère le joueur et les ennemis (passe le joueur aux ennemis lors de l'update)
+- Au début du jeu, faire spawn le joueur en dehors du bord bas gauche de l'écran et le faire avancer doucement au milieu de l'écran où il va rester tout en utilisant Move()
+- Faire un WaveManager qui gère les wave 
+- Faire un HUDManager pour afficher toutes ces infos
+- Faire un EnemyManager qui gère tous les ennemis
+- Le wave manager pourra former des groupes d'ennemis à incorporer dans des vagues aléatoirement, genre 3 camper et 1 angel, 5 camper.
+- Adapter les ennemis par rapport à la vague
+- Mettre dans les modules des EntityStats et WeaponStats à appliquer à l'entity qui peuvent être modifiées à tout moment et utiliser les modules comme upgrade
+
 ## Gui 
 
 - Faire une struct TextComponent qui a lui même un vector de struct Text avec couleur et tout pour les interfaces

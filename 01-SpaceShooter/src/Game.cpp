@@ -8,18 +8,18 @@
 #include "manager/AudioManager.h"
 #include "manager/ProjectileManager.h"
 #include "entity/enemies/Angel.h"
+#include "gui/guis/MenuGui.h"
 
 Game::Game() :
 	_window(sf::RenderWindow(sf::VideoMode(1920, 1080), "Space Shooter", sf::Style::Close)),
-	_world(b2World(b2Vec2(0.0f, 0.f))),
-	_player(*this, sf::Vector2f(100.f, 100.f))
+	_world(b2World(b2Vec2(0.0f, 0.f)))
 {
 	_window.setFramerateLimit(144);
 	_window.setVerticalSyncEnabled(true);
 	_pause = false;
 
 	// Set the size of the game
-	Game::HEIGHT = _window.getSize().y;
+	Game::HEIGHT =_window.getSize().y;
 	Game::WIDTH = _window.getSize().x;
 
 	const std::vector backgrounds = { Texture::BACKGROUND, Texture::BACKGROUND2, Texture::BACKGROUND3 };
@@ -31,13 +31,13 @@ Game::Game() :
 	_background.setPosition(0.f, 0.f);
 	_backgroundStep = 0.f;
 
-	_player.SetPosition(sf::Vector2f(-100.f, HEIGHT + 100.f));
-
 	_enemies = {};
 
 	_world.SetContactListener(&_contactListener);
 
 	AudioManager::GetInstance().StartMainTheme();
+
+	SetState(GameState::MAIN_MENU);
 }
 
 void Game::update(const sf::Time elapsed)
@@ -113,7 +113,10 @@ void Game::update(const sf::Time elapsed)
 void Game::checkInputs(const sf::Event event)
 {
 	if (event.type == sf::Event::Closed)
+	{
 		_window.close();
+		return;
+	}
 
 	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 	{
@@ -266,6 +269,22 @@ void Game::spawnEnemies()
 
 			_enemies.emplace_back(new Camper(*this, sf::Vector2f(x, y)));
 		}
+	}
+}
+
+void Game::SetState(const GameState state)
+{
+	_state = state;
+
+	//TODO: Do action depending on the state
+	if (state == GameState::PLAYING)
+	{
+		_gui = nullptr;
+	}
+	else if (state == GameState::MAIN_MENU)
+	{
+		_player = new Player(*this);
+		_gui = new MenuGui(*this);
 	}
 }
 

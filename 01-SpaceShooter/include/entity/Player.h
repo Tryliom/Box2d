@@ -7,11 +7,13 @@ constexpr float TAIL_COOLDOWN = 0.1f;
 class Player final : public Entity
 {
 public:
-	Player(Game& game, sf::Vector2f position);
+	explicit Player(Game& game);
 
 protected:
 	std::list<Tail> _tails;
 	sf::Time _tailCooldown;
+
+	bool _copilot = true;
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
@@ -21,4 +23,6 @@ protected:
 public:
 	void Update(sf::Time elapsed) override;
 	void Move(sf::Time elapsed) override;
+
+	void TakeLead();
 };
