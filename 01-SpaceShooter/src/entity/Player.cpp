@@ -76,7 +76,7 @@ void Player::Update(const sf::Time elapsed)
 		_body->SetLinearVelocity(Game::GetLinearVelocity(speedToCenter * elapsed.asSeconds(), Game::RadToDegree(_body->GetAngle())));
 
 		// If the player is on the center of the screen, stop it
-		if (_shape.getPosition().y <= Game::HEIGHT / 2.f || _shape.getPosition().y <= Game::HEIGHT / 2.f)
+		if (_shape.getPosition().x >= Game::WIDTH / 2.f)
 		{
 			_body->SetLinearVelocity({ 0.f, 0.f });
 		}

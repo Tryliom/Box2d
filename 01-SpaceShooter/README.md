@@ -26,5 +26,4 @@
 
 ## Bug
 
-- Hp bar doesn't display correctly on HUDManager
 - The first music is not played

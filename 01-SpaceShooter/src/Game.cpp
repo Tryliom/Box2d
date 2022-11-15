@@ -33,6 +33,7 @@ Game::Game() :
 
 	_world.SetContactListener(&_contactListener);
 
+	AudioManager::GetInstance();
 	SetState(GameState::MAIN_MENU);
 }
 
@@ -40,12 +41,12 @@ void Game::update(const sf::Time elapsed)
 {
 	_world.Step(elapsed.asSeconds(), 8, 3);
 
+	EntityManager& entityManager = EntityManager::GetInstance();
+	entityManager.Update(elapsed, _state);
 	ProjectileManager::GetInstance().Update(elapsed);
 	AnimationManager::GetInstance().Update(elapsed);
 	AudioManager::GetInstance().Update(elapsed);
-
-	EntityManager& entityManager = EntityManager::GetInstance();
-	entityManager.Update(elapsed, _state);
+	HUDManager::GetInstance().Update(elapsed);
 
 	if (_gui != nullptr)
 	{
