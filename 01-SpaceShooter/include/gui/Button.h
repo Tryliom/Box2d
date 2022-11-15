@@ -4,7 +4,7 @@
 
 #include "Text.h"
 
-const sf::Time HOVER_TIME = sf::seconds(0.3f);
+const sf::Time HOVER_TIME = sf::seconds(0.1f);
 
 class Button : public sf::Drawable
 {

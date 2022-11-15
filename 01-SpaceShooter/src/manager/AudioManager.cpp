@@ -10,8 +10,10 @@ AudioManager::AudioManager()
 
 	_continuousSounds[static_cast<int>(ContinuousSoundType::BURST)] = { sf::Sound(Assets::GetInstance().GetSound(Sound::BURST)), false, false };
 
+	_music.openFromFile(Assets::GetInstance().GetMusicPath(Music::MAIN_THEME));
 	_music.setLoop(true);
 	_music.setVolume(50.f);
+	_music.play();
 }
 
 void AudioManager::Update(const sf::Time elapsedTime)
@@ -106,8 +108,8 @@ void AudioManager::StartMainTheme()
 
 void AudioManager::PlayMusic(const Music music)
 {
-	_stopMusic = true;
 	_nextMusic = music;
+	_stopMusic = true;
 }
 
 void AudioManager::StopMusic()

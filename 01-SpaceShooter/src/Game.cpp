@@ -28,8 +28,10 @@ Game::Game() :
 	
 	_background.setTexture(&backgroundTexture);
 	_background.setSize(sf::Vector2f(backgroundTexture.getSize()));
-	_background.setPosition(0.f, 0.f);
 	_backgroundStep = 0.f;
+	const float y = (HEIGHT - _background.getSize().y) / 2.f + std::cos(_backgroundStep * b2_pi) * (HEIGHT - _background.getSize().y) / 2.f;
+
+	_background.setPosition(0.f, y);
 
 	_world.SetContactListener(&_contactListener);
 
@@ -52,7 +54,7 @@ void Game::update(const sf::Time elapsed)
 	{
 		_gui->Update(sf::Vector2f(sf::Mouse::getPosition(_window)), elapsed);
 	}
-	else
+	else if (_state == GameState::PLAYING)
 	{
 		_backgroundStep += elapsed.asSeconds() / 100.f;
 		const float y = (HEIGHT - _background.getSize().y) / 2.f + std::cos(_backgroundStep * b2_pi) * (HEIGHT - _background.getSize().y) / 2.f;
@@ -188,6 +190,11 @@ void Game::spawnEnemies()
 
 void Game::SetState(const GameState state)
 {
+	if (_state == state)
+	{
+		return;
+	}
+
 	if (state == GameState::PLAYING)
 	{
 		_gui = nullptr;
@@ -218,6 +225,8 @@ void Game::SetState(const GameState state)
 		//_gui = new GameOverGui(*this);
 		
 		AudioManager::GetInstance().PlayMusic(Music::DEATH);
+
+		EntityManager::GetInstance().RunAway();
 	}
 	else if (state == GameState::UPGRADE_CHOICE)
 	{

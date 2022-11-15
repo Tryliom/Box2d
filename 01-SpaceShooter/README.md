@@ -3,7 +3,6 @@
 ## Now
 
 - Faire un WaveManager qui gère les wave
-- Faire un EnemyManager qui gère tous les ennemis
 - Le wave manager pourra former des groupes d'ennemis à incorporer dans des vagues aléatoirement, genre 3 camper et 1 angel, 5 camper.
 - Adapter les ennemis par rapport à la vague
 - Mettre dans les modules des EntityStats et WeaponStats à appliquer à l'entity qui peuvent être modifiées à tout moment et utiliser les modules comme upgrade
@@ -11,6 +10,8 @@
 ## Gui 
 
 - Display hp bar of the boss
+- Display mouse cursor when on hover
+- Make gameOver gui
 
 ## XP
 
@@ -26,4 +27,4 @@
 
 ## Bug
 
-- The first music is not played
+- The text in button is not really centered on y axis

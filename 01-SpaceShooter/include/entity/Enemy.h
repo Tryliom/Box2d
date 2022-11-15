@@ -33,6 +33,7 @@ protected:
 
 	virtual void onEndCycle() {}
 	void rotateToPlayer(float angle = 0.f) const;
+	void stopRotate() const;
 
 public:
 	void Update(sf::Time elapsed) override;

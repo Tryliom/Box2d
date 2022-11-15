@@ -31,7 +31,7 @@ Text::Text(sf::Vector2f position, const std::vector<TextLine>& texts, float maxX
 
 			if (_centered)
 			{
-				const auto bounds = text.getLocalBounds();
+				const auto bounds = text.getGlobalBounds();
 				text.setOrigin(bounds.width / 2, bounds.height / 2);
 			}
 
@@ -39,7 +39,7 @@ Text::Text(sf::Vector2f position, const std::vector<TextLine>& texts, float maxX
 			{
 				const auto bounds = text.getLocalBounds();
 
-				if (baseX + bounds.width > maxX)
+				if (position.x - baseX + bounds.width > maxX)
 				{
 					position.x = baseX;
 					position.y += maxHeight;

@@ -30,6 +30,11 @@ void Enemy::rotateToPlayer(const float angle) const
 	rotate(flatAngle);
 }
 
+void Enemy::stopRotate() const
+{
+	_body->SetAngularVelocity(0.f);
+}
+
 void Enemy::Update(const sf::Time elapsed)
 {
 	Entity::Update(elapsed);
@@ -71,21 +76,19 @@ void Enemy::Update(const sf::Time elapsed)
 	else if (action == ActionType::RUN_AWAY)
 	{
 		Move(elapsed);
+		stopRotate();
 
-		if (action == ActionType::RUN_AWAY)
-		{
-			AddBonusStats(Stats::EntityStats{ 
+		AddBonusStats(Stats::EntityStats{
 				.SpeedPercentage = 0.5f * elapsed.asSeconds()
 			});
 
-			// If out of screen, destroy
-			const float x = GetPosition().x - _shape.getSize().x / 2.f;
-			const float y = GetPosition().y - _shape.getSize().y / 2.f;
+		// If out of screen, destroy
+		const float x = GetPosition().x - _shape.getSize().x / 2.f;
+		const float y = GetPosition().y - _shape.getSize().y / 2.f;
 
-			if (Game::IsOutOfScreen(sf::Vector2f(x, y)))
-			{
-				_health = 0.f;
-			}
+		if (Game::IsOutOfScreen(sf::Vector2f(x, y)))
+		{
+			_health = 0.f;
 		}
 	}
 	else if (action == ActionType::ATTACK)
