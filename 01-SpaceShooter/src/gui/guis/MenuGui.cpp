@@ -4,17 +4,18 @@
 
 MenuGui::MenuGui(Game& game) : Gui(game)
 {
-	_background.setFillColor(sf::Color(0, 0, 0, 50));
+	_background.setSize(sf::Vector2f(Game::WIDTH, Game::HEIGHT));
+	_background.setFillColor(sf::Color(0, 0, 0, 100));
 
 	// Create buttons
 	Button playButton = Button(
-		sf::Vector2f(Game::WIDTH - 200.f, Game::HEIGHT / 2.f), 
+		sf::Vector2f(Game::WIDTH / 2.f, Game::HEIGHT - 100.f), 
 		sf::Vector2f(200, 50),
 		true
 	);
 
 	playButton.SetText({
-		TextLine({CustomText{ .Text = "Play", .Size = 24}})
+		TextLine({CustomText{ .Text = "PLAY", .Style = sf::Text::Style::Bold, .Size = 24}})
 	});
 	playButton.SetOnClick([&]() {
 		_game.SetState(GameState::PLAYING);
@@ -26,10 +27,8 @@ MenuGui::MenuGui(Game& game) : Gui(game)
 	Text title = Text(
 		sf::Vector2f(Game::WIDTH / 2.f, 100.f),
 		{
-			TextLine({
-				CustomText{.Text = "Space Shooter", .Size = 30},
-				CustomText{.Text = "A game by Tryliom", .Style = sf::Text::Style::Italic, .Size = 16}
-			})
+			TextLine({CustomText{.Text = "Space Shooter", .Size = 50}}),
+			TextLine({CustomText{.Text = "A game by Tryliom", .Style = sf::Text::Style::Italic, .Size = 12}}),
 		},
 		-1,
 		true

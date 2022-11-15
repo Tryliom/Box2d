@@ -24,5 +24,6 @@ public:
 	void Update(sf::Time elapsed) override;
 	void Move(sf::Time elapsed) override;
 
-	void TakeLead();
+	void TakeControl();
+	bool IsAlive() const;
 };

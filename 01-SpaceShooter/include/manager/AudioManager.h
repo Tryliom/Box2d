@@ -13,7 +13,7 @@ struct ContinuousSound {
 	bool Active{};
 };
 
-class AudioManager
+class AudioManager final
 {
 private:
 	AudioManager();
@@ -36,10 +36,14 @@ public:
 	}
 
 	void Update(sf::Time elapsedTime);
+	void CheckInputs(sf::Event event);
 
 	void StartMainTheme();
 	void PlayMusic(Music music);
 	void StopMusic();
+
+	void PauseAll();
+	void ResumeAll();
 
 	void PlaySound(Sound sound);
 

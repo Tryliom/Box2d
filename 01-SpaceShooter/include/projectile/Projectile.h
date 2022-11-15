@@ -5,6 +5,8 @@
 #include "Group.h"
 #include "animation/HitAnimation.h"
 
+#include "box2d/b2_world.h"
+
 enum class ShapeType
 {
 	RECTANGLE,

@@ -2,8 +2,9 @@
 #include <SFML/Graphics.hpp>
 
 #include "Button.h"
-#include "Game.h"
 #include "Text.h"
+
+class Game;
 
 class Gui : public sf::Drawable
 {

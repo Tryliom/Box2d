@@ -15,13 +15,21 @@ void ProjectileManager::draw(sf::RenderTarget& target, sf::RenderStates states) 
 
 void ProjectileManager::Update(const sf::Time elapsed)
 {
-	for (const auto projectile : _projectiles)
+	for (auto it = _projectiles.begin(); it != _projectiles.end();)
 	{
-		projectile->Update(elapsed);
-	}
+		(*it)->Update(elapsed);
 
-	// Remove projectiles that are dead
-	erase_if(_projectiles, [](const auto* projectile) { return projectile->IsDead(); });
+		if ((*it)->IsDead())
+		{
+			(*it)->GetBody()->GetWorld()->DestroyBody((*it)->GetBody());
+
+			it = _projectiles.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
 }
 
 void ProjectileManager::AddProjectile(Projectile* projectile)

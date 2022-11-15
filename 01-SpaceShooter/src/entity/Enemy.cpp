@@ -1,9 +1,10 @@
 #include "entity/Enemy.h"
 
 #include "Game.h"
+#include "manager/EntityManager.h"
 
 Enemy::Enemy(Game& game, sf::Vector2f position, const sf::Texture& texture, float health, float maxHealth,
-	Group groupIndex, Stats::EntityStats stats, Stats::WeaponStats weaponStats, const std::vector<Pattern>& patterns) :
+             Group groupIndex, Stats::EntityStats stats, Stats::WeaponStats weaponStats, const std::vector<Pattern>& patterns) :
 	Entity(game, position, texture, health, maxHealth, stats, groupIndex)
 {
 	_weaponStats = weaponStats;
@@ -13,11 +14,9 @@ Enemy::Enemy(Game& game, sf::Vector2f position, const sf::Texture& texture, floa
 
 void Enemy::rotateToPlayer(const float angle) const
 {
-	const sf::Vector2f playerPosition = _game.GetPlayer().GetPosition();
+	const sf::Vector2f playerPosition = EntityManager::GetInstance().GetPlayer()->GetPosition();
 	const sf::Vector2f direction = playerPosition - GetPosition();
 	float flatAngle = Game::RadToDegree(atan2(direction.y, direction.x));
-
-	//TODO: Need to adjust it
 
 	if (flatAngle < 0.f)
 	{

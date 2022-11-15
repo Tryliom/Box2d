@@ -9,6 +9,9 @@ AudioManager::AudioManager()
 	_sounds = {};
 
 	_continuousSounds[static_cast<int>(ContinuousSoundType::BURST)] = { sf::Sound(Assets::GetInstance().GetSound(Sound::BURST)), false, false };
+
+	_music.setLoop(true);
+	_music.setVolume(50.f);
 }
 
 void AudioManager::Update(const sf::Time elapsedTime)
@@ -80,6 +83,19 @@ void AudioManager::Update(const sf::Time elapsedTime)
 	}
 }
 
+void AudioManager::CheckInputs(const sf::Event event)
+{
+	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+	{
+		PlayContinuousSound(ContinuousSoundType::BURST);
+	}
+
+	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
+	{
+		StopContinuousSound(ContinuousSoundType::BURST);
+	}
+}
+
 void AudioManager::StartMainTheme()
 {
 	const std::vector mainThemes = { Music::MAIN_THEME, Music::MAIN_THEME2 };
@@ -97,6 +113,42 @@ void AudioManager::PlayMusic(const Music music)
 void AudioManager::StopMusic()
 {
 	_stopMusic = true;
+}
+
+void AudioManager::PauseAll()
+{
+	_music.pause();
+
+	for (auto& sound : _continuousSounds)
+	{
+		if (sound.Active)
+		{
+			sound.Sound.pause();
+		}
+	}
+
+	for (auto& sound : _sounds)
+	{
+		sound.pause();
+	}
+}
+
+void AudioManager::ResumeAll()
+{
+	_music.play();
+
+	for (auto& sound : _continuousSounds)
+	{
+		if (sound.Active)
+		{
+			sound.Sound.play();
+		}
+	}
+
+	for (auto& sound : _sounds)
+	{
+		sound.play();
+	}
 }
 
 void AudioManager::PlaySound(const Sound sound)

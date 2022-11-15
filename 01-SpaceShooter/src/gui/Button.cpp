@@ -9,7 +9,7 @@ Button::Button(const sf::Vector2f position, const sf::Vector2f size, const bool 
 	_centered = centered;
 
 	_backgroundColor = sf::Color(0, 0, 0, 50);
-	_hoverBackgroundColor = sf::Color(10, 10, 10, 150);
+	_hoverBackgroundColor = sf::Color(10, 10, 10, 255);
 
 	_background.setFillColor(_backgroundColor);
 	_background.setOutlineColor(sf::Color::White);
@@ -25,15 +25,7 @@ Button::Button(const sf::Vector2f position, const sf::Vector2f size, const bool 
 
 void Button::SetText(const std::vector<TextLine>& texts)
 {
-	sf::Vector2f position = _position;
-
-	if (_centered)
-	{
-		position.x -= _background.getSize().x / 2;
-		position.y -= _background.getSize().y / 2;
-	}
-
-	_text = Text(position, texts, _background.getSize().x, _centered);
+	_text = Text(_position, texts, _background.getSize().x, _centered);
 }
 
 sf::FloatRect Button::GetGlobalBounds() const

@@ -9,6 +9,8 @@
 #include "manager/ProjectileManager.h"
 #include "entity/enemies/Angel.h"
 #include "gui/guis/MenuGui.h"
+#include "manager/EntityManager.h"
+#include "manager/HUDManager.h"
 
 Game::Game() :
 	_window(sf::RenderWindow(sf::VideoMode(1920, 1080), "Space Shooter", sf::Style::Close)),
@@ -16,14 +18,12 @@ Game::Game() :
 {
 	_window.setFramerateLimit(144);
 	_window.setVerticalSyncEnabled(true);
-	_pause = false;
 
 	// Set the size of the game
-	Game::HEIGHT =_window.getSize().y;
-	Game::WIDTH = _window.getSize().x;
+	HEIGHT = static_cast<float>(_window.getSize().y);
+	WIDTH = static_cast<float>(_window.getSize().x);
 
 	const std::vector backgrounds = { Texture::BACKGROUND, Texture::BACKGROUND2, Texture::BACKGROUND3 };
-
 	const sf::Texture& backgroundTexture = Assets::GetInstance().GetTexture(backgrounds[Random::GetInt(0, backgrounds.size() - 1)]);
 	
 	_background.setTexture(&backgroundTexture);
@@ -31,83 +31,40 @@ Game::Game() :
 	_background.setPosition(0.f, 0.f);
 	_backgroundStep = 0.f;
 
-	_enemies = {};
-
 	_world.SetContactListener(&_contactListener);
-
-	AudioManager::GetInstance().StartMainTheme();
 
 	SetState(GameState::MAIN_MENU);
 }
 
 void Game::update(const sf::Time elapsed)
 {
-	if (_pause)
-	{
-		return;
-	}
-
 	_world.Step(elapsed.asSeconds(), 8, 3);
 
 	ProjectileManager::GetInstance().Update(elapsed);
 	AnimationManager::GetInstance().Update(elapsed);
 	AudioManager::GetInstance().Update(elapsed);
 
-	_backgroundStep += elapsed.asSeconds() / 100.f;
-	const float y = (HEIGHT - _background.getSize().y) / 2.f + std::cos(_backgroundStep * b2_pi) * (HEIGHT - _background.getSize().y) / 2.f;
+	EntityManager& entityManager = EntityManager::GetInstance();
+	entityManager.Update(elapsed, _state);
 
-	_background.setPosition(0.f, y);
-
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	if (_gui != nullptr)
 	{
-		_player.Move(elapsed);
+		_gui->Update(sf::Vector2f(sf::Mouse::getPosition(_window)), elapsed);
 	}
-
-	_player.Update(elapsed);
-
-	_waveTime += elapsed;
-
-	if (_enemies.size() == 0 || _waveTime >= _waveDuration && _wave % 5 != 0)
+	else
 	{
-		spawnEnemies();
-	}
+		_backgroundStep += elapsed.asSeconds() / 100.f;
+		const float y = (HEIGHT - _background.getSize().y) / 2.f + std::cos(_backgroundStep * b2_pi) * (HEIGHT - _background.getSize().y) / 2.f;
 
-	for (auto* enemy : _enemies)
-	{
-		enemy->Update(elapsed);
-	}
+		_background.setPosition(0.f, y);
 
-	// If the player go out of the screen, teleport him to the other side
-	if (_player.GetPosition().x < 0)
-	{
-		_player.SetPosition(sf::Vector2f(Game::WIDTH, _player.GetPosition().y));
-	}
-	else if (_player.GetPosition().x > Game::WIDTH)
-	{
-		_player.SetPosition(sf::Vector2f(0, _player.GetPosition().y));
-	}
-	else if (_player.GetPosition().y < 0)
-	{
-		_player.SetPosition(sf::Vector2f(_player.GetPosition().x, Game::HEIGHT));
-	}
-	else if (_player.GetPosition().y > Game::HEIGHT)
-	{
-		_player.SetPosition(sf::Vector2f(_player.GetPosition().x, 0));
-	}
+		_waveTime += elapsed;
 
-	// Remove the enemies that are dead
-	_enemies.erase(std::remove_if(_enemies.begin(), _enemies.end(), [this](const Enemy* enemy)
+		if (!entityManager.AreEnemiesAlive() || _waveTime >= _waveDuration && _wave % 5 != 0)
 		{
-			if (enemy->IsDead())
-			{
-				enemy->GetBody()->GetWorld()->DestroyBody(enemy->GetBody());
-
-				return true;
-			}
-
-			return false;
+			spawnEnemies();
 		}
-	), _enemies.end());
+	}
 }
 
 void Game::checkInputs(const sf::Event event)
@@ -118,29 +75,15 @@ void Game::checkInputs(const sf::Event event)
 		return;
 	}
 
-	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+	if (_state == GameState::PLAYING)
 	{
-		AudioManager::GetInstance().PlayContinuousSound(ContinuousSoundType::BURST);
+		EntityManager::GetInstance().CheckInputs(event);
+		AudioManager::GetInstance().CheckInputs(event);
 	}
 
-	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
+	if (_gui != nullptr)
 	{
-		AudioManager::GetInstance().StopContinuousSound(ContinuousSoundType::BURST);
-	}
-
-	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
-	{
-		_player.ChargeWeapon();
-	}
-
-	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Right)
-	{
-		_player.StopChargingWeapon();
-	}
-
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-	{
-		_pause = !_pause;
+		_gui->CheckInputs(event);
 	}
 }
 
@@ -159,48 +102,22 @@ void Game::render()
 	_window.draw(ProjectileManager::GetInstance());
 
 	// Render entities
-	_window.draw(_player);
-
-	for (const auto* enemy : _enemies)
-	{
-		_window.draw(*enemy);
-	}
+	_window.draw(EntityManager::GetInstance());
 
 	animationManager.DrawHitAnimations(_window);
 	animationManager.DrawTextAnimations(_window);
 
-	renderHealthBar();
-
-	_window.display();
-}
-
-void Game::renderHealthBar()
-{
-	// Draw health bar
-	sf::RectangleShape healthBackgroundBar;
-	healthBackgroundBar.setSize(sf::Vector2f(400.f, 8.f));
-	healthBackgroundBar.setFillColor(sf::Color(40, 40, 40));
-	healthBackgroundBar.setOrigin(healthBackgroundBar.getSize() / 2.f);
-	healthBackgroundBar.setPosition({ Game::WIDTH / 2.f, Game::HEIGHT - 20.f });
-
-	_window.draw(healthBackgroundBar);
-
-	float healthPercentage = _player.GetHealthPercentage();
-
-	if (healthPercentage < 0.f)
+	if (_state != GameState::MAIN_MENU)
 	{
-		healthPercentage = 0.f;
+		_window.draw(HUDManager::GetInstance());
 	}
 
-	sf::RectangleShape healthBar;
-	healthBar.setSize(sf::Vector2f(healthBackgroundBar.getSize().x * healthPercentage, healthBackgroundBar.getSize().y));
-	healthBar.setFillColor(sf::Color::Red);
-	healthBackgroundBar.setOutlineColor(sf::Color::Black);
-	healthBackgroundBar.setOutlineThickness(-0.5f);
-	healthBar.setOrigin(healthBar.getSize() / 2.f);
-	healthBar.setPosition(healthBackgroundBar.getPosition());
+	if (_gui != nullptr)
+	{
+		_window.draw(*_gui);
+	}
 
-	_window.draw(healthBar);
+	_window.display();
 }
 
 void Game::spawnEnemies()
@@ -209,25 +126,22 @@ void Game::spawnEnemies()
 	_waveTime = sf::Time::Zero;
 	_waveDuration += sf::seconds(2.f);
 
-	for (auto* enemy : _enemies)
-	{
-		enemy->RunAway();
-	}
+	EntityManager::GetInstance().RunAway();
 
 	// Spawn enemies outside the screen
 	const int number = Random::GetInt(_wave, 10 + _wave);
 
 	if (_wave % 5 == 0)
 	{
-		_enemies.emplace_back(new Imperator(*this, sf::Vector2f(WIDTH / 2.f, -200.f)));
-		_enemies.emplace_back(new Angel(*this, sf::Vector2f(WIDTH / 4.f, -200.f)));
-		_enemies.emplace_back(new Angel(*this, sf::Vector2f(WIDTH * 3.f / 4.f, -200.f)));
+		EntityManager::GetInstance().SpawnEnemy(new Imperator(*this, sf::Vector2f(WIDTH / 2.f, -200.f)));
+		EntityManager::GetInstance().SpawnEnemy(new Angel(*this, sf::Vector2f(WIDTH / 4.f, -200.f)));
+		EntityManager::GetInstance().SpawnEnemy(new Angel(*this, sf::Vector2f(WIDTH * 3.f / 4.f, -200.f)));
 
 		if (_wave >= 20)
 		{
-			_enemies.emplace_back(new Imperator(*this, sf::Vector2f(WIDTH / 2.f, HEIGHT + 200.f)));
-			_enemies.emplace_back(new Angel(*this, sf::Vector2f(WIDTH / 4.f, HEIGHT + 200.f)));
-			_enemies.emplace_back(new Angel(*this, sf::Vector2f(WIDTH * 3.f / 4.f, HEIGHT + 200.f)));
+			EntityManager::GetInstance().SpawnEnemy(new Imperator(*this, sf::Vector2f(WIDTH / 2.f, HEIGHT + 200.f)));
+			EntityManager::GetInstance().SpawnEnemy(new Angel(*this, sf::Vector2f(WIDTH / 4.f, HEIGHT + 200.f)));
+			EntityManager::GetInstance().SpawnEnemy(new Angel(*this, sf::Vector2f(WIDTH * 3.f / 4.f, HEIGHT + 200.f)));
 		}
 
 		AudioManager::GetInstance().PlayMusic(Music::BOSS_THEME);
@@ -236,7 +150,6 @@ void Game::spawnEnemies()
 	{
 		AudioManager::GetInstance().StartMainTheme();
 	}
-	
 
 	if (_wave % 5 != 0)
 	{
@@ -267,25 +180,52 @@ void Game::spawnEnemies()
 				y = Random::GetFloat(0.f, HEIGHT);
 			}
 
-			_enemies.emplace_back(new Camper(*this, sf::Vector2f(x, y)));
+			EntityManager::GetInstance().SpawnEnemy(new Camper(*this, sf::Vector2f(x, y)));
 		}
 	}
 }
 
 void Game::SetState(const GameState state)
 {
-	_state = state;
-
-	//TODO: Do action depending on the state
 	if (state == GameState::PLAYING)
 	{
 		_gui = nullptr;
+
+		if (_state == GameState::UPGRADE_CHOICE)
+		{
+			AudioManager::GetInstance().ResumeAll();
+		}
+		else
+		{
+			EntityManager::GetInstance().GetPlayer()->TakeControl();
+			AudioManager::GetInstance().StartMainTheme();
+		}
 	}
 	else if (state == GameState::MAIN_MENU)
 	{
-		_player = new Player(*this);
 		_gui = new MenuGui(*this);
+
+		EntityManager::GetInstance().Restart(*this);
+
+		if (_state != GameState::DEAD)
+		{
+			AudioManager::GetInstance().PlayMusic(Music::DEATH);
+		}
 	}
+	else if (state == GameState::DEAD)
+	{
+		//_gui = new GameOverGui(*this);
+		
+		AudioManager::GetInstance().PlayMusic(Music::DEATH);
+	}
+	else if (state == GameState::UPGRADE_CHOICE)
+	{
+		//_gui = new UpgradeChoiceGui(*this);
+
+		AudioManager::GetInstance().PauseAll();
+	}
+
+	_state = state;
 }
 
 sf::Vector2f Game::MeterToPixel(const b2Vec2 meter)
@@ -374,11 +314,6 @@ b2Body* Game::GetNewBody()
 	bodyDef.position.Set(0.0f, 0.0f);
 
 	return _world.CreateBody(&bodyDef);
-}
-
-Player& Game::GetPlayer()
-{
-	return _player;
 }
 
 bool Game::IsOutOfScreen(const sf::Vector2f position)

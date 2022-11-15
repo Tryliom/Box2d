@@ -1,7 +1,9 @@
 #include "gui/Gui.h"
+#include "Game.h"
 
 Gui::Gui(Game& game) : _game(game)
 {
+	_background.setSize(sf::Vector2f(Game::WIDTH, Game::HEIGHT));
 	_background.setFillColor(sf::Color(0, 0, 0, 50));
 }
 

@@ -299,6 +299,10 @@ void Entity::AddModule(Module* module)
 
 void Entity::onDeath()
 {
+	AnimationManager::GetInstance().AddDeathAnimation(DeathAnimation(_shape.getPosition()));
+
+	updateHealthDifference();
+
 	// Play sound according to the group
 	if (_groupIndex == Group::ENEMY)
 	{
@@ -306,10 +310,6 @@ void Entity::onDeath()
 	}
 	else
 	{
-		AudioManager::GetInstance().PlayMusic(Music::DEATH);
+		_game.SetState(GameState::DEAD);
 	}
-
-	AnimationManager::GetInstance().AddDeathAnimation(DeathAnimation(_shape.getPosition()));
-
-	updateHealthDifference();
 }

@@ -1,20 +1,16 @@
 #pragma once
-#include "entity/Player.h"
-
 #include "SFML/Graphics.hpp"
 
 #include "ContactListener.h"
-#include "box2d/b2_body.h"
 #include "box2d/b2_world.h"
-#include "entity/Enemy.h"
 #include "gui/Gui.h"
 
 enum class GameState
 {
 	NONE,
 	PLAYING,
-	PAUSED,
 	MAIN_MENU,
+	UPGRADE_CHOICE,
 	DEAD
 };
 
@@ -28,7 +24,6 @@ private:
 	sf::RenderWindow _window;
 	b2World _world;
 	ContactListener _contactListener;
-	bool _pause;
 
 	// Gui
 	Gui* _gui{ nullptr };
@@ -37,10 +32,6 @@ private:
 	sf::RectangleShape _background;
 	float _backgroundStep;
 
-	// Entities
-	Player* _player{ nullptr };
-	std::list<Enemy*> _enemies;
-
 	int _wave{ 0 };
 	sf::Time _waveTime{ sf::Time::Zero };
 	sf::Time _waveDuration{ sf::seconds(30.f) };
@@ -48,7 +39,6 @@ private:
 	void update(sf::Time elapsed);
 	void checkInputs(sf::Event event);
 	void render();
-	void renderHealthBar();
 	void spawnEnemies();
 
 public:
@@ -75,7 +65,6 @@ public:
 	int Loop();
 
 	b2Body* GetNewBody();
-	Player& GetPlayer();
 
 	sf::RenderWindow& GetWindow() { return _window; }
 	b2World& GetWorld() { return _world; }

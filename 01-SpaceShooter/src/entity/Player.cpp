@@ -1,5 +1,7 @@
 #include "entity/Player.h"
 
+#include <iostream>
+
 #include "Assets.h"
 #include "Game.h"
 #include "module/modules/SparksModule.h"
@@ -7,7 +9,7 @@
 
 Player::Player(Game& game) :
 	Entity(
-		game, {0, Game::HEIGHT}, Assets::GetInstance().GetTexture(Texture::SPACE_SHIP),
+		game, {-100.f, Game::HEIGHT + 100.f}, Assets::GetInstance().GetTexture(Texture::SPACE_SHIP),
 		100.f, 100.f, Stats::EntityStats{
 			.HealthRegeneration = 0.5f,
 			.Speed = 600.f,
@@ -28,7 +30,10 @@ Player::Player(Game& game) :
 		.Size = 1.f
 	};
 
-	_shape.setRotation(45.f);
+	// Set the angle of the ship to the middle of the screen
+	const auto position = sf::Vector2f(Game::WIDTH / 2.f, Game::HEIGHT / 2.f) - _shape.getPosition();
+
+	_shape.setRotation(Game::RadToDegree(atan2(position.y, position.x)) + 90.f);
 	_body->SetTransform(Game::PixelToMeter(_shape.getPosition()), Game::DegreeToRad(_shape.getRotation()));
 }
 
@@ -63,8 +68,15 @@ void Player::Update(const sf::Time elapsed)
 	{
 		Move(elapsed);
 
+		// Set the linear velocity to go to the center of the screen
+		const float x = Game::WIDTH / 2.f - _shape.getPosition().x;
+		const float y = Game::HEIGHT / 2.f - _shape.getPosition().y;
+		const float speedToCenter = (x * x + y * y) / Game::SCALE;
+
+		_body->SetLinearVelocity(Game::GetLinearVelocity(speedToCenter * elapsed.asSeconds(), Game::RadToDegree(_body->GetAngle())));
+
 		// If the player is on the center of the screen, stop it
-		if (_shape.getPosition().x <= Game::WIDTH / 2.f)
+		if (_shape.getPosition().y <= Game::HEIGHT / 2.f || _shape.getPosition().y <= Game::HEIGHT / 2.f)
 		{
 			_body->SetLinearVelocity({ 0.f, 0.f });
 		}
@@ -106,7 +118,12 @@ void Player::Move(sf::Time elapsed)
 	}
 }
 
-void Player::TakeLead()
+void Player::TakeControl()
 {
 	_copilot = false;
+}
+
+bool Player::IsAlive() const
+{
+	return _health > 0.f;
 }
