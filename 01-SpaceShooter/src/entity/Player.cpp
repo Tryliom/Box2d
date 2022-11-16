@@ -68,13 +68,6 @@ void Player::Update(const sf::Time elapsed)
 	{
 		Move(elapsed);
 
-		// Set the linear velocity to go to the center of the screen
-		const float x = Game::WIDTH / 2.f - _shape.getPosition().x;
-		const float y = Game::HEIGHT / 2.f - _shape.getPosition().y;
-		const float speedToCenter = (x * x + y * y) / Game::SCALE;
-
-		_body->SetLinearVelocity(Game::GetLinearVelocity(speedToCenter * elapsed.asSeconds(), Game::RadToDegree(_body->GetAngle())));
-
 		// If the player is on the center of the screen, stop it
 		if (_shape.getPosition().x >= Game::WIDTH / 2.f)
 		{
