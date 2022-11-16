@@ -93,7 +93,14 @@ void EntityManager::SpawnEnemy(Enemy* entity)
 void EntityManager::Restart(Game& game)
 {
 	_player = new Player(game);
-	_enemies = {};
+
+	// Remove all enemies from the world and the list
+	for (auto it = _enemies.begin(); it != _enemies.end();)
+	{
+		(*it)->GetBody()->GetWorld()->DestroyBody((*it)->GetBody());
+
+		it = _enemies.erase(it);
+	}
 }
 
 void EntityManager::RunAway() const
@@ -102,6 +109,13 @@ void EntityManager::RunAway() const
 	{
 		entity->RunAway();
 	}
+}
+
+void EntityManager::EndGame() const
+{
+	_player->StopChargingWeapon();
+
+	RunAway();
 }
 
 bool EntityManager::IsPlayerAlive() const

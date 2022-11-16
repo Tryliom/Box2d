@@ -31,9 +31,10 @@ public:
 	void SpawnEnemy(Enemy* entity);
 	void Restart(Game& game);
 	void RunAway() const;
+	void EndGame();
 
-	bool IsPlayerAlive() const;
-	bool AreEnemiesAlive() const;
+	[[nodiscard]] bool IsPlayerAlive() const;
+	[[nodiscard]] bool AreEnemiesAlive() const;
 
-	Player* GetPlayer() const { return _player; }
+	[[nodiscard]] Player* GetPlayer() const { return _player; }
 };

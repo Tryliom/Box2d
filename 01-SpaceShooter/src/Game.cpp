@@ -10,6 +10,7 @@
 #include "entity/enemies/Angel.h"
 #include "gui/guis/GameOverGui.h"
 #include "gui/guis/MenuGui.h"
+#include "gui/guis/PauseGui.h"
 #include "gui/guis/WeaponChoiceGui.h"
 #include "manager/EntityManager.h"
 #include "manager/HUDManager.h"
@@ -43,14 +44,16 @@ Game::Game() :
 
 void Game::update(const sf::Time elapsed)
 {
-	_world.Step(elapsed.asSeconds(), 8, 3);
-
-	EntityManager& entityManager = EntityManager::GetInstance();
-	entityManager.Update(elapsed, _state);
-	ProjectileManager::GetInstance().Update(elapsed);
-	AnimationManager::GetInstance().Update(elapsed);
-	AudioManager::GetInstance().Update(elapsed);
-	HUDManager::GetInstance().Update(elapsed);
+	if (_state != GameState::PAUSE && _state != GameState::UPGRADE_CHOICE)
+	{
+		_world.Step(elapsed.asSeconds(), 8, 3);
+		
+		EntityManager::GetInstance().Update(elapsed, _state);
+		ProjectileManager::GetInstance().Update(elapsed);
+		AnimationManager::GetInstance().Update(elapsed);
+		AudioManager::GetInstance().Update(elapsed);
+		HUDManager::GetInstance().Update(elapsed);
+	}
 
 	if (_gui != nullptr)
 	{
@@ -65,7 +68,7 @@ void Game::update(const sf::Time elapsed)
 
 		_waveTime += elapsed;
 
-		if (!entityManager.AreEnemiesAlive() || _waveTime >= _waveDuration && _wave % 5 != 0)
+		if (!EntityManager::GetInstance().AreEnemiesAlive() || _waveTime >= _waveDuration && _wave % 5 != 0)
 		{
 			spawnEnemies();
 		}
@@ -86,7 +89,11 @@ void Game::checkInputs(const sf::Event event)
 		AudioManager::GetInstance().CheckInputs(event);
 	}
 
-	if (_gui != nullptr)
+	if (_state == GameState::PLAYING && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+	{
+		SetState(GameState::PAUSE);
+	}
+	else if (_gui != nullptr)
 	{
 		_gui->CheckInputs(event, *this);
 	}
@@ -201,7 +208,7 @@ void Game::SetState(const GameState state)
 	{
 		_gui = nullptr;
 
-		if (_state == GameState::UPGRADE_CHOICE)
+		if (_state == GameState::UPGRADE_CHOICE || _state == GameState::PAUSE)
 		{
 			AudioManager::GetInstance().ResumeAll();
 		}
@@ -216,6 +223,10 @@ void Game::SetState(const GameState state)
 		_gui = new MenuGui(*this);
 
 		EntityManager::GetInstance().Restart(*this);
+
+		_wave = 0;
+		_waveTime = sf::Time::Zero;
+		_waveDuration = sf::seconds(30.f);
 
 		if (_state != GameState::DEAD)
 		{
@@ -232,7 +243,7 @@ void Game::SetState(const GameState state)
 		
 		AudioManager::GetInstance().PlayMusic(Music::DEATH);
 
-		EntityManager::GetInstance().RunAway();
+		EntityManager::GetInstance().EndGame();
 	}
 	else if (state == GameState::UPGRADE_CHOICE)
 	{
@@ -240,8 +251,19 @@ void Game::SetState(const GameState state)
 
 		AudioManager::GetInstance().PauseAll();
 	}
+	else if (state == GameState::PAUSE)
+	{
+		_gui = new PauseGui(*this);
+
+		AudioManager::GetInstance().PauseAll();
+	}
 
 	_state = state;
+}
+
+void Game::Exit()
+{
+	_window.close();
 }
 
 sf::Vector2f Game::MeterToPixel(const b2Vec2 meter)

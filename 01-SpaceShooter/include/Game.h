@@ -8,6 +8,7 @@
 enum class GameState
 {
 	NONE,
+	PAUSE,
 	PLAYING,
 	MAIN_MENU,
 	WEAPON_CHOICE,
@@ -63,6 +64,8 @@ public:
 
 	static b2Vec2 GetLinearVelocity(float speed, float angleDegree);
 
+	static bool IsOutOfScreen(sf::Vector2f position);
+
 	int Loop();
 
 	b2Body* GetNewBody();
@@ -72,5 +75,5 @@ public:
 
 	void SetState(GameState state);
 
-	static bool IsOutOfScreen(sf::Vector2f position);
+	void Exit();
 };

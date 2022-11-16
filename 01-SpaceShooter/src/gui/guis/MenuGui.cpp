@@ -20,6 +20,21 @@ MenuGui::MenuGui(Game& game) : Gui(game)
 
 	_buttons.emplace_back(playButton);
 
+	auto quitButton = Button(
+		sf::Vector2f(Game::WIDTH / 2.f, Game::HEIGHT - 100.f),
+		sf::Vector2f(200, 50),
+		true
+	);
+
+	quitButton.SetText({
+		TextLine({CustomText{.Text = "QUIT", .Style = sf::Text::Style::Bold, .Size = 24}})
+	});
+	quitButton.SetOnClick([&]() {
+		_game.Exit();
+	});
+
+	_buttons.emplace_back(quitButton);
+
 	// Create texts
 	auto title = Text(
 		sf::Vector2f(Game::WIDTH / 2.f, 100.f),
