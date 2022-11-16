@@ -40,7 +40,6 @@ private:
 	void update(sf::Time elapsed);
 	void checkInputs(sf::Event event);
 	void render();
-	void spawnEnemies();
 
 public:
 	inline static float HEIGHT = 0.f;

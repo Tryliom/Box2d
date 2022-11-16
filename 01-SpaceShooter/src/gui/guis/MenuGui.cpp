@@ -40,7 +40,7 @@ MenuGui::MenuGui(Game& game) : Gui(game)
 		sf::Vector2f(Game::WIDTH / 2.f, 100.f),
 		{
 			TextLine({CustomText{.Text = "Space Shooter", .Size = 50}}),
-			TextLine({CustomText{.Text = "A game by Tryliom", .Style = sf::Text::Style::Italic, .Size = 12}}),
+			TextLine({CustomText{.Text = "A game by Tryliom", .Style = sf::Text::Style::Italic, .Size = 16}}),
 		},
 		-1,
 		true
