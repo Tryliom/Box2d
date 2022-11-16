@@ -6,7 +6,7 @@ MenuGui::MenuGui(Game& game) : Gui(game)
 {
 	// Create buttons
 	auto playButton = Button(
-		sf::Vector2f(Game::WIDTH / 2.f, Game::HEIGHT - 100.f), 
+		sf::Vector2f(Game::WIDTH / 2.f, Game::HEIGHT * 3.f / 4.f), 
 		sf::Vector2f(200, 50),
 		true
 	);

@@ -8,6 +8,7 @@
 #include "manager/AudioManager.h"
 #include "manager/ProjectileManager.h"
 #include "entity/enemies/Angel.h"
+#include "gui/guis/GameOverGui.h"
 #include "gui/guis/MenuGui.h"
 #include "gui/guis/WeaponChoiceGui.h"
 #include "manager/EntityManager.h"
@@ -227,7 +228,7 @@ void Game::SetState(const GameState state)
 	}
 	else if (state == GameState::DEAD)
 	{
-		//_gui = new GameOverGui(*this);
+		_gui = new GameOverGui(*this);
 		
 		AudioManager::GetInstance().PlayMusic(Music::DEATH);
 

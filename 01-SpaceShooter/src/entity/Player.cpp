@@ -59,8 +59,6 @@ void Player::Update(const sf::Time elapsed)
 	{
 		Move(elapsed);
 
-		//TODO: Try apply force to move it to center
-
 		// If the player is on the center of the screen, stop it
 		if (_shape.getPosition().x >= Game::WIDTH / 2.f)
 		{
