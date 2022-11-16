@@ -3,9 +3,9 @@
 #include "Game.h"
 #include "manager/EntityManager.h"
 
-Enemy::Enemy(Game& game, sf::Vector2f position, const sf::Texture& texture, float health, float maxHealth,
+Enemy::Enemy(Game& game, sf::Vector2f position, const sf::Texture& texture, float maxHealth,
              Group groupIndex, Stats::EntityStats stats, Stats::WeaponStats weaponStats, const std::vector<Pattern>& patterns) :
-	Entity(game, position, texture, health, maxHealth, stats, groupIndex)
+	Entity(game, position, texture, maxHealth, stats, groupIndex)
 {
 	_weaponStats = weaponStats;
 	_patterns = patterns;

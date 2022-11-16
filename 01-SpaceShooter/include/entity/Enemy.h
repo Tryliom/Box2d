@@ -22,7 +22,7 @@ class Enemy : public Entity
 public:
 	Enemy(
 		Game& game, sf::Vector2f position, const sf::Texture& texture,
-		float health, float maxHealth,
+		float maxHealth,
 		Group groupIndex, Stats::EntityStats stats, Stats::WeaponStats weaponStats, const std::vector<Pattern>& patterns
 	);
 

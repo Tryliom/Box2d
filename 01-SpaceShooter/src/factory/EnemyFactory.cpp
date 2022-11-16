@@ -4,19 +4,19 @@
 #include "entity/enemies/Camper.h"
 #include "entity/enemies/Imperator.h"
 
-Enemy* EnemyFactory::createEnemy(const EnemyType type, const sf::Vector2f& position, Game& game)
+Enemy* EnemyFactory::createEnemy(const EnemyType type, const sf::Vector2f& position, Game& game, const int level)
 {
 	if (type == EnemyType::CAMPER)
 	{
-		return new Camper(game, position);
+		return new Camper(game, position, level);
 	}
 	else if (type == EnemyType::ANGEL)
 	{
-		return new Angel(game, position);
+		return new Angel(game, position, level);
 	}
 	else if (type == EnemyType::IMPERATOR)
 	{
-		return new Imperator(game, position);
+		return new Imperator(game, position, level);
 	}
 	else
 	{

@@ -4,7 +4,7 @@
 class Imperator final : public Enemy
 {
 public:
-	Imperator(Game& game, sf::Vector2f position);
+	Imperator(Game& game, sf::Vector2f position, int level);
 
 protected:
 	std::vector<Weapon*> _weapons;

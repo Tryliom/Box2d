@@ -40,6 +40,7 @@ void WaveManager::spawnEnemies(Game& game)
 	AnimationManager::GetInstance().AddTextAnimation(WaveTextAnimation({ Game::WIDTH / 2.f, Game::HEIGHT / 4.f }, _wave));
 
 	const auto side = static_cast<ScreenSide>(Random::GetInt(0, 3));
+	const auto level = static_cast<int>(floor(static_cast<float>(_wave) / 5.f));
 
 	if (_wave % 5 == 0)
 	{
@@ -47,7 +48,7 @@ void WaveManager::spawnEnemies(Game& game)
 
 		for (const auto& enemy : bossEnemies)
 		{
-			EntityManager::GetInstance().SpawnEnemy(EnemyFactory::createEnemy(enemy, getSpawnPosition(side), game));
+			EntityManager::GetInstance().SpawnEnemy(EnemyFactory::createEnemy(enemy, getSpawnPosition(side), game, level));
 		}
 
 		AudioManager::GetInstance().PlayMusic(Music::BOSS_THEME);
@@ -58,7 +59,7 @@ void WaveManager::spawnEnemies(Game& game)
 
 		for (const auto& enemy : regularEnemies)
 		{
-			EntityManager::GetInstance().SpawnEnemy(EnemyFactory::createEnemy(enemy, getSpawnPosition(side), game));
+			EntityManager::GetInstance().SpawnEnemy(EnemyFactory::createEnemy(enemy, getSpawnPosition(side), game, level));
 		}
 
 		if ((_wave - 1) % 5 == 0)
@@ -113,7 +114,7 @@ std::vector<EnemyType> WaveManager::getBossEnemies() const
 {
 	std::vector<EnemyType> enemies;
 
-	int index = _wave / 5;
+	int index = static_cast<int>(floor(_wave / 5.f));
 
 	if (index >= BOSS_ENEMY_COMPOSITION_PER_LEVEL.size())
 	{

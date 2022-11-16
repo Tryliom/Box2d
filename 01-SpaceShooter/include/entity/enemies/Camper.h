@@ -4,5 +4,5 @@
 class Camper final : public Enemy
 {
 public:
-	Camper(Game& game, sf::Vector2f position);
+	Camper(Game& game, sf::Vector2f position, int level);
 };

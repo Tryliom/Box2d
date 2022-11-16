@@ -4,20 +4,20 @@
 #include "weapon/weapons/Canon.h"
 #include "weapon/weapons/MachineGun.h"
 
-Imperator::Imperator(Game& game, const sf::Vector2f position) :
+Imperator::Imperator(Game& game, const sf::Vector2f position, int level) :
 	Enemy(game, position, Assets::GetInstance().GetTexture(Texture::ENEMY_IMPERATOR),
-		500.f, 500.f, Group::ENEMY,
+		500.f + level * 100.f, Group::ENEMY,
 		Stats::EntityStats{
-			.Speed = 50.f,
-			.RotationSpeed = 10.f,
-			.CollisionDamage = 20.f,
-			.Size = 3.f
+			.Speed = 50.f + 10.f * level,
+			.RotationSpeed = 10.f + level,
+			.CollisionDamage = 20.f + level * 2.f,
+			.Size = 3.f + level * 0.2f,
 		},
 		Stats::WeaponStats{
 			.Damage = 10.f,
 			.SpeedPercentage = -0.5f,
 			.CooldownReductionPercentage = 0.5f,
-			.Size = 5.f
+			.Size = 5.f,
 		},
 		{
 			Pattern(ActionType::MOVE_AROUND_PLAYER, sf::seconds(3.f)),

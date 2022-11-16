@@ -11,7 +11,7 @@ enum class ScreenSide
 };
 
 const std::vector<std::vector<std::pair<EnemyType, int>>> REGULAR_ENEMY_COMPOSITION = {
-	{{EnemyType::CAMPER, 8}},
+	{{EnemyType::CAMPER, 5}},
 	{{EnemyType::CAMPER, 3}, {EnemyType::ANGEL, 2}},
 	{{EnemyType::ANGEL, 3}}
 };

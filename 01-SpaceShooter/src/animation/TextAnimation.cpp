@@ -80,8 +80,6 @@ void TextAnimation::Update(const sf::Time elapsed)
 				alpha = 255.f;
 			}
 
-			std::cout << "alpha: " << alpha << ", percent: " << percent << std::endl;
-
 			sf::Color color = _text.getFillColor();
 			color.a = static_cast<sf::Uint8>(alpha);
 

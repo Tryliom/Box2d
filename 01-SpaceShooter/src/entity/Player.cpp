@@ -10,7 +10,7 @@
 Player::Player(Game& game) :
 	Entity(
 		game, {-100.f, Game::HEIGHT + 100.f}, Assets::GetInstance().GetTexture(Texture::SPACE_SHIP),
-		100.f, 100.f, Stats::EntityStats{
+		100.f, Stats::EntityStats{
 			.HealthRegeneration = 0.5f,
 			.Speed = 600.f,
 			.RotationSpeed = 15.f,

@@ -2,7 +2,6 @@
 
 ## Now
 
-- Adapter les ennemis par rapport à la vague
 - Mettre dans les modules des EntityStats et WeaponStats à appliquer à l'entity qui peuvent être modifiées à tout moment et utiliser les modules comme upgrade
 
 ## Gui 

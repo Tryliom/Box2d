@@ -8,7 +8,7 @@ Sniper::Sniper(Stats::WeaponStats& userStats) :
 	Weapon(Stats::WeaponStats{
 		.Damage = 50.f,
 		.Speed = 1500.f,
-		.Spread = 0.f,
+		.Spread = 10.f,
 		.Range = 10000.f,
 		.BulletsPerShot = 1,
 		.Cooldown = 1.f,

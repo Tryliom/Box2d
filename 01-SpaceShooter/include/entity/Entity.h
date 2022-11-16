@@ -10,7 +10,7 @@ class Entity : public DrawableObject
 {
 public:
 	Entity(Game& game, sf::Vector2f position, const sf::Texture& texture,
-		float health, float maxHealth, Stats::EntityStats stats, 
+		float maxHealth, Stats::EntityStats stats, 
 		Group groupIndex
 	);
 private:

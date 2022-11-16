@@ -8,14 +8,14 @@
 #include "manager/AudioManager.h"
 
 Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& texture,
-               const float health, const float maxHealth, 
+               const float maxHealth, 
                const Stats::EntityStats stats, const Group groupIndex) :
 	DrawableObject(game.GetNewBody(), position),
 	_game(game)
 {
-	_health = health;
+	_health = maxHealth;
 	_maxHealth = maxHealth;
-	_lastHealth = health;
+	_lastHealth = maxHealth;
 
 	_stats = stats;
 	_bonusStats = {};

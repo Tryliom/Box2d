@@ -4,5 +4,5 @@
 class Angel final : public Enemy
 {
 public:
-	Angel(Game& game, sf::Vector2f position);
+	Angel(Game& game, sf::Vector2f position, int level);
 };
