@@ -1,7 +1,9 @@
 #include "animation/TextAnimation.h"
 
+#include <iostream>
+
 TextAnimation::TextAnimation(sf::Vector2f position, sf::Vector2f velocity, sf::Time duration,
-	const std::vector<AnimationEffect>& animationEffects, const std::string& text, unsigned characterSize, sf::Color color)
+                             const std::vector<AnimationEffect>& animationEffects, const std::string& text, unsigned characterSize, sf::Color color)
 {
 	_text.setFont(Assets::GetInstance().GetFont(Font::PIXELMIX));
 	_text.setString(text);
@@ -48,6 +50,37 @@ void TextAnimation::Update(const sf::Time elapsed)
 			{
 				alpha = 255.f;
 			}
+
+			sf::Color color = _text.getFillColor();
+			color.a = static_cast<sf::Uint8>(alpha);
+
+			_text.setFillColor(color);
+		}
+		else if (animationEffect.Type == EndAnimationType::FADE_IN_AND_OUT)
+		{
+			float alpha = 0.f;
+
+			// Fade in for the first half of the animation
+			if (percent < 0.5f)
+			{
+				alpha = 255.f - 255.f * (animationEffect.BaseValue - animationEffect.EndValue * percent * 2.f);
+			}
+			// Fade out for the second half of the animation
+			else
+			{
+				alpha = 255.f - 255.f * (animationEffect.BaseValue - animationEffect.EndValue * (1.f - percent) * 2.f);
+			}
+
+			if (alpha < 0.f)
+			{
+				alpha = 0.f;
+			}
+			else if (alpha > 255.f)
+			{
+				alpha = 255.f;
+			}
+
+			std::cout << "alpha: " << alpha << ", percent: " << percent << std::endl;
 
 			sf::Color color = _text.getFillColor();
 			color.a = static_cast<sf::Uint8>(alpha);

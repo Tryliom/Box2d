@@ -267,8 +267,8 @@ sf::Vector2f Entity::GetWeaponPosition() const
 	const sf::Vector2f position = _shape.getPosition();
 	const float angle = _shape.getRotation() + 90.f;
 
-	const float x = position.x - (size.x * scale.x * 0.5f) * std::cos(Game::DegreeToRad(angle));
-	const float y = position.y - (size.y * scale.y * 0.5f) * std::sin(Game::DegreeToRad(angle));
+	const float x = position.x - (size.x * scale.x / 2.f) * std::cos(Game::DegreeToRad(angle));
+	const float y = position.y - (size.y * scale.y / 2.f) * std::sin(Game::DegreeToRad(angle));
 
 	return { x, y };
 }

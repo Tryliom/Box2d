@@ -34,11 +34,29 @@ public:
 			sf::Vector2f(0.f, 0.f),
 			sf::seconds(0.75f),
 			{
-				{ EndAnimationType::FADE, 1.f, -2.f },
+				{ EndAnimationType::FADE_IN_AND_OUT, 1.f, 1.f },
 				{ EndAnimationType::SCALE_UP, 0.5f, 1.f },
 			},
 			text,
 			20,
 			color
 		) {}
+};
+
+class WaveTextAnimation final : public TextAnimation
+{
+public:
+	WaveTextAnimation(const sf::Vector2f position, const int waveNumber) :
+		TextAnimation(
+			position,
+			sf::Vector2f(0.f, 0.f),
+			sf::seconds(3.f),
+			{
+				{ EndAnimationType::FADE_IN_AND_OUT, 1.f, 1.f },
+				{ EndAnimationType::SCALE_UP, 0.5f, 1.f },
+			},
+			"Wave " + std::to_string(waveNumber),
+			50,
+			sf::Color::White
+			) {}
 };

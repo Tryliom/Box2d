@@ -6,6 +6,7 @@
 enum class EndAnimationType
 {
 	FADE,
+	FADE_IN_AND_OUT,
 	SCALE_UP,
 	SCALE_DOWN,
 	ROTATE_LEFT,

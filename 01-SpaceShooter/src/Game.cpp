@@ -2,18 +2,17 @@
 
 #include "Assets.h"
 #include "Random.h"
-#include "entity/enemies/Camper.h"
-#include "entity/enemies/Imperator.h"
-#include "manager/AnimationManager.h"
-#include "manager/AudioManager.h"
-#include "manager/ProjectileManager.h"
-#include "entity/enemies/Angel.h"
 #include "gui/guis/GameOverGui.h"
 #include "gui/guis/MenuGui.h"
 #include "gui/guis/PauseGui.h"
 #include "gui/guis/WeaponChoiceGui.h"
+
+#include "manager/AnimationManager.h"
+#include "manager/AudioManager.h"
+#include "manager/ProjectileManager.h"
 #include "manager/EntityManager.h"
 #include "manager/HUDManager.h"
+#include "manager/WaveManager.h"
 
 Game::Game() :
 	_window(sf::RenderWindow(sf::VideoMode(1920, 1080), "Space Shooter", sf::Style::Fullscreen)),
@@ -66,12 +65,7 @@ void Game::update(const sf::Time elapsed)
 
 		_background.setPosition(0.f, y);
 
-		_waveTime += elapsed;
-
-		if (!EntityManager::GetInstance().AreEnemiesAlive() || _waveTime >= _waveDuration && _wave % 5 != 0)
-		{
-			spawnEnemies();
-		}
+		_waveManager.Update(elapsed, *this);
 	}
 }
 
@@ -132,71 +126,6 @@ void Game::render()
 	_window.display();
 }
 
-void Game::spawnEnemies()
-{
-	_wave++;
-	_waveTime = sf::Time::Zero;
-	_waveDuration += sf::seconds(2.f);
-
-	EntityManager::GetInstance().RunAway();
-
-	// Spawn enemies outside the screen
-	const int number = Random::GetInt(_wave, 10 + _wave);
-
-	if (_wave % 5 == 0)
-	{
-		EntityManager::GetInstance().SpawnEnemy(new Imperator(*this, sf::Vector2f(WIDTH / 2.f, -200.f)));
-		EntityManager::GetInstance().SpawnEnemy(new Angel(*this, sf::Vector2f(WIDTH / 4.f, -200.f)));
-		EntityManager::GetInstance().SpawnEnemy(new Angel(*this, sf::Vector2f(WIDTH * 3.f / 4.f, -200.f)));
-
-		if (_wave >= 20)
-		{
-			EntityManager::GetInstance().SpawnEnemy(new Imperator(*this, sf::Vector2f(WIDTH / 2.f, HEIGHT + 200.f)));
-			EntityManager::GetInstance().SpawnEnemy(new Angel(*this, sf::Vector2f(WIDTH / 4.f, HEIGHT + 200.f)));
-			EntityManager::GetInstance().SpawnEnemy(new Angel(*this, sf::Vector2f(WIDTH * 3.f / 4.f, HEIGHT + 200.f)));
-		}
-
-		AudioManager::GetInstance().PlayMusic(Music::BOSS_THEME);
-	}
-	else if ((_wave - 1) % 5 == 0)
-	{
-		AudioManager::GetInstance().StartMainTheme();
-	}
-
-	if (_wave % 5 != 0)
-	{
-		const float sideRandom = Random::GetFloat();
-
-		for (int i = 0; i < number; ++i)
-		{
-			float x, y;
-
-			if (sideRandom < 0.25f)
-			{
-				x = Random::GetFloat(0.f, WIDTH);
-				y = Random::GetFloat(-100.f, -50.f);
-			}
-			else if (sideRandom < 0.5f)
-			{
-				x = Random::GetFloat(0.f, WIDTH);
-				y = Random::GetFloat(HEIGHT + 50.f, HEIGHT + 100.f);
-			}
-			else if (sideRandom < 0.75f)
-			{
-				x = Random::GetFloat(-100.f, -50.f);
-				y = Random::GetFloat(0.f, HEIGHT);
-			}
-			else
-			{
-				x = Random::GetFloat(WIDTH + 50.f, WIDTH + 100.f);
-				y = Random::GetFloat(0.f, HEIGHT);
-			}
-
-			EntityManager::GetInstance().SpawnEnemy(new Camper(*this, sf::Vector2f(x, y)));
-		}
-	}
-}
-
 void Game::SetState(const GameState state)
 {
 	if (_state == state)
@@ -224,9 +153,7 @@ void Game::SetState(const GameState state)
 
 		EntityManager::GetInstance().Restart(*this);
 
-		_wave = 0;
-		_waveTime = sf::Time::Zero;
-		_waveDuration = sf::seconds(30.f);
+		_waveManager.Reset();
 
 		if (_state != GameState::DEAD)
 		{

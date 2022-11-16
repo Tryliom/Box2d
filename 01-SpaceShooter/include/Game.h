@@ -4,6 +4,7 @@
 #include "ContactListener.h"
 #include "box2d/b2_world.h"
 #include "gui/Gui.h"
+#include "manager/WaveManager.h"
 
 enum class GameState
 {
@@ -34,9 +35,7 @@ private:
 	sf::RectangleShape _background;
 	float _backgroundStep;
 
-	int _wave{ 0 };
-	sf::Time _waveTime{ sf::Time::Zero };
-	sf::Time _waveDuration{ sf::seconds(30.f) };
+	WaveManager _waveManager;
 
 	void update(sf::Time elapsed);
 	void checkInputs(sf::Event event);

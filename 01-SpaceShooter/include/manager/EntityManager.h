@@ -31,7 +31,7 @@ public:
 	void SpawnEnemy(Enemy* entity);
 	void Restart(Game& game);
 	void RunAway() const;
-	void EndGame();
+	void EndGame() const;
 
 	[[nodiscard]] bool IsPlayerAlive() const;
 	[[nodiscard]] bool AreEnemiesAlive() const;
