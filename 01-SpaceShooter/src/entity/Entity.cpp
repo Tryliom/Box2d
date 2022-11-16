@@ -313,6 +313,7 @@ void Entity::onDeath()
 	}
 	else
 	{
+		_weapon->StopCharging();
 		_game.SetState(GameState::DEAD);
 	}
 }
