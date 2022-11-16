@@ -52,7 +52,7 @@ void Game::update(const sf::Time elapsed)
 
 	if (_gui != nullptr)
 	{
-		_gui->Update(sf::Vector2f(sf::Mouse::getPosition(_window)), elapsed);
+		_gui->Update(*this, elapsed);
 	}
 	else if (_state == GameState::PLAYING)
 	{
@@ -86,7 +86,7 @@ void Game::checkInputs(const sf::Event event)
 
 	if (_gui != nullptr)
 	{
-		_gui->CheckInputs(event);
+		_gui->CheckInputs(event, *this);
 	}
 }
 

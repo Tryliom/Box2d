@@ -126,20 +126,30 @@ void Button::Update(const sf::Time elapsed)
 	}
 }
 
-void Button::OnClick()
+void Button::OnClick(Game& game)
 {
 	if (_onClick)
 	{
 		_onClick();
+
+		sf::Cursor cursor;
+		cursor.loadFromSystem(sf::Cursor::Arrow);
+		game.GetWindow().setMouseCursor(cursor);
 	}
 }
 
-void Button::OnStartHover()
+void Button::OnStartHover(Game& game)
 {
 	_hover = true;
+	sf::Cursor cursor;
+	cursor.loadFromSystem(sf::Cursor::Hand);
+	game.GetWindow().setMouseCursor(cursor);
 }
 
-void Button::OnEndHover()
+void Button::OnEndHover(Game& game)
 {
 	_hover = false;
+	sf::Cursor cursor;
+	cursor.loadFromSystem(sf::Cursor::Arrow);
+	game.GetWindow().setMouseCursor(cursor);
 }

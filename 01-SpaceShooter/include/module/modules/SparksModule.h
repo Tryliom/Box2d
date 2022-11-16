@@ -8,17 +8,15 @@ public:
 	SparksModule();
 
 protected:
-	std::list<PenetrationBullet> _sparks;	
 	sf::Time _sparksCooldown;
 	sf::Time _sparksCurrentCooldown;
 
 	float _sparksPerSecond;
 	float _sparksAngle;
 
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void updateData(Entity* entity) override;
 
-	void addSparks(float angleDegree, Entity* entity);
+	void addSparks(float angleDegree, Entity* entity) const;
 
 public:
 	void Initialize(Entity* entity) override;

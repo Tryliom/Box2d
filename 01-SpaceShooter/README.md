@@ -10,7 +10,6 @@
 ## Gui 
 
 - Display hp bar of the boss
-- Display mouse cursor when on hover
 - Make gameOver gui
 
 ## XP

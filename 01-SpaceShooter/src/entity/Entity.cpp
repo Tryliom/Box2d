@@ -54,11 +54,6 @@ Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& textu
 
 void Entity::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
-	for (const auto* module : _modules)
-	{
-		target.draw(*module, states);
-	}
-
 	if (_weapon != nullptr)
 	{
 		target.draw(*_weapon, states);
@@ -141,7 +136,7 @@ void Entity::Update(const sf::Time elapsed)
 		updateHealthDifference();
 	}
 
-	if (_health < _maxHealth)
+	if (_health < _maxHealth && !IsDead())
 	{
 		_health += GetTotalStats().GetHealthRegeneration() * elapsed.asSeconds();
 	}
@@ -165,7 +160,7 @@ void Entity::Update(const sf::Time elapsed)
 
 	if (_weapon != nullptr && _weapon->CanShoot())
 	{
-		_weapon->Shoot(this, _groupIndex == Group::PLAYER ? Group::PLAYER_PROJECTILE : Group::ENEMY_PROJECTILE);
+		_weapon->Shoot(this, GetProjectileGroup());
 
 		if (_groupIndex == Group::PLAYER)
 		{

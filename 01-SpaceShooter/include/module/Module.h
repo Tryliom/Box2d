@@ -1,19 +1,16 @@
 #pragma once
-#include <SFML/Graphics/Drawable.hpp>
 #include <SFML/System/Time.hpp>
 
 #include "projectile/Projectile.h"
 
 class Entity;
 
-class Module : public sf::Drawable
+class Module
 {
 public:
 	Module() = default;
 
 protected:
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const override = 0;
-
 	virtual void updateData(Entity* entity) = 0;
 
 public:

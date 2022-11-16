@@ -50,7 +50,7 @@ void ContactListener::BeginContact(b2Contact* contact)
 			projectile = reinterpret_cast<Projectile*>(aPointer);
 		}
 
-		if (!projectile->IsDead())
+		if (!projectile->IsDead() && !entity->IsDead())
 		{
 			// Get the point between the two bodies
 			const sf::Vector2f bodyPosition = Game::MeterToPixel(entity->GetBody()->GetPosition());

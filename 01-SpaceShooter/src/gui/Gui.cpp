@@ -22,8 +22,10 @@ void Gui::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 	}
 }
 
-void Gui::Update(const sf::Vector2f mousePosition, const sf::Time elapsed)
+void Gui::Update(Game& game, const sf::Time elapsed)
 {
+	const auto mousePosition = sf::Vector2f(sf::Mouse::getPosition(game.GetWindow()));
+
 	for (auto& button : _buttons)
 	{
 		button.Update(elapsed);
@@ -32,20 +34,20 @@ void Gui::Update(const sf::Vector2f mousePosition, const sf::Time elapsed)
 		{
 			if (!button.IsHover())
 			{
-				button.OnStartHover();
+				button.OnStartHover(game);
 			}
 		}
 		else
 		{
 			if (button.IsHover())
 			{
-				button.OnEndHover();
+				button.OnEndHover(game);
 			}
 		}
 	}
 }
 
-void Gui::CheckInputs(const sf::Event event)
+void Gui::CheckInputs(const sf::Event event, Game& game)
 {
 	if (event.type == sf::Event::MouseButtonPressed)
 	{
@@ -55,7 +57,7 @@ void Gui::CheckInputs(const sf::Event event)
 			{
 				if (button.IsHover())
 				{
-					button.OnClick();
+					button.OnClick(game);
 					break;
 				}
 			}

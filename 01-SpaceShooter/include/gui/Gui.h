@@ -21,6 +21,6 @@ protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 public:
-	virtual void Update(sf::Vector2f mousePosition, sf::Time elapsed);
-	virtual void CheckInputs(sf::Event event);
+	virtual void Update(Game& game, sf::Time elapsed);
+	virtual void CheckInputs(sf::Event event, Game& game);
 };

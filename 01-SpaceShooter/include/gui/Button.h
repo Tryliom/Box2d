@@ -4,6 +4,7 @@
 
 #include "Text.h"
 
+class Game;
 const sf::Time HOVER_TIME = sf::seconds(0.15f);
 
 struct TempColor
@@ -50,9 +51,9 @@ protected:
 
 public:
 	virtual void Update(sf::Time elapsed);
-	virtual void OnClick();
-	virtual void OnStartHover();
-	virtual void OnEndHover();
+	virtual void OnClick(Game& game);
+	virtual void OnStartHover(Game& game);
+	virtual void OnEndHover(Game& game);
 
 	void SetText(const std::vector<TextLine>& texts);
 	sf::FloatRect GetGlobalBounds() const;

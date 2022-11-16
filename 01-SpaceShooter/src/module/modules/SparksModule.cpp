@@ -5,22 +5,14 @@
 #include "Game.h"
 #include "Random.h"
 #include "entity/Entity.h"
+#include "manager/ProjectileManager.h"
 
 SparksModule::SparksModule()
 {
-	_sparks = {};
 	_sparksCurrentCooldown = sf::Time::Zero;
 	_sparksPerSecond = 20.0f;
 	_sparksAngle = 90.0f;
 	_sparksCooldown = sf::seconds(1.0f / _sparksPerSecond);
-}
-
-void SparksModule::draw(sf::RenderTarget& target, const sf::RenderStates states) const
-{
-	for (auto& spark : _sparks)
-	{
-		target.draw(spark, states);
-	}
 }
 
 void SparksModule::updateData(Entity* entity)
@@ -37,7 +29,7 @@ void SparksModule::updateData(Entity* entity)
 	}
 }
 
-void SparksModule::addSparks(float angleDegree, Entity* entity)
+void SparksModule::addSparks(float angleDegree, Entity* entity) const
 {
 	const sf::RectangleShape shape = entity->GetShape();
 	const sf::Vector2f scale = shape.getScale();
@@ -51,11 +43,11 @@ void SparksModule::addSparks(float angleDegree, Entity* entity)
 
 	angleDegree -= 90.f;
 
-	_sparks.emplace_back(
+	ProjectileManager::GetInstance().AddProjectile(new PenetrationBullet(
 		entity->GetGame().GetNewBody(), sf::Vector2f(x, y),
 		angleDegree, 2.f + weaponStats.GetSize(), Game::GetLinearVelocity(stats.GetSpeed(), angleDegree), sf::seconds(0.5f),
 		stats.GetSpeed(), entity->GetProjectileGroup()
-	);
+	));
 }
 
 void SparksModule::Initialize(Entity* entity)
@@ -68,24 +60,6 @@ void SparksModule::Update(const sf::Time elapsed, Entity* entity)
 	updateData(entity);
 
 	_sparksCurrentCooldown += elapsed;
-
-	for (auto& spark : _sparks)
-	{
-		spark.Update(elapsed);
-	}
-
-	// Remove the sparks that are dead
-	_sparks.erase(std::remove_if(_sparks.begin(), _sparks.end(), [](const PenetrationBullet& spark)
-	{
-		if (spark.IsDead())
-		{
-			spark.GetBody()->GetWorld()->DestroyBody(spark.GetBody());
-
-			return true;
-		}
-
-		return false;
-	}), _sparks.end());
 }
 
 void SparksModule::OnEntityMove(Entity* entity)

@@ -54,9 +54,6 @@ protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 public:
-	int Mask{ -1 };
-	int Mask2{ -1 };
-
 	void Update(sf::Time elapsed) override;
 
 	void OnImpact(sf::Vector2f impactPoint);

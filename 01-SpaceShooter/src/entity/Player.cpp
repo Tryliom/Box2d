@@ -24,8 +24,8 @@ Player::Player(Game& game) :
 
 	// Temporary
 	_weaponStats = Stats::WeaponStats{
-		.DamagePercentage = 0.5f,
-		.BulletsPerShotPercentage = 1.f,
+		.DamagePercentage = -0.9f,
+		.BulletsPerShotPercentage = 2.f,
 		.CooldownReductionPercentage = 0.7f,
 		.Size = 1.f
 	};
