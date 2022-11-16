@@ -303,6 +303,9 @@ void Entity::onDeath()
 
 	updateHealthDifference();
 
+	// Set the entity to sensor to not collide with other entities
+	_body->GetFixtureList()->SetSensor(true);
+
 	// Play sound according to the group
 	if (_groupIndex == Group::ENEMY)
 	{

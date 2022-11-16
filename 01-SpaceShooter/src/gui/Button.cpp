@@ -1,19 +1,60 @@
 #include "gui/Button.h"
 
+#include <iostream>
+
 #include "Game.h"
 
+TempColor::TempColor(sf::Color color)
+{
+	R = color.r;
+	G = color.g;
+	B = color.b;
+	A = color.a;
+}
+
+TempColor::TempColor(int r, int g, int b, int a)
+{
+	R = r;
+	G = g;
+	B = b;
+	A = a;
+}
+
+TempColor::operator sf::Color() const
+{
+	return { static_cast<sf::Uint8>(R), static_cast<sf::Uint8>(G), static_cast<sf::Uint8>(B), static_cast<sf::Uint8>(A) };
+}
+
+TempColor TempColor::operator+(const TempColor& other) const
+{
+	return {R + other.R, G + other.G, B + other.B, A + other.A};
+}
+
+TempColor TempColor::operator-(const TempColor& other) const
+{
+	return {R - other.R, G - other.G, B - other.B, A - other.A};
+}
+
+TempColor TempColor::operator*(float factor) const
+{
+	return { static_cast<int>(R * factor), static_cast<int>(G * factor), static_cast<int>(B * factor), static_cast<int>(A * factor) };
+}
 
 Button::Button(const sf::Vector2f position, const sf::Vector2f size, const bool centered)
 {
 	_position = position;
 	_centered = centered;
 
-	_backgroundColor = sf::Color(0, 0, 0, 50);
-	_hoverBackgroundColor = sf::Color(10, 10, 10, 255);
+	_backgroundColor = sf::Color(0, 0, 0, 55);
+	_hoverBackgroundColor = sf::Color(0, 0, 0, 255);
+	_borderColor = sf::Color::White;
+	_hoverBorderColor = sf::Color::White;
+	_borderThickness = -1.f;
+	_hoverBorderThickness = -2.f;
 
 	_background.setFillColor(_backgroundColor);
-	_background.setOutlineColor(sf::Color::White);
-	_background.setOutlineThickness(-1.0f);
+	_background.setOutlineColor(_borderColor);
+	_background.setOutlineThickness(_borderThickness);
 	_background.setPosition(_position);
 	_background.setSize(size);
 
@@ -71,14 +112,18 @@ void Button::Update(const sf::Time elapsed)
 	}
 
 	const float ratio = _hoverTime.asSeconds() / HOVER_TIME.asSeconds();
-	sf::Color color = _backgroundColor;
 
-	color.r += static_cast<sf::Uint8>((_hoverBackgroundColor.r - _backgroundColor.r) * ratio);
-	color.g += static_cast<sf::Uint8>((_hoverBackgroundColor.g - _backgroundColor.g) * ratio);
-	color.b += static_cast<sf::Uint8>((_hoverBackgroundColor.b - _backgroundColor.b) * ratio);
-	color.a += static_cast<sf::Uint8>((_hoverBackgroundColor.a - _backgroundColor.a) * ratio);
+	const TempColor backgroundColor = TempColor(_backgroundColor) + (TempColor(_hoverBackgroundColor) - TempColor(_backgroundColor)) * ratio;
+	const float borderThickness = _borderThickness + (_hoverBorderThickness - _borderThickness) * ratio;
+	const TempColor borderColor = TempColor(_borderColor) + (TempColor(_hoverBorderColor) - TempColor(_borderColor)) * ratio;
 
-	_background.setFillColor(color);
+	_background.setFillColor(static_cast<sf::Color>(backgroundColor));
+	_background.setOutlineThickness(borderThickness);
+
+	if (borderThickness > 0)
+	{
+		_background.setOutlineColor(static_cast<sf::Color>(borderColor));
+	}
 }
 
 void Button::OnClick()
@@ -92,11 +137,9 @@ void Button::OnClick()
 void Button::OnStartHover()
 {
 	_hover = true;
-	_background.setFillColor(_hoverBackgroundColor);
 }
 
 void Button::OnEndHover()
 {
 	_hover = false;
-	_background.setFillColor(_backgroundColor);
 }

@@ -26,5 +26,3 @@
 - Make Tail a class that can be assigned to any entities, create a tail for each enemy
 
 ## Bug
-
-- The text in button is not really centered on y axis

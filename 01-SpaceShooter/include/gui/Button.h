@@ -4,7 +4,23 @@
 
 #include "Text.h"
 
-const sf::Time HOVER_TIME = sf::seconds(0.1f);
+const sf::Time HOVER_TIME = sf::seconds(0.15f);
+
+struct TempColor
+{
+	int R;
+	int G;
+	int B;
+	int A;
+
+	explicit TempColor(sf::Color color);
+	TempColor(int r, int g, int b, int a);
+
+	explicit operator sf::Color() const;
+	TempColor operator+(const TempColor& other) const;
+	TempColor operator-(const TempColor& other) const;
+	TempColor operator*(float factor) const;
+};
 
 class Button : public sf::Drawable
 {
@@ -18,7 +34,11 @@ protected:
 
 	sf::Color _backgroundColor;
 	sf::Color _hoverBackgroundColor;
-
+	sf::Color _borderColor;
+	sf::Color _hoverBorderColor;
+	float _borderThickness{ -1.0f };
+	float _hoverBorderThickness{ -1.0f };
+	
 	bool _hover{ false };
 	bool _centered{ false };
 

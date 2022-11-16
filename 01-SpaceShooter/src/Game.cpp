@@ -13,7 +13,7 @@
 #include "manager/HUDManager.h"
 
 Game::Game() :
-	_window(sf::RenderWindow(sf::VideoMode(1920, 1080), "Space Shooter", sf::Style::Close)),
+	_window(sf::RenderWindow(sf::VideoMode(1920, 1080), "Space Shooter", sf::Style::Fullscreen)),
 	_world(b2World(b2Vec2(0.0f, 0.f)))
 {
 	_window.setFramerateLimit(144);

@@ -32,7 +32,7 @@ Text::Text(sf::Vector2f position, const std::vector<TextLine>& texts, float maxX
 			if (_centered)
 			{
 				const auto bounds = text.getGlobalBounds();
-				text.setOrigin(bounds.width / 2, bounds.height / 2);
+				text.setOrigin(bounds.width / 2, bounds.height / 2 + 2);
 			}
 
 			if (maxX > 0.f)
@@ -67,5 +67,13 @@ void Text::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 	for (auto& text : _texts)
 	{
 		target.draw(text, states);
+	}
+}
+
+void Text::SetColor(const sf::Color& color)
+{
+	for (auto& text : _texts)
+	{
+		text.setFillColor(color);
 	}
 }

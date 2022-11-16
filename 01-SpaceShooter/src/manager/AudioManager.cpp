@@ -74,7 +74,7 @@ void AudioManager::Update(const sf::Time elapsedTime)
 
 	for (auto it = _sounds.begin(); it != _sounds.end();)
 	{
-		if (it->getStatus() == sf::SoundSource::Stopped)
+		if (it->SoundPlayed.getStatus() == sf::SoundSource::Stopped)
 		{
 			it = _sounds.erase(it);
 		}
@@ -131,7 +131,7 @@ void AudioManager::PauseAll()
 
 	for (auto& sound : _sounds)
 	{
-		sound.pause();
+		sound.SoundPlayed.pause();
 	}
 }
 
@@ -149,15 +149,29 @@ void AudioManager::ResumeAll()
 
 	for (auto& sound : _sounds)
 	{
-		sound.play();
+		sound.SoundPlayed.play();
 	}
 }
 
 void AudioManager::PlaySound(const Sound sound)
 {
-	_sounds.emplace_back(sf::Sound(Assets::GetInstance().GetSound(sound)));
-	_sounds.back().play();
-	_sounds.back().setVolume(50.f);
+	// Check if the sound is already played more than 3 times
+	int count = 0;
+
+	for (const auto& soundPlayed : _sounds)
+	{
+		if (soundPlayed.Type == sound)
+		{
+			++count;
+		}
+	}
+
+	if (count < 10)
+	{
+		_sounds.emplace_back(sf::Sound(Assets::GetInstance().GetSound(sound)), sound);
+		_sounds.back().SoundPlayed.play();
+		_sounds.back().SoundPlayed.setVolume(50.f);
+	}
 }
 
 void AudioManager::PlayContinuousSound(ContinuousSoundType sound)

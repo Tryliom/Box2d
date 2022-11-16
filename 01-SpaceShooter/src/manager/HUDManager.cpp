@@ -10,7 +10,7 @@ HUDManager::HUDManager()
 	_healthBackgroundBar.setOrigin(_healthBackgroundBar.getSize() / 2.f);
 	_healthBackgroundBar.setPosition({ Game::WIDTH / 2.f, Game::HEIGHT - 20.f });
 	_healthBackgroundBar.setOutlineColor(sf::Color::White);
-	_healthBackgroundBar.setOutlineThickness(0.5f);
+	_healthBackgroundBar.setOutlineThickness(1.f);
 }
 
 void HUDManager::draw(sf::RenderTarget& target, sf::RenderStates states) const

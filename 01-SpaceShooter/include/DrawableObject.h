@@ -11,9 +11,6 @@ class DrawableObject : public sf::Drawable
 {
 public:
 	DrawableObject(b2Body* body, sf::Vector2f position);
-private:
-	int _mask{ -1 };
-	int _mask2{ -1 };
 
 protected:
 	b2Body* _body;
@@ -24,6 +21,4 @@ public:
 	[[nodiscard]] b2Body* GetBody() const { return _body; }
 
 	virtual void Update(sf::Time elapsed) = 0;
-
-	bool IsMaskValid() const { return _mask == -1 && _mask2 == -1; }
 };

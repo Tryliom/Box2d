@@ -24,8 +24,13 @@ void ContactListener::BeginContact(b2Contact* contact)
 		auto* entityA = reinterpret_cast<Entity*>(aPointer);
 		auto* entityB = reinterpret_cast<Entity*>(bPointer);
 
-		entityA->TakeDamage(entityB);
-		entityB->TakeDamage(entityA);
+
+		if (!entityA->IsDead() && !entityB->IsDead() 
+			&& !entityA->GetBody()->GetFixtureList()->IsSensor() && !entityB->GetBody()->GetFixtureList()->IsSensor())
+		{
+			entityA->TakeDamage(entityB);
+			entityB->TakeDamage(entityA);
+		}
 	}
 	else if ((groupA == Group::PLAYER && groupB == Group::ENEMY_PROJECTILE) || (groupA == Group::ENEMY_PROJECTILE && groupB == Group::PLAYER) ||
 			 (groupA == Group::PLAYER_PROJECTILE && groupB == Group::ENEMY) || (groupA == Group::ENEMY && groupB == Group::PLAYER_PROJECTILE))
@@ -45,7 +50,7 @@ void ContactListener::BeginContact(b2Contact* contact)
 			projectile = reinterpret_cast<Projectile*>(aPointer);
 		}
 
-		if (projectile->IsMaskValid() && !projectile->IsDead())
+		if (!projectile->IsDead())
 		{
 			// Get the point between the two bodies
 			const sf::Vector2f bodyPosition = Game::MeterToPixel(entity->GetBody()->GetPosition());

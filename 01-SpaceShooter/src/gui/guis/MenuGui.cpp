@@ -8,7 +8,7 @@ MenuGui::MenuGui(Game& game) : Gui(game)
 	_background.setFillColor(sf::Color(0, 0, 0, 100));
 
 	// Create buttons
-	Button playButton = Button(
+	auto playButton = Button(
 		sf::Vector2f(Game::WIDTH / 2.f, Game::HEIGHT - 100.f), 
 		sf::Vector2f(200, 50),
 		true
@@ -24,7 +24,7 @@ MenuGui::MenuGui(Game& game) : Gui(game)
 	_buttons.emplace_back(playButton);
 
 	// Create texts
-	Text title = Text(
+	auto title = Text(
 		sf::Vector2f(Game::WIDTH / 2.f, 100.f),
 		{
 			TextLine({CustomText{.Text = "Space Shooter", .Size = 50}}),

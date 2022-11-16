@@ -30,4 +30,6 @@ protected:
 
 public:
 	virtual void Update(sf::Time elapsed) {}
+
+	void SetColor(const sf::Color& color);
 };

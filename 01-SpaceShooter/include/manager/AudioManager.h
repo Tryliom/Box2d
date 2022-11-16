@@ -13,13 +13,19 @@ struct ContinuousSound {
 	bool Active{};
 };
 
+struct ActiveSound
+{
+	sf::Sound SoundPlayed;
+	Sound Type;
+};
+
 class AudioManager final
 {
 private:
 	AudioManager();
 
 	sf::Music _music;
-	std::vector<sf::Sound> _sounds;
+	std::vector<ActiveSound> _sounds;
 	std::array<ContinuousSound, static_cast<int>(ContinuousSoundType::END)> _continuousSounds;
 
 	Music _nextMusic;
