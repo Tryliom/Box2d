@@ -4,9 +4,6 @@
 
 MenuGui::MenuGui(Game& game) : Gui(game)
 {
-	_background.setSize(sf::Vector2f(Game::WIDTH, Game::HEIGHT));
-	_background.setFillColor(sf::Color(0, 0, 0, 100));
-
 	// Create buttons
 	auto playButton = Button(
 		sf::Vector2f(Game::WIDTH / 2.f, Game::HEIGHT - 100.f), 
@@ -18,7 +15,7 @@ MenuGui::MenuGui(Game& game) : Gui(game)
 		TextLine({CustomText{ .Text = "PLAY", .Style = sf::Text::Style::Bold, .Size = 24}})
 	});
 	playButton.SetOnClick([&]() {
-		_game.SetState(GameState::PLAYING);
+		_game.SetState(GameState::WEAPON_CHOICE);
 	});
 
 	_buttons.emplace_back(playButton);

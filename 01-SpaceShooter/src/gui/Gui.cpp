@@ -4,7 +4,7 @@
 Gui::Gui(Game& game) : _game(game)
 {
 	_background.setSize(sf::Vector2f(Game::WIDTH, Game::HEIGHT));
-	_background.setFillColor(sf::Color(0, 0, 0, 50));
+	_background.setFillColor(sf::Color(0, 0, 0, 100));
 }
 
 void Gui::draw(sf::RenderTarget& target, const sf::RenderStates states) const
@@ -13,7 +13,10 @@ void Gui::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 
 	for (auto& button : _buttons)
 	{
-		target.draw(button, states);
+		if (!button.IsDisabled())
+		{
+			target.draw(button, states);
+		}
 	}
 
 	for (auto& text : _texts)
@@ -28,6 +31,11 @@ void Gui::Update(Game& game, const sf::Time elapsed)
 
 	for (auto& button : _buttons)
 	{
+		if (button.IsDisabled())
+		{
+			continue;
+		}
+
 		button.Update(elapsed);
 
 		if (button.GetGlobalBounds().contains(mousePosition))
@@ -55,7 +63,7 @@ void Gui::CheckInputs(const sf::Event event, Game& game)
 		{
 			for (auto& button : _buttons)
 			{
-				if (button.IsHover())
+				if (button.IsHover() && !button.IsDisabled())
 				{
 					button.OnClick(game);
 					break;

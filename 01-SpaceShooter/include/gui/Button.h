@@ -37,11 +37,14 @@ protected:
 	sf::Color _hoverBackgroundColor;
 	sf::Color _borderColor;
 	sf::Color _hoverBorderColor;
+	sf::Color _selectedBorderColor;
 	float _borderThickness{ -1.0f };
 	float _hoverBorderThickness{ -1.0f };
 	
 	bool _hover{ false };
 	bool _centered{ false };
+	bool _disabled{ false };
+	bool _selected{ false };
 
 	sf::Time _hoverTime{ sf::Time::Zero };
 
@@ -59,4 +62,11 @@ public:
 	sf::FloatRect GetGlobalBounds() const;
 	bool IsHover() const;
 	void SetOnClick(const std::function<void()>& onClick);
+
+	void Show() { _disabled = false; }
+	void Disable() { _disabled = true; }
+	bool IsDisabled() const { return _disabled; }
+
+	void Toggle(const bool toggle) { _selected = toggle; }
+	void Toggle() { _selected = !_selected; }
 };

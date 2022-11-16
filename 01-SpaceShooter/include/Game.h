@@ -10,6 +10,7 @@ enum class GameState
 	NONE,
 	PLAYING,
 	MAIN_MENU,
+	WEAPON_CHOICE,
 	UPGRADE_CHOICE,
 	DEAD
 };

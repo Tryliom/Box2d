@@ -292,6 +292,11 @@ void Entity::AddModule(Module* module)
 	_modules.push_back(module);
 }
 
+void Entity::ChangeWeapon(Weapon* weapon)
+{
+	_weapon = weapon;
+}
+
 void Entity::onDeath()
 {
 	AnimationManager::GetInstance().AddDeathAnimation(DeathAnimation(_shape.getPosition()));

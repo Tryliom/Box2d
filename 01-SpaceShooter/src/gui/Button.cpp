@@ -49,6 +49,7 @@ Button::Button(const sf::Vector2f position, const sf::Vector2f size, const bool 
 	_hoverBackgroundColor = sf::Color(0, 0, 0, 255);
 	_borderColor = sf::Color::White;
 	_hoverBorderColor = sf::Color::White;
+	_selectedBorderColor = sf::Color::Yellow;
 	_borderThickness = -1.f;
 	_hoverBorderThickness = -2.f;
 
@@ -115,15 +116,16 @@ void Button::Update(const sf::Time elapsed)
 
 	const TempColor backgroundColor = TempColor(_backgroundColor) + (TempColor(_hoverBackgroundColor) - TempColor(_backgroundColor)) * ratio;
 	const float borderThickness = _borderThickness + (_hoverBorderThickness - _borderThickness) * ratio;
-	const TempColor borderColor = TempColor(_borderColor) + (TempColor(_hoverBorderColor) - TempColor(_borderColor)) * ratio;
+	TempColor borderColor = TempColor(_borderColor) + (TempColor(_hoverBorderColor) - TempColor(_borderColor)) * ratio;
+
+	if (_selected)
+	{
+		borderColor = TempColor(_selectedBorderColor);
+	}
 
 	_background.setFillColor(static_cast<sf::Color>(backgroundColor));
 	_background.setOutlineThickness(borderThickness);
-
-	if (borderThickness > 0)
-	{
-		_background.setOutlineColor(static_cast<sf::Color>(borderColor));
-	}
+	_background.setOutlineColor(static_cast<sf::Color>(borderColor));
 }
 
 void Button::OnClick(Game& game)

@@ -9,6 +9,7 @@
 #include "manager/ProjectileManager.h"
 #include "entity/enemies/Angel.h"
 #include "gui/guis/MenuGui.h"
+#include "gui/guis/WeaponChoiceGui.h"
 #include "manager/EntityManager.h"
 #include "manager/HUDManager.h"
 
@@ -110,7 +111,7 @@ void Game::render()
 	animationManager.DrawHitAnimations(_window);
 	animationManager.DrawTextAnimations(_window);
 
-	if (_state != GameState::MAIN_MENU)
+	if (_state != GameState::MAIN_MENU && _state != GameState::WEAPON_CHOICE)
 	{
 		_window.draw(HUDManager::GetInstance());
 	}
@@ -219,6 +220,10 @@ void Game::SetState(const GameState state)
 		{
 			AudioManager::GetInstance().PlayMusic(Music::DEATH);
 		}
+	}
+	else if (state == GameState::WEAPON_CHOICE)
+	{
+		_gui = new WeaponChoiceGui(*this);
 	}
 	else if (state == GameState::DEAD)
 	{

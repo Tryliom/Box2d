@@ -66,7 +66,9 @@ public:
 	void AddBonusStats(const Stats::WeaponStats bonusStats) { _weaponStats += bonusStats; }
 
 	Stats::EntityStats GetTotalStats() const { return _stats + _bonusStats; }
-	Stats::WeaponStats GetWeaponStats() const { return _weaponStats; }
+	Stats::WeaponStats& GetWeaponStats() { return _weaponStats; }
 
 	void AddModule(Module* module);
+
+	void ChangeWeapon(Weapon* weapon);
 };

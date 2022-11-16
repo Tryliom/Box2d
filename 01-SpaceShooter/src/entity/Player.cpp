@@ -19,18 +19,9 @@ Player::Player(Game& game) :
 		Group::PLAYER
 	)
 {
-	_weapon = new MachineGun(_weaponStats);
 	AddModule(new SparksModule());
 
-	// Temporary
-	_weaponStats = Stats::WeaponStats{
-		.DamagePercentage = -0.9f,
-		.BulletsPerShotPercentage = 2.f,
-		.CooldownReductionPercentage = 0.7f,
-		.Size = 1.f
-	};
-
-	// Set the angle of the ship to the middle of the screen
+	// Set the angle of the ship to look to the middle of the screen
 	const auto position = sf::Vector2f(Game::WIDTH / 2.f, Game::HEIGHT / 2.f) - _shape.getPosition();
 
 	_shape.setRotation(Game::RadToDegree(atan2(position.y, position.x)) + 90.f);
@@ -67,6 +58,8 @@ void Player::Update(const sf::Time elapsed)
 	if (_copilot)
 	{
 		Move(elapsed);
+
+		//TODO: Try apply force to move it to center
 
 		// If the player is on the center of the screen, stop it
 		if (_shape.getPosition().x >= Game::WIDTH / 2.f)
