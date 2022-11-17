@@ -5,6 +5,7 @@
 #include "gui/guis/GameOverGui.h"
 #include "gui/guis/MenuGui.h"
 #include "gui/guis/PauseGui.h"
+#include "gui/guis/UpgradeChoiceGui.h"
 #include "gui/guis/WeaponChoiceGui.h"
 
 #include "manager/AnimationManager.h"
@@ -175,7 +176,7 @@ void Game::SetState(const GameState state)
 	}
 	else if (state == GameState::UPGRADE_CHOICE)
 	{
-		//_gui = new UpgradeChoiceGui(*this);
+		_gui = new UpgradeChoiceGui(*this);
 
 		AudioManager::GetInstance().PauseAll();
 	}

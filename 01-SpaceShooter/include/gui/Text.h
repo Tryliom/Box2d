@@ -8,7 +8,7 @@ struct CustomText
 	sf::Text::Style Style{ sf::Text::Style::Regular };
 	int Size{ 12 };
 
-	sf::Text ToSfText() const;
+	[[nodiscard]] sf::Text ToSfText() const;
 };
 
 struct TextLine

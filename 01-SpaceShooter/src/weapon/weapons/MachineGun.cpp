@@ -3,7 +3,7 @@
 #include "manager/ProjectileManager.h"
 #include "projectile/bullets/MachineGunBullet.h"
 
-MachineGun::MachineGun(Stats::WeaponStats& userStats) :
+MachineGun::MachineGun(Entity* user) :
 	Weapon(Stats::WeaponStats{
 		.Damage = 5.f,
 		.Speed = 1200.f,
@@ -12,7 +12,7 @@ MachineGun::MachineGun(Stats::WeaponStats& userStats) :
 		.BulletsPerShot = 3,
 		.Cooldown = 0.3f,
 		.Size = 0.75f
-	}, userStats)
+	}, user)
 {}
 
 void MachineGun::shootBullet(b2Body* body, const sf::Vector2f position, const float angle, const b2Vec2 velocity,

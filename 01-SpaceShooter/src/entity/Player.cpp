@@ -53,11 +53,9 @@ sf::Vector2f Player::getTailPosition() const
 
 void Player::onLevelUp()
 {
+	_xp -= GetMaxXp();
 	_level++;
 	_credits++;
-	_xp = 0;
-
-	_game.SetState(GameState::UPGRADE_CHOICE);
 }
 
 void Player::Update(const sf::Time elapsed)
@@ -162,6 +160,20 @@ void Player::UseCredit()
 void Player::Contact(const XpShard* xpShard)
 {
 	_xp += xpShard->GetXp();
+
+	bool hasLevelUp = false;
+
+	while (_xp >= GetMaxXp())
+	{
+		onLevelUp();
+
+		hasLevelUp = true;
+	}
+
+	if (hasLevelUp)
+	{
+		_game.SetState(GameState::UPGRADE_CHOICE);
+	}
 }
 
 void Player::TryToShoot()
@@ -172,4 +184,9 @@ void Player::TryToShoot()
 
 		ChargeWeapon();
 	}
+}
+
+int Player::GetCredits() const
+{
+	return _credits;
 }

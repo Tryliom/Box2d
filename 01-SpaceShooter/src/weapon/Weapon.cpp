@@ -7,8 +7,9 @@
 #include "box2d/b2_world.h"
 #include "manager/AudioManager.h"
 
-Weapon::Weapon(const Stats::WeaponStats stats, Stats::WeaponStats& userStats) : _userStats(userStats)
+Weapon::Weapon(const Stats::WeaponStats stats, Entity* user)
 {
+	_user = user;
 	_stats = stats;
 	_currentCooldown = getTotalStats().GetCooldown();
 	_isCharging = false;
@@ -22,6 +23,11 @@ void Weapon::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 	{
 		target.draw(*_chargeAnimation, states);
 	}
+}
+
+Stats::WeaponStats Weapon::getTotalStats() const
+{
+	return _stats + _user->GetWeaponStats();
 }
 
 sf::Time Weapon::getLifeTime() const

@@ -74,3 +74,13 @@ void SparksModule::OnEntityMove(Entity* entity)
 		addSparks(Random::GetFloat(anglePosition, anglePosition + _sparksAngle / 2.f), entity);
 	}
 }
+
+std::vector<TextLine> SparksModule::GetDescription() const
+{
+	return {
+		TextLine({
+			CustomText{.Text = "Shoot sparks from the bottom of your ship", .Size = 16},
+			CustomText{.Text = "Damage scale with your ship speed", .Size = 16}
+		}),
+	};
+}

@@ -24,5 +24,5 @@ Camper::Camper(Game& game, sf::Vector2f position, int level) :
 			Pattern(ActionType::ATTACK, sf::seconds(Random::GetFloat(1.5f, 3.f)))
 		})
 {
-	_weapon = new Canon(_weaponStats);
+	_weapon = new Canon(this);
 }

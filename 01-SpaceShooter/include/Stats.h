@@ -1,4 +1,5 @@
 #pragma once
+#include "gui/Text.h"
 
 namespace Stats
 {
@@ -28,6 +29,8 @@ namespace Stats
 		[[nodiscard]] float GetCollisionReductionDamage() const;
 		[[nodiscard]] float GetCollisionDamage(float collisionDamage) const;
 		[[nodiscard]] float GetSize() const;
+
+		[[nodiscard]] std::vector<TextLine> GetTextLines() const;
 	};
 
 	struct WeaponStats
@@ -58,6 +61,8 @@ namespace Stats
 		[[nodiscard]] int GetBulletsPerShot() const;
 		[[nodiscard]] float GetCooldown() const;
 		[[nodiscard]] float GetSize() const;
+
+		[[nodiscard]] std::vector<TextLine> GetTextLines() const;
 	};
 
 	WeaponStats operator+(WeaponStats stats, WeaponStats otherStats);

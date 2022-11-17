@@ -64,10 +64,10 @@ public:
 	virtual sf::Vector2f GetWeaponPosition() const;
 
 	void AddBonusStats(const Stats::EntityStats bonusStats);
-	void AddBonusStats(const Stats::WeaponStats bonusStats) { _weaponStats += bonusStats; }
+	void AddBonusStats(const Stats::WeaponStats bonusStats);
 
-	Stats::EntityStats GetTotalStats() const { return _stats + _bonusStats; }
-	Stats::WeaponStats& GetWeaponStats() { return _weaponStats; }
+	Stats::EntityStats GetTotalStats() const;
+	Stats::WeaponStats GetWeaponStats() const;
 
 	void AddModule(Module* module);
 

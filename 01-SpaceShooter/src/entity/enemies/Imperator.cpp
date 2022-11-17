@@ -28,8 +28,8 @@ Imperator::Imperator(Game& game, const sf::Vector2f position, int level) :
 		})
 {
 	_weapons = {
-		new Canon(_weaponStats),
-		new MachineGun(_weaponStats)
+		new Canon(this),
+		new MachineGun(this)
 	};
 
 	_weapon = _weapons[_currentWeaponIndex];

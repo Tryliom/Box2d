@@ -4,7 +4,7 @@
 #include "manager/ProjectileManager.h"
 #include "projectile/bullets/CanonBullet.h"
 
-Canon::Canon(Stats::WeaponStats& userStats) :
+Canon::Canon(Entity* user) :
 	Weapon(Stats::WeaponStats{
 		.Damage = 20.f,
 		.Speed = 500.f,
@@ -13,7 +13,7 @@ Canon::Canon(Stats::WeaponStats& userStats) :
 		.BulletsPerShot = 1,
 		.Cooldown = 0.8f,
 		.Size = 1.5f
-	}, userStats) {}
+	}, user) {}
 
 void Canon::shootBullet(b2Body* body, const sf::Vector2f position, const float angle, const b2Vec2 velocity, const Group bulletGroup)
 {

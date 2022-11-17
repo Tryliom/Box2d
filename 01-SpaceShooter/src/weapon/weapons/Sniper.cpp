@@ -4,7 +4,7 @@
 #include "Game.h"
 #include "manager/ProjectileManager.h"
 
-Sniper::Sniper(Stats::WeaponStats& userStats) :
+Sniper::Sniper(Entity* user) :
 	Weapon(Stats::WeaponStats{
 		.Damage = 50.f,
 		.Speed = 1500.f,
@@ -13,7 +13,7 @@ Sniper::Sniper(Stats::WeaponStats& userStats) :
 		.BulletsPerShot = 1,
 		.Cooldown = 2.f,
 		.Size = 1.5f
-	}, userStats)
+	}, user)
 {}
 
 void Sniper::shootBullet(b2Body* body, const sf::Vector2f position, const float angle, const b2Vec2 velocity, const Group bulletGroup)

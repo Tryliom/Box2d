@@ -1,5 +1,4 @@
 #pragma once
-#include <list>
 #include <SFML/System/Time.hpp>
 
 #include "Group.h"
@@ -12,11 +11,11 @@ class Entity;
 class Weapon : public sf::Drawable
 {
 public:
-	Weapon(Stats::WeaponStats stats, Stats::WeaponStats& userStats);
+	Weapon(Stats::WeaponStats stats, Entity* user);
 
 private:
 	Stats::WeaponStats _stats;
-	Stats::WeaponStats& _userStats;
+	Entity* _user;
 
 protected:
 	float _currentCooldown;
@@ -26,7 +25,7 @@ protected:
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-	[[nodiscard]] Stats::WeaponStats getTotalStats() const { return _stats + _userStats; }
+	[[nodiscard]] Stats::WeaponStats getTotalStats() const;
 	[[nodiscard]] sf::Time getLifeTime() const;
 
 	virtual void shootBullet(b2Body* body, const sf::Vector2f position, const float angle, const b2Vec2 velocity, const Group bulletGroup) = 0;

@@ -1,7 +1,5 @@
 #include "ContactListener.h"
 
-#include <iostream>
-
 #include "entity/Entity.h"
 #include "box2d/b2_contact.h"
 #include "Game.h"

@@ -67,7 +67,15 @@ Button::Button(const sf::Vector2f position, const sf::Vector2f size, const bool 
 
 void Button::SetText(const std::vector<TextLine>& texts)
 {
-	_text = Text(_position, texts, _background.getSize().x, _centered);
+	sf::Vector2f position = { _position.x, _position.y };
+
+	if (!_centered)
+	{
+		position.x += _background.getSize().x / 20.f;
+		position.y += _background.getSize().y / 20.f;
+	}
+
+	_text = Text(position, texts, _background.getSize().x, _centered);
 }
 
 sf::FloatRect Button::GetGlobalBounds() const

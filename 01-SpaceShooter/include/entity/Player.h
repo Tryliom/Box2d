@@ -38,8 +38,11 @@ public:
 
 	int GetMaxXp() const;
 	float GetXpPercentage() const;
+
 	bool HasCredits() const;
 	void UseCredit();
+	int GetCredits() const;
+
 	void Contact(const XpShard* xpShard);
 
 	void TryToShoot();

@@ -9,15 +9,15 @@ void WeaponFactory::AssignWeapon(const WeaponType type, Entity* entity)
 {
 	if (type == WeaponType::MACHINE_GUN)
 	{
-		entity->ChangeWeapon(new MachineGun(entity->GetWeaponStats()));
+		entity->ChangeWeapon(new MachineGun(entity));
 	}
 	else if (type == WeaponType::SNIPER)
 	{
-		entity->ChangeWeapon(new Sniper(entity->GetWeaponStats()));
+		entity->ChangeWeapon(new Sniper(entity));
 	}
 	else if (type == WeaponType::CANON)
 	{
-		entity->ChangeWeapon(new Canon(entity->GetWeaponStats()));
+		entity->ChangeWeapon(new Canon(entity));
 	}
 }
 

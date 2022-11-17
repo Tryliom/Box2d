@@ -310,6 +310,35 @@ void Entity::AddBonusStats(const Stats::EntityStats bonusStats)
 	}
 }
 
+void Entity::AddBonusStats(const Stats::WeaponStats bonusStats)
+{
+	_weaponStats += bonusStats;
+}
+
+Stats::EntityStats Entity::GetTotalStats() const
+{
+	Stats::EntityStats totalStats = _stats + _bonusStats;
+
+	for (const auto* module : _modules)
+	{
+		totalStats += module->GetStats();
+	}
+
+	return totalStats;
+}
+
+Stats::WeaponStats Entity::GetWeaponStats() const
+{
+	Stats::WeaponStats totalStats = _weaponStats;
+
+	for (const auto* module : _modules)
+	{
+		totalStats += module->GetWeaponStats();
+	}
+
+	return totalStats;
+}
+
 void Entity::AddModule(Module* module)
 {
 	module->Initialize(this);

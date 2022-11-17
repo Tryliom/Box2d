@@ -73,20 +73,20 @@ sf::Vector2f WaveManager::getSpawnPosition(const ScreenSide side)
 {
 	if (side == ScreenSide::LEFT)
 	{
-		return { -100.f, Random::GetFloat(0.f, Game::HEIGHT) };
+		return { -200.f, Random::GetFloat(0.f, Game::HEIGHT) };
 	}
 
 	if (side == ScreenSide::RIGHT)
 	{
-		return {Game::WIDTH + 100.f, Random::GetFloat(0.f, Game::HEIGHT)};
+		return {Game::WIDTH + 200.f, Random::GetFloat(0.f, Game::HEIGHT)};
 	}
 
 	if (side == ScreenSide::TOP)
 	{
-		return {Random::GetFloat(0.f, Game::WIDTH), -100.f};
+		return {Random::GetFloat(0.f, Game::WIDTH), -200.f};
 	}
 
-	return { Random::GetFloat(0.f, Game::WIDTH), Game::HEIGHT + 100.f };
+	return { Random::GetFloat(0.f, Game::WIDTH), Game::HEIGHT + 200.f };
 }
 
 std::vector<EnemyType> WaveManager::getRandomRegularEnemies() const

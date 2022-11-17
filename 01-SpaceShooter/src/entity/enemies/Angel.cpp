@@ -26,6 +26,6 @@ Angel::Angel(Game& game, sf::Vector2f position, int level) :
 			Pattern(ActionType::ATTACK, sf::seconds(Random::GetFloat(1.5f, 3.f)))
 		})
 {
-	_weapon = new Sniper(_weaponStats);
+	_weapon = new Sniper(this);
 	AddModule(new SparksModule());
 }

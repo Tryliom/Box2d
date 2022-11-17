@@ -49,7 +49,7 @@ Text::Text(sf::Vector2f position, const std::vector<TextLine>& texts, float maxX
 
 			_texts.push_back(text);
 
-			position.x += text.getLocalBounds().width;
+			position.x += text.getLocalBounds().width + text.getCharacterSize() / 5;
 
 			if (text.getLocalBounds().height > maxHeight)
 			{

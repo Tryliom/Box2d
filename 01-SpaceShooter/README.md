@@ -2,8 +2,7 @@
 
 ## Now
 
-- Mettre dans les modules des EntityStats et WeaponStats à appliquer à l'entity qui peuvent être modifiées à tout moment et utiliser les modules comme upgrade
-- XP
+
 
 ## Gui 
 
@@ -11,9 +10,6 @@
 
 ## XP
 
-- Create experience shards that rotate on themselves and are attracted by the player when a enemy is destroyed
-- Make enemies drop xp shards when destroyed
-- Add level to player, each level require xp. When level up, he can choose to upgrade his EntityStats or WeaponStats or gain a new module
 
 ## Future
 
@@ -23,7 +19,8 @@
 - Add some enemy that move in the title screen sometimes
 - Add a dummy in weapon choice to see damage and fire rate
 - Faire passer des genre de comètes qui tombent en sens inverse du joueur sur l'écran titre.
-- Mettre des ennemis qui passent aussi à des size variable (lie aussi la vitesse).
+- Mettre des ennemis qui passent aussi à des size variable (lie aussi la vitesse, sur l'écran titre).
 - Faire une arme: Plasma gun, tire un bullet comme le regular qui grossit en absorbant les tirs ennemis
+- Ajouter plus de modules spéciaux
 
 ## Bug

@@ -51,6 +51,93 @@ namespace Stats
 		return Size;
 	}
 
+	TextLine GetTextLine(float value, std::string name, const bool isPercentage)
+	{
+		std::string prefix;
+
+		if (value > 0.f)
+		{
+			prefix = "+";
+		}
+
+		name = " " + name;
+
+		if (isPercentage)
+		{
+			value *= 100.f;
+
+			name = "%" + name;
+		}
+
+		return TextLine({
+			CustomText{.Text = prefix, .Size = 16},
+			CustomText{.Text = std::to_string(static_cast<int>(value)), .Color = sf::Color::Yellow, .Size = 16},
+			CustomText{.Text = name, .Size = 16}
+		});
+	}
+
+	TextLine GetTextLine(const int value, const std::string& name, const bool isPercentage)
+	{
+		return GetTextLine(static_cast<float>(value), name, false);
+	}
+
+	std::vector<TextLine> EntityStats::GetTextLines() const
+	{
+		std::vector<TextLine> textLines;
+
+		if (HealthRegeneration != 0.f)
+		{
+			textLines.push_back(GetTextLine(HealthRegeneration, "Health Regeneration", false));
+		}
+
+		if (HealthRegenerationPercentage != 0.f)
+		{
+			textLines.push_back(GetTextLine(HealthRegenerationPercentage, "Health Regeneration", true));
+		}
+
+		if (Speed != 0.f)
+		{
+			textLines.push_back(GetTextLine(Speed, "Ship speed", false));
+		}
+
+		if (SpeedPercentage != 0.f)
+		{
+			textLines.push_back(GetTextLine(SpeedPercentage, "Ship speed", true));
+		}
+
+		if (RotationSpeed != 0.f)
+		{
+			textLines.push_back(GetTextLine(RotationSpeed, "Rotation speed", false));
+		}
+
+		if (CollisionDamage != 0.f)
+		{
+			textLines.push_back(GetTextLine(CollisionDamage, "Collision damage", false));
+		}
+
+		if (CollisionDamagePercentage != 0.f)
+		{
+			textLines.push_back(GetTextLine(CollisionDamagePercentage, "Collision damage", true));
+		}
+
+		if (CollisionReductionDamage != 0.f)
+		{
+			textLines.push_back(GetTextLine(CollisionReductionDamage, "Collision reduction damage", false));
+		}
+
+		if (CollisionReductionDamagePercentage != 0.f)
+		{
+			textLines.push_back(GetTextLine(CollisionReductionDamagePercentage, "Collision reduction damage", true));
+		}
+
+		if (Size != 0.f)
+		{
+			textLines.push_back(GetTextLine(Size, "Ship size", false));
+		}
+
+		return textLines;
+	}
+
 	float WeaponStats::GetDamage() const
 	{
 		return Damage * (1.f + DamagePercentage);
@@ -84,6 +171,73 @@ namespace Stats
 	float WeaponStats::GetSize() const
 	{
 		return Size;
+	}
+
+	std::vector<TextLine> WeaponStats::GetTextLines() const
+	{
+		std::vector<TextLine> textLines;
+
+		if (Damage != 0.f)
+		{
+			textLines.push_back(GetTextLine(Damage, "Bullet damage", false));
+		}
+
+		if (DamagePercentage != 0.f)
+		{
+			textLines.push_back(GetTextLine(DamagePercentage, "Bullet damage", true));
+		}
+
+		if (Speed != 0.f)
+		{
+			textLines.push_back(GetTextLine(Speed, "Bullet speed", false));
+		}
+
+		if (SpeedPercentage != 0.f)
+		{
+			textLines.push_back(GetTextLine(SpeedPercentage, "Bullet speed", true));
+		}
+
+		if (Spread != 0.f)
+		{
+			textLines.push_back(GetTextLine(Spread, "Weapon spread", false));
+		}
+
+		if (Range != 0.f)
+		{
+			textLines.push_back(GetTextLine(Range, "Weapon range", false));
+		}
+
+		if (BulletsPerShot != 0.f)
+		{
+			textLines.push_back(GetTextLine(BulletsPerShot, "Bullets per shot", false));
+		}
+
+		if (BulletsPerShotPercentage != 0.f)
+		{
+			textLines.push_back(GetTextLine(BulletsPerShotPercentage, "Bullets per shot", true));
+		}
+
+		if (Cooldown != 0.f)
+		{
+			textLines.push_back(GetTextLine(Cooldown, "Weapon cooldown", false));
+		}
+
+		if (CooldownReduction != 0.f)
+		{
+			textLines.push_back(GetTextLine(CooldownReduction, "Weapon cooldown reduction", true));
+		}
+
+		if (CooldownReductionPercentage != 0.f)
+		{
+			textLines.push_back(GetTextLine(CooldownReductionPercentage, "Weapon cooldown reduction", true));
+		}
+
+		if (Size != 0.f)
+		{
+			textLines.push_back(GetTextLine(Size, "Bullet size", true));
+		}
+
+		return textLines;
 	}
 
 	WeaponStats operator+(const WeaponStats stats, const WeaponStats otherStats)

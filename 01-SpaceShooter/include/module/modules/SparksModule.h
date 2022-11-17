@@ -25,4 +25,6 @@ public:
 	void Update(sf::Time elapsed, Entity* entity) override;
 
 	void OnEntityMove(Entity* entity) override;
+
+	std::vector<TextLine> GetDescription() const override;
 };
