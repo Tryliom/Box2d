@@ -132,7 +132,7 @@ namespace Stats
 
 		if (Size != 0.f)
 		{
-			textLines.push_back(GetTextLine(Size, "Ship size", false));
+			textLines.push_back(GetTextLine(Size, "Ship size", true));
 		}
 
 		return textLines;

@@ -301,13 +301,7 @@ void Entity::AddBonusStats(const Stats::EntityStats bonusStats)
 {
 	_bonusStats += bonusStats;
 
-	if (bonusStats.Size != 0.f)
-	{
-		const float scale = 1.f + GetTotalStats().Size;
-
-		_shape.setScale(scale, scale);
-		_body->GetFixtureList()->GetShape()->m_radius = Game::PixelToMeter(_shape.getSize().x * scale / 3.f);
-	}
+	updateSize();
 }
 
 void Entity::AddBonusStats(const Stats::WeaponStats bonusStats)
@@ -343,11 +337,21 @@ void Entity::AddModule(Module* module)
 {
 	module->Initialize(this);
 	_modules.push_back(module);
+
+	updateSize();
 }
 
 void Entity::ChangeWeapon(Weapon* weapon)
 {
 	_weapon = weapon;
+}
+
+void Entity::updateSize()
+{
+	const float scale = 1.f + GetTotalStats().Size;
+
+	_shape.setScale(scale, scale);
+	_body->GetFixtureList()->GetShape()->m_radius = Game::PixelToMeter(_shape.getSize().x * scale / 3.f);
 }
 
 void Entity::onDeath()

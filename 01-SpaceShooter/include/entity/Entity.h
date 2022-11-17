@@ -43,6 +43,8 @@ protected:
 
 	virtual void onDeath();
 
+	void updateSize();
+
 public:
 	void Update(sf::Time elapsed) override;
 	virtual void Move(sf::Time elapsed);

@@ -108,15 +108,6 @@ public:
 		}) {}
 };
 
-class WeaponDamageModule final : public Module
-{
-public:
-	explicit WeaponDamageModule() : Module(
-		{}, Stats::WeaponStats{
-			.Damage = 10.f,
-		}) {}
-};
-
 class WeaponDamagePercentModule final : public Module
 {
 public:
@@ -186,9 +177,10 @@ public:
 	explicit WeaponMultipleProjectileModule() : Module(
 		{}, Stats::WeaponStats{
 			.DamagePercentage = -0.1f,
-			.Spread = 10.f,
+			.Spread = 15.f,
 			.BulletsPerShot = 3,
 			.BulletsPerShotPercentage = 1.f,
+			.CooldownReductionPercentage = 0.3f,
 			.Size = -0.1f,
 		}) {}
 };
@@ -198,8 +190,9 @@ class WeaponSingleProjectileModule final : public Module
 public:
 	explicit WeaponSingleProjectileModule() : Module(
 		{}, Stats::WeaponStats{
-			.DamagePercentage = 0.5f,
+			.DamagePercentage = 0.3f,
 			.Spread = -10.f,
+			.CooldownReductionPercentage = -0.5f,
 			.Size = 0.3f,
 		}) {}
 };

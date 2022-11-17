@@ -42,7 +42,7 @@ Text::Text(sf::Vector2f position, const std::vector<TextLine>& texts, float maxX
 				if (position.x - baseX + bounds.width > maxX)
 				{
 					position.x = baseX;
-					position.y += maxHeight + 2.f;
+					position.y += maxHeight * 1.5f;
 					text.setPosition(position);
 				}
 			}
@@ -57,7 +57,7 @@ Text::Text(sf::Vector2f position, const std::vector<TextLine>& texts, float maxX
 			}
 		}
 
-		position.y += maxHeight;
+		position.y += maxHeight * 1.5f;
 		position.x = baseX;
 	}
 }

@@ -65,6 +65,8 @@ UpgradeChoiceGui::UpgradeChoiceGui(Game& game) : Gui(game)
 		-1,
 		true
 	);
+
+	_texts.emplace_back(credits);
 }
 
 std::vector<Module*> UpgradeChoiceGui::getAllModules()
@@ -78,7 +80,6 @@ std::vector<Module*> UpgradeChoiceGui::getAllModules()
 		new EntityCollisionDamagePercentModule(),
 		new EntityCollisionReductionDamageModule(),
 		new EntityCollisionReductionDamagePercentModule(),
-		new WeaponDamageModule(),
 		new WeaponDamagePercentModule(),
 		new WeaponSpeedModule(),
 		new WeaponSpeedPercentModule(),
