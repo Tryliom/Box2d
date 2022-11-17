@@ -159,6 +159,11 @@ void Player::UseCredit()
 	_credits--;
 }
 
+void Player::Contact(const XpShard* xpShard)
+{
+	_xp += xpShard->GetXp();
+}
+
 void Player::TryToShoot()
 {
 	if (_weapon != nullptr && _weapon->CanShoot())

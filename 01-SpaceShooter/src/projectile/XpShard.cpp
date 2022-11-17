@@ -1,5 +1,7 @@
 #include "projectile/XpShard.h"
 
+#include <iostream>
+
 #include "Assets.h"
 #include "Game.h"
 
@@ -33,9 +35,10 @@ XpShard::XpShard(b2Body* body, const sf::Vector2f position, const int xp) :
 	_body->SetType(b2_dynamicBody);
 }
 
-void XpShard::Update(sf::Time elapsed)
+void XpShard::Update(const sf::Time elapsed)
 {
-	
+	_sprite.setPosition(Game::MeterToPixel(_body->GetPosition()));
+	_sprite.setRotation(_sprite.getRotation() + 720.f * elapsed.asSeconds());
 }
 
 void XpShard::draw(sf::RenderTarget& target, const sf::RenderStates states) const

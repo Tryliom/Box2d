@@ -7,7 +7,9 @@
 
 Angel::Angel(Game& game, sf::Vector2f position, int level) :
 	Enemy(game, position, Assets::GetInstance().GetTexture(Texture::ENEMY_ANGEL),
-		150.f, Group::ENEMY,
+		150.f, 
+		100 + level * 10,
+		Group::ENEMY,
 		Stats::EntityStats{
 			.Speed = 200.f + level * 10.f,
 			.RotationSpeed = 10.f + level * 0.5f,

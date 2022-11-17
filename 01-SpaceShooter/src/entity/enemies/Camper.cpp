@@ -6,7 +6,9 @@
 
 Camper::Camper(Game& game, sf::Vector2f position, int level) :
 	Enemy(game, position, Assets::GetInstance().GetTexture(Texture::ENEMY_CAMPER),
-		30.f + level * 5.f, Group::ENEMY, 
+		30.f + level * 5.f,
+		30 + level * 5,
+		Group::ENEMY, 
 		Stats::EntityStats{
 			.Speed = 100.f + level * 10.f,
 			.RotationSpeed = 5.f + level * 0.5f,

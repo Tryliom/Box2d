@@ -9,6 +9,9 @@ private:
 	sf::RectangleShape _healthBackgroundBar;
 	sf::RectangleShape _healthBar;
 
+	// A simple white line draw to the bottom of the window
+	sf::RectangleShape _xpBar;
+
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 public:

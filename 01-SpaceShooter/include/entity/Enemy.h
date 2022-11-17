@@ -22,14 +22,18 @@ class Enemy : public Entity
 public:
 	Enemy(
 		Game& game, sf::Vector2f position, const sf::Texture& texture,
-		float maxHealth,
+		float maxHealth, int xp,
 		Group groupIndex, Stats::EntityStats stats, Stats::WeaponStats weaponStats, const std::vector<Pattern>& patterns
 	);
 
 protected:
+	int _xp;
+
 	std::vector<Pattern> _patterns;
 	sf::Time _currentPatternTime;
 	size_t _currentPatternIndex{ 0 };
+
+	bool _killedByPlayer{ true };
 
 	virtual void onEndCycle() {}
 	void rotateToPlayer(float angle = 0.f) const;
@@ -39,4 +43,7 @@ public:
 	void Update(sf::Time elapsed) override;
 
 	void RunAway();
+
+	int GetXp() const;
+	bool IsKilledByPlayer() const;
 };

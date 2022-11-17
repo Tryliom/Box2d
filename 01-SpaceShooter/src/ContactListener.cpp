@@ -5,6 +5,8 @@
 #include "entity/Entity.h"
 #include "box2d/b2_contact.h"
 #include "Game.h"
+#include "entity/Player.h"
+#include "projectile/XpShard.h"
 
 void ContactListener::BeginContact(b2Contact* contact)
 {
@@ -64,25 +66,25 @@ void ContactListener::BeginContact(b2Contact* contact)
 	else if (groupA == Group::PLAYER && groupB == Group::XP || groupA == Group::XP && groupB == Group::PLAYER)
 	{
 		// Player hit XP
-		/*Entity* entity = nullptr;
-		Xp* xp = nullptr;
+		Player* player = nullptr;
+		XpShard* xpShard = nullptr;
 
 		if (groupA == Group::PLAYER)
 		{
-			entity = reinterpret_cast<Entity*>(aPointer);
-			xp = reinterpret_cast<Xp*>(bPointer);
+			player = reinterpret_cast<Player*>(aPointer);
+			xpShard = reinterpret_cast<XpShard*>(bPointer);
 		}
 		else
 		{
-			entity = reinterpret_cast<Entity*>(bPointer);
-			xp = reinterpret_cast<Xp*>(aPointer);
+			player = reinterpret_cast<Player*>(bPointer);
+			xpShard = reinterpret_cast<XpShard*>(aPointer);
 		}
 
-		if (!xp->IsDead() && !entity->IsDead())
+		if (!xpShard->IsPickedUp() && !player->IsDead())
 		{
-			entity->AddXp(xp->GetXp());
-			xp->OnImpact();
-		}*/
+			player->Contact(xpShard);
+			xpShard->Destroy();
+		}
 	}
 }
 

@@ -6,7 +6,9 @@
 
 Imperator::Imperator(Game& game, const sf::Vector2f position, int level) :
 	Enemy(game, position, Assets::GetInstance().GetTexture(Texture::ENEMY_IMPERATOR),
-		500.f + level * 100.f, Group::ENEMY,
+		500.f + level * 100.f, 
+		300 + level * 25, 
+		Group::ENEMY,
 		Stats::EntityStats{
 			.Speed = 50.f + 10.f * level,
 			.RotationSpeed = 10.f + level,

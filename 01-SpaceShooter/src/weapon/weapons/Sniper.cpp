@@ -11,7 +11,7 @@ Sniper::Sniper(Stats::WeaponStats& userStats) :
 		.Spread = 10.f,
 		.Range = 10000.f,
 		.BulletsPerShot = 1,
-		.Cooldown = 1.f,
+		.Cooldown = 2.f,
 		.Size = 1.5f
 	}, userStats)
 {}

@@ -1,6 +1,7 @@
 #pragma once
 #include "animation/Tail.h"
 #include "entity/Entity.h"
+#include "projectile/XpShard.h"
 
 constexpr float TAIL_COOLDOWN = 0.1f;
 
@@ -39,7 +40,7 @@ public:
 	float GetXpPercentage() const;
 	bool HasCredits() const;
 	void UseCredit();
-	//void Contact(XpShard* xpShard);
+	void Contact(const XpShard* xpShard);
 
 	void TryToShoot();
 };

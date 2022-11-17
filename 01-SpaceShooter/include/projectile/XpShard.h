@@ -11,7 +11,7 @@ public:
 protected:
 	sf::Sprite _sprite;
 
-	bool _pickedUp;
+	bool _pickedUp{ false };
 	int _xp;
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

@@ -2,11 +2,14 @@
 
 #include "Game.h"
 #include "manager/EntityManager.h"
+#include "manager/ProjectileManager.h"
 
-Enemy::Enemy(Game& game, sf::Vector2f position, const sf::Texture& texture, float maxHealth,
+Enemy::Enemy(Game& game, sf::Vector2f position, const sf::Texture& texture, float maxHealth, int xp,
              Group groupIndex, Stats::EntityStats stats, Stats::WeaponStats weaponStats, const std::vector<Pattern>& patterns) :
 	Entity(game, position, texture, maxHealth, stats, groupIndex)
 {
+	_xp = xp;
+
 	_weaponStats = weaponStats;
 	_patterns = patterns;
 	_currentPatternTime = sf::Time::Zero;
@@ -89,6 +92,7 @@ void Enemy::Update(const sf::Time elapsed)
 		if (Game::IsOutOfScreen(sf::Vector2f(x, y)))
 		{
 			_health = 0.f;
+			_killedByPlayer = false;
 		}
 	}
 	else if (action == ActionType::ATTACK)
@@ -119,4 +123,14 @@ void Enemy::RunAway()
 	_patterns = { { ActionType::RUN_AWAY, sf::seconds(30.f) } };
 
 	StopChargingWeapon();
+}
+
+int Enemy::GetXp() const
+{
+	return _xp;
+}
+
+bool Enemy::IsKilledByPlayer() const
+{
+	return _killedByPlayer;
 }

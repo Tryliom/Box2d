@@ -30,6 +30,7 @@ Game::Game() :
 	
 	_background.setTexture(&backgroundTexture);
 	_background.setSize(sf::Vector2f(backgroundTexture.getSize()));
+	_background.setFillColor(sf::Color(100, 150, 150));
 	_backgroundStep = 0.f;
 	const float y = (HEIGHT - _background.getSize().y) / 2.f + std::cos(_backgroundStep * b2_pi) * (HEIGHT - _background.getSize().y) / 2.f;
 

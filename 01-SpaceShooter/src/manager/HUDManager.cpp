@@ -11,12 +11,18 @@ HUDManager::HUDManager()
 	_healthBackgroundBar.setPosition({ Game::WIDTH / 2.f, Game::HEIGHT - 20.f });
 	_healthBackgroundBar.setOutlineColor(sf::Color::White);
 	_healthBackgroundBar.setOutlineThickness(1.f);
+
+	_xpBar.setSize(sf::Vector2f(Game::WIDTH, 8.f));
+	_xpBar.setFillColor(sf::Color(255, 255, 255, 200));
+	_xpBar.setPosition({ 0.f, Game::HEIGHT - 8.f });
 }
 
 void HUDManager::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(_healthBackgroundBar);
 	target.draw(_healthBar);
+
+	target.draw(_xpBar);
 }
 
 void HUDManager::Update(sf::Time elapsed)
@@ -32,4 +38,13 @@ void HUDManager::Update(sf::Time elapsed)
 	_healthBar.setOrigin(_healthBar.getSize() / 2.f);
 	_healthBar.setPosition(_healthBackgroundBar.getPosition());
 	_healthBar.setFillColor(sf::Color::Red);
+
+	float xpPercentage = EntityManager::GetInstance().GetPlayer()->GetXpPercentage();
+
+	if (xpPercentage < 0.f)
+	{
+		xpPercentage = 0.f;
+	}
+
+	_xpBar.setSize(sf::Vector2f(Game::WIDTH * xpPercentage, _xpBar.getSize().y));
 }

@@ -110,7 +110,7 @@ void Entity::updateHealthDifference()
 			animationManager.AddTextAnimation(DamageTextAnimation(
 				_shape.getPosition(),
 				std::to_string(static_cast<int>(healthDifference)),
-				_groupIndex == Group::PLAYER ? sf::Color::Red : sf::Color::Yellow
+				_groupIndex == Group::PLAYER ? sf::Color::Red : sf::Color::White
 			));
 		}
 		else if (healthDifference < 0.f)

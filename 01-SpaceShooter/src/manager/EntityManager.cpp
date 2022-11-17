@@ -1,6 +1,7 @@
 #include "manager/EntityManager.h"
 
 #include "Game.h"
+#include "manager/ProjectileManager.h"
 
 EntityManager::EntityManager()
 {
@@ -61,6 +62,13 @@ void EntityManager::Update(const sf::Time elapsed, const GameState state)
 
 		if ((*it)->IsDead())
 		{
+			const Enemy* enemy = *it;
+
+			if (enemy->IsKilledByPlayer())
+			{
+				ProjectileManager::GetInstance().AddXpShard(new XpShard(enemy->GetGame().GetNewBody(), enemy->GetPosition(), enemy->GetXp()));
+			}
+
 			(*it)->GetBody()->GetWorld()->DestroyBody((*it)->GetBody());
 
 			it = _enemies.erase(it);

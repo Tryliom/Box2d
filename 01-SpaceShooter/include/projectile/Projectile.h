@@ -54,13 +54,9 @@ protected:
 
 public:
 	void Update(sf::Time elapsed) override;
-
 	void OnImpact(sf::Vector2f impactPoint);
 
 	bool IsDead() const;
 
 	float GetDamage() const { return _damage; }
-	bool CanPierce() const { return _canPierce; }
-	Group GetGroupIndex() const { return _groupIndex; }
-	Group GetGroup() const { return _groupIndex; }
 };
