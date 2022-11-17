@@ -12,8 +12,8 @@ Player::Player(Game& game) :
 		game, {-100.f, Game::HEIGHT + 100.f}, Assets::GetInstance().GetTexture(Texture::SPACE_SHIP),
 		100.f, Stats::EntityStats{
 			.HealthRegeneration = 0.5f,
-			.Speed = 600.f,
-			.RotationSpeed = 15.f,
+			.Speed = 800.f,
+			.RotationSpeed = 25.f,
 			.CollisionDamage = 20.f
 		},
 		Group::PLAYER
@@ -51,6 +51,15 @@ sf::Vector2f Player::getTailPosition() const
 	return { x, y };
 }
 
+void Player::onLevelUp()
+{
+	_level++;
+	_credits++;
+	_xp = 0;
+
+	_game.SetState(GameState::UPGRADE_CHOICE);
+}
+
 void Player::Update(const sf::Time elapsed)
 {
 	Entity::Update(elapsed);
@@ -66,6 +75,8 @@ void Player::Update(const sf::Time elapsed)
 		{
 			_body->SetLinearVelocity({ 0.f, 0.f });
 		}
+
+		TryToShoot();
 	}
 	else
 	{
@@ -108,6 +119,8 @@ void Player::TakeControl()
 {
 	_copilot = false;
 	_invincible = false;
+
+	ChargeWeapon();
 }
 
 void Player::ReleaseControl()
@@ -119,4 +132,39 @@ void Player::ReleaseControl()
 bool Player::IsAlive() const
 {
 	return _health > 0.f;
+}
+
+bool Player::IsCopilot() const
+{
+	return _copilot;
+}
+
+int Player::GetMaxXp() const
+{
+	return 100 + _level * 25;
+}
+
+float Player::GetXpPercentage() const
+{
+	return static_cast<float>(_xp) / static_cast<float>(GetMaxXp());
+}
+
+bool Player::HasCredits() const
+{
+	return _credits > 0;
+}
+
+void Player::UseCredit()
+{
+	_credits--;
+}
+
+void Player::TryToShoot()
+{
+	if (_weapon != nullptr && _weapon->CanShoot())
+	{
+		_weapon->Shoot(this, GetProjectileGroup());
+
+		ChargeWeapon();
+	}
 }

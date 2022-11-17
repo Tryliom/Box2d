@@ -10,6 +10,10 @@ public:
 	explicit Player(Game& game);
 
 protected:
+	int _xp{ 0 };
+	int _level{ 1 };
+	int _credits{ 0 };
+
 	std::list<Tail> _tails;
 	sf::Time _tailCooldown;
 
@@ -20,6 +24,8 @@ protected:
 	// Get tail position at the bottom of the ship that change with the rotation
 	sf::Vector2f getTailPosition() const;
 
+	void onLevelUp();
+
 public:
 	void Update(sf::Time elapsed) override;
 	void Move(sf::Time elapsed) override;
@@ -27,4 +33,13 @@ public:
 	void TakeControl();
 	void ReleaseControl();
 	bool IsAlive() const;
+	bool IsCopilot() const;
+
+	int GetMaxXp() const;
+	float GetXpPercentage() const;
+	bool HasCredits() const;
+	void UseCredit();
+	//void Contact(XpShard* xpShard);
+
+	void TryToShoot();
 };

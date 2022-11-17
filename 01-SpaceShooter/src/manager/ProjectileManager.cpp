@@ -30,9 +30,30 @@ void ProjectileManager::Update(const sf::Time elapsed)
 			++it;
 		}
 	}
+
+	for (auto it = _xpShards.begin(); it != _xpShards.end();)
+	{
+		it->Update(elapsed);
+
+		if (it->IsPickedUp())
+		{
+			(*it).GetBody()->GetWorld()->DestroyBody((*it).GetBody());
+
+			it = _xpShards.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
 }
 
 void ProjectileManager::AddProjectile(Projectile* projectile)
 {
 	_projectiles.emplace_back(projectile);
+}
+
+void ProjectileManager::AddXpShard(const XpShard& xpShard)
+{
+	_xpShards.emplace_back(xpShard);
 }

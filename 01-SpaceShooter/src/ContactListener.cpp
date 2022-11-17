@@ -61,6 +61,29 @@ void ContactListener::BeginContact(b2Contact* contact)
 			projectile->OnImpact(impactPosition);
 		}
 	}
+	else if (groupA == Group::PLAYER && groupB == Group::XP || groupA == Group::XP && groupB == Group::PLAYER)
+	{
+		// Player hit XP
+		/*Entity* entity = nullptr;
+		Xp* xp = nullptr;
+
+		if (groupA == Group::PLAYER)
+		{
+			entity = reinterpret_cast<Entity*>(aPointer);
+			xp = reinterpret_cast<Xp*>(bPointer);
+		}
+		else
+		{
+			entity = reinterpret_cast<Entity*>(bPointer);
+			xp = reinterpret_cast<Xp*>(aPointer);
+		}
+
+		if (!xp->IsDead() && !entity->IsDead())
+		{
+			entity->AddXp(xp->GetXp());
+			xp->OnImpact();
+		}*/
+	}
 }
 
 void ContactListener::EndContact(b2Contact* contact)

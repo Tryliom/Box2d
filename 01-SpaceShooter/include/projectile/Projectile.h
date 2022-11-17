@@ -29,6 +29,7 @@ public:
 	 * \param damage The damage of the projectile, if it can pierce, it will be divided by seconds
 	 * \param canPierce Can the projectile pierce through multiple enemies?
 	 * \param groupIndex The group index of the projectile
+	 * \param trail If the projectile has a trail
 	 */
 	Projectile(
 		b2Body* body, sf::Vector2f position, 
@@ -42,8 +43,6 @@ protected:
 
 	sf::Time _lifeTime;
 	sf::Time _currentLifeTime;
-
-	std::list<HitAnimation> _hitAnimations;
 
 	float _size;
 	float _damage;

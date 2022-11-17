@@ -4,6 +4,7 @@
 
 #include "Game.h"
 #include "animation/TextAnimation.h"
+#include "entity/Player.h"
 #include "manager/AnimationManager.h"
 #include "manager/AudioManager.h"
 
@@ -47,7 +48,7 @@ Entity::Entity(Game& game, const sf::Vector2f position, const sf::Texture& textu
 
 	_body->CreateFixture(&fixtureDef);
 
-	_body->SetLinearDamping(0.5f);
+	_body->SetLinearDamping(0.8f);
 	_body->SetTransform(Game::PixelToMeter(position), Game::DegreeToRad(_shape.getRotation()));
 	_body->SetType(b2_dynamicBody);
 }
@@ -160,11 +161,20 @@ void Entity::Update(const sf::Time elapsed)
 
 	if (_weapon != nullptr && _weapon->CanShoot())
 	{
-		_weapon->Shoot(this, GetProjectileGroup());
-
 		if (_groupIndex == Group::PLAYER)
 		{
-			_weapon->StartCharging(this);
+			const auto player = dynamic_cast<Player*>(this);
+
+			if (player->IsCopilot() || sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Mouse::isButtonPressed(sf::Mouse::Right))
+			{
+				_weapon->Shoot(this, GetProjectileGroup());
+
+				ChargeWeapon();
+			}
+		}
+		else
+		{
+			_weapon->Shoot(this, GetProjectileGroup());
 		}
 	}
 
@@ -179,9 +189,17 @@ void Entity::Move(const sf::Time elapsed)
 	// Add a linear velocity to the body to make it move to the angle it is facing
 	if (_body->GetLinearVelocity().Length() < GetTotalStats().GetMaxSpeed())
 	{
+		float speed = GetTotalStats().GetSpeed() * elapsed.asSeconds();
+
+		if (_body->GetLinearVelocity().Length() < GetTotalStats().GetSpeed() * 2.f)
+		{
+			speed *= 2.f;
+		}
+
+
 		_body->SetLinearVelocity(
 			_body->GetLinearVelocity() + 
-			Game::GetLinearVelocity(GetTotalStats().GetSpeed() * elapsed.asSeconds(), Game::RadToDegree(_body->GetAngle()))
+			Game::GetLinearVelocity(speed, Game::RadToDegree(_body->GetAngle()))
 		);
 	}
 

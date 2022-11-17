@@ -74,14 +74,10 @@ void EntityManager::Update(const sf::Time elapsed, const GameState state)
 
 void EntityManager::CheckInputs(const sf::Event event) const
 {
-	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
+	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right 
+		|| event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
 	{
-		_player->ChargeWeapon();
-	}
-
-	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Right)
-	{
-		_player->StopChargingWeapon();
+		_player->TryToShoot();
 	}
 }
 
