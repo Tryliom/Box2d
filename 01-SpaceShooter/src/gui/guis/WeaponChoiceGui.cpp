@@ -8,7 +8,8 @@
 constexpr std::array WEAPONS = {
 	WeaponType::MACHINE_GUN,
 	WeaponType::SNIPER,
-	WeaponType::CANON
+	WeaponType::CANON,
+	WeaponType::SHOT_GUN
 };
 
 WeaponChoiceGui::WeaponChoiceGui(Game& game) : Gui(game)

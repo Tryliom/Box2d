@@ -3,6 +3,7 @@
 #include "entity/Entity.h"
 #include "weapon/weapons/Canon.h"
 #include "weapon/weapons/MachineGun.h"
+#include "weapon/weapons/ShotGun.h"
 #include "weapon/weapons/Sniper.h"
 
 void WeaponFactory::AssignWeapon(const WeaponType type, Entity* entity)
@@ -19,6 +20,10 @@ void WeaponFactory::AssignWeapon(const WeaponType type, Entity* entity)
 	{
 		entity->ChangeWeapon(new Canon(entity));
 	}
+	else if (type == WeaponType::SHOT_GUN)
+	{
+		entity->ChangeWeapon(new ShotGun(entity));
+	}
 }
 
 std::string WeaponFactory::GetWeaponName(WeaponType type)
@@ -34,6 +39,10 @@ std::string WeaponFactory::GetWeaponName(WeaponType type)
 	else if (type == WeaponType::CANON)
 	{
 		return "Canon";
+	}
+	else if (type == WeaponType::SHOT_GUN)
+	{
+		return "Shot gun";
 	}
 
 	return "";

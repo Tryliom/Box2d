@@ -16,6 +16,7 @@ Assets::Assets()
 	_textures[static_cast<int>(Texture::ENEMY_IMPERATOR)].loadFromFile("data/images/enemies/imperator.png");
 	_textures[static_cast<int>(Texture::ENEMY_ANGEL)].loadFromFile("data/images/enemies/angel.png");
 	_textures[static_cast<int>(Texture::XP_SHARD)].loadFromFile("data/images/xp_shard.png");
+	_textures[static_cast<int>(Texture::SHOT_GUN_BULLET)].loadFromFile("data/images/shot_gun_bullet.png");
 
 	_fonts[static_cast<int>(Font::PIXELMIX)].loadFromFile("data/fonts/pixelmix.ttf");
 
