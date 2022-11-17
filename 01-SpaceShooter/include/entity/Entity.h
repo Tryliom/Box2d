@@ -21,6 +21,7 @@ protected:
 
 	float _health;
 	float _maxHealth;
+	bool _invincible = false;
 
 	float _lastHealth{ 0.f };
 	sf::Time _healthDifferenceTime{ sf::Time::Zero };

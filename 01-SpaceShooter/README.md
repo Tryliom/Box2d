@@ -22,5 +22,8 @@
 - Make Tail a class that can be assigned to any entities, create a tail for each enemy
 - Add some enemy that move in the title screen sometimes
 - Add a dummy in weapon choice to see damage and fire rate
+- Faire passer des genre de comètes qui tombent en sens inverse du joueur sur l'écran titre.
+- Mettre des ennemis qui passent aussi à des size variable (lie aussi la vitesse).
+- Faire une arme: Plasma gun, tire un bullet comme le regular qui grossit en absorbant les tirs ennemis
 
 ## Bug

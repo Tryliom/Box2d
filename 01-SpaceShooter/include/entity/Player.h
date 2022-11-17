@@ -13,7 +13,7 @@ protected:
 	std::list<Tail> _tails;
 	sf::Time _tailCooldown;
 
-	bool _copilot = true;
+	bool _copilot{ false };
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
@@ -25,5 +25,6 @@ public:
 	void Move(sf::Time elapsed) override;
 
 	void TakeControl();
+	void ReleaseControl();
 	bool IsAlive() const;
 };

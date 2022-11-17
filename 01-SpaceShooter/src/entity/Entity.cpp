@@ -213,7 +213,10 @@ Group Entity::GetProjectileGroup() const
 
 void Entity::TakeDamage(Projectile* projectile)
 {
-	_health -= projectile->GetDamage();
+	if (!_invincible)
+	{
+		_health -= projectile->GetDamage();
+	}
 
 	for (auto* module : _modules)
 	{
@@ -228,8 +231,11 @@ void Entity::TakeDamage(Projectile* projectile)
 
 void Entity::TakeDamage(Entity* entity)
 {
-	const float collisionDamage = GetTotalStats().GetCollisionDamage(entity->GetTotalStats().GetCollisionDamage());
-	_health -= collisionDamage;
+	if (!_invincible)
+	{
+		const float collisionDamage = GetTotalStats().GetCollisionDamage(entity->GetTotalStats().GetCollisionDamage());
+		_health -= collisionDamage;
+	}
 
 	AudioManager::GetInstance().PlaySound(Sound::ENTITY_COLLISION);
 

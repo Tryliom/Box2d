@@ -26,6 +26,8 @@ Player::Player(Game& game) :
 
 	_shape.setRotation(Game::RadToDegree(atan2(position.y, position.x)) + 90.f);
 	_body->SetTransform(Game::PixelToMeter(_shape.getPosition()), Game::DegreeToRad(_shape.getRotation()));
+
+	ReleaseControl();
 }
 
 void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
@@ -105,6 +107,13 @@ void Player::Move(sf::Time elapsed)
 void Player::TakeControl()
 {
 	_copilot = false;
+	_invincible = false;
+}
+
+void Player::ReleaseControl()
+{
+	_copilot = true;
+	_invincible = true;
 }
 
 bool Player::IsAlive() const
